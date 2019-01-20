@@ -110,15 +110,15 @@
                     {
                         icon: 'el-icon-lx-warn',
                         index: '7',
-                        title: '错误处理',
+                        title: '设置',
                         subs: [
                             {
-                                index: 'permission',
-                                title: '权限测试'
+                                index: 'account',
+                                title: '账号管理'
                             },
                             {
-                                index: '404',
-                                title: '404页面'
+                                index: 'setting',
+                                title: '设置页面'
                             }
                         ]
                     }

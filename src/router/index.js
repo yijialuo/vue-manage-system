@@ -77,14 +77,14 @@ export default new Router({
                 },
                 {
                     // 权限页面
-                    path: '/permission',
-                    component: resolve => require(['../components/page/Permission.vue'], resolve),
-                    meta: { title: '权限测试', permission: true }
+                    path: '/account',
+                    component: resolve => require(['../components/page/Account.vue'], resolve),
+                    meta: { title: '账号管理', permission: true }
                 },
                 {
-                    path: '/404',
-                    component: resolve => require(['../components/page/404.vue'], resolve),
-                    meta: { title: '404' }
+                    path: '/setting',
+                    component: resolve => require(['../components/page/Setting.vue'], resolve),
+                    meta: { title: '设置页面',permission:true }
                 },
                 {
                     path: '/403',

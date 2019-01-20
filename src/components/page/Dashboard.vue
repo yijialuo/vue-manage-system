@@ -6,25 +6,22 @@
                     <div class="user-info">
                         <img src="../../assets/img/img.jpg" class="user-avator" alt="">
                         <div class="user-info-cont">
-                            <div class="user-info-name">{{name}}</div>
+                            <div class="user-info-name">{{user.userName}}</div>
                             <div>{{role}}</div>
                         </div>
                     </div>
-                    <div class="user-info-list">上次登录时间：<span>2018-01-01</span></div>
-                    <div class="user-info-list">上次登录地点：<span>东莞</span></div>
+                    <div class="user-info-list">上次登录时间：<span>2019-01-11</span></div>
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
                     <div slot="header" class="clearfix">
-                        <span>语言详情</span>
+                        <span>项目占比</span>
                     </div>
-                    Vue
+                    固定资产
                     <el-progress :percentage="71.3" color="#42b983"></el-progress>
-                    JavaScript
+                    维修
                     <el-progress :percentage="24.1" color="#f1e05a"></el-progress>
-                    CSS
-                    <el-progress :percentage="3.7"></el-progress>
-                    HTML
-                    <el-progress :percentage="0.9" color="#f56c6c"></el-progress>
+                    物资采购
+                    <el-progress :percentage="30.7"></el-progress>
                 </el-card>
             </el-col>
             <el-col :span="16">
@@ -35,7 +32,7 @@
                                 <i class="el-icon-lx-people grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">1234</div>
-                                    <div>用户访问量</div>
+                                    <div>总项目</div>
                                 </div>
                             </div>
                         </el-card>
@@ -46,7 +43,7 @@
                                 <i class="el-icon-lx-notice grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">321</div>
-                                    <div>系统消息</div>
+                                    <div>已完结</div>
                                 </div>
                             </div>
                         </el-card>
@@ -56,8 +53,8 @@
                             <div class="grid-content grid-con-3">
                                 <i class="el-icon-lx-goods grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">5000</div>
-                                    <div>数量</div>
+                                    <div class="grid-num">500</div>
+                                    <div>未完结</div>
                                 </div>
                             </div>
                         </el-card>
@@ -65,24 +62,19 @@
                 </el-row>
                 <el-card shadow="hover" style="height:403px;">
                     <div slot="header" class="clearfix">
-                        <span>待办事项</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
+                        <span>我的项目</span>
+                        <el-button style="float: right; padding: 3px 0" type="text" @click="show_xjsq=true">新建申请
+                        </el-button>
                     </div>
                     <el-table :data="todoList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
-                        <el-table-column width="40">
-                            <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.status"></el-checkbox>
-                            </template>
-                        </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}</div>
+                                <div class="todo-item">{{scope.row.title}}</div>
                             </template>
                         </el-table-column>
                         <el-table-column width="60">
                             <template slot-scope="scope">
-                                <i class="el-icon-edit"></i>
-                                <i class="el-icon-delete"></i>
+                                <el-button type="text" @click="zt(scope.row)" icon="el-icon-edit">状态</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -97,49 +89,114 @@
             </el-col>
             <el-col :span="12">
                 <el-card shadow="hover">
-                    <schart ref="line" class="schart" canvasId="line" :data="data" type="line" :options="options2"></schart>
+                    <schart ref="line" class="schart" canvasId="line" :data="data" type="line"
+                            :options="options2"></schart>
                 </el-card>
             </el-col>
         </el-row>
+
+        <el-dialog title="状态" :visible.sync="show_zt" width="70%">
+            <img :src='src'/>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="show_zt=false">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 新建申请弹窗 -->
+        <el-dialog title="申请项目" :visible.sync="show_xjsq" width="50%">
+            <el-form ref="form" :model="sqb" label-width="100px">
+                <el-form-item label="项目名称">
+                    <el-input v-model="sqb.xmmc"></el-input>
+                </el-form-item>
+                <el-form-item label="项目类别">
+                    <el-select v-model="sqb.xmlb" placeholder="请选择">
+                        <el-option
+                                v-for="item in xmlb"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="投资概算">
+                    <el-input v-model="sqb.tzgs"></el-input>
+                </el-form-item>
+                <el-form-item label="项目负责人">
+                    <el-input v-model="sqb.xmfzr"></el-input>
+                </el-form-item>
+                <el-form-item label="立项背景理由">
+                    <el-input v-model="sqb.lxbjly" type="textarea"
+                              placeholder="项目内容概要"
+                              :autosize="{ minRows: 2, maxRows: 4}"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="立项内容规模">
+                    <el-input v-model="sqb.lxlrgm" type="textarea"
+                              placeholder="立项内容规模"
+                              :autosize="{ minRows: 2, maxRows: 4}"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="投资概算说明">
+                    <el-input v-model="sqb.tzgssm" type="textarea"
+                              placeholder="投资概算说明"
+                              :autosize="{ minRows: 2, maxRows: 4}"
+                    ></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="show_xjsq = false">取 消</el-button>
+                <el-button type="primary" @click="qdsq">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+    import axios from 'axios';
     import Schart from 'vue-schart';
     import bus from '../common/bus';
+
     export default {
         name: 'dashboard',
+
         data() {
             return {
-                name: localStorage.getItem('ms_username'),
-                todoList: [{
-                        title: '今天要修复100个bug',
-                        status: false,
-                    },
-                    {
-                        title: '今天要修复100个bug',
-                        status: false,
-                    },
-                    {
-                        title: '今天要写100行代码加几个bug吧',
-                        status: false,
-                    }, {
-                        title: '今天要修复100个bug',
-                        status: false,
-                    },
-                    {
-                        title: '今天要修复100个bug',
-                        status: true,
-                    },
-                    {
-                        title: '今天要写100行代码加几个bug吧',
-                        status: true,
-                    }
-                ],
+                src: '',
+                show_xjsq: false,
+                show_zt: false,
+                ip: 'http://192.168.0.154:8080',
+                xmlb: [{
+                    value: '固定资产',
+                    label: '固定资产'
+                }, {
+                    value: '维修',
+                    label: '维修'
+                }, {
+                    value: '物资采购',
+                    label: '物资采购'
+                }],
+                sqb: {//申请表
+                    pi: '',
+                    userId: localStorage.getItem('userId'),
+                    bh: '',
+                    sbbm: '',
+                    xmmc: '',
+                    xmlb: '',
+                    tzgs: '',//投资概算
+                    xmfzr: '',//项目负责人
+                    lxbjly: '',
+                    lxlrgm: '',
+                    tzgssm: '',
+                    bmshyj: '',//部门审核意见
+                    zgbmyj: ''//主管部门意见
+                },
+                user: {},
+                //申请列表
+                todoList: [],
                 data: [{
-                        name: '2018/09/04',
-                        value: 1083
-                    },
+                    name: '2018/09/04',
+                    value: 1083
+                },
                     {
                         name: '2018/09/05',
                         value: 941
@@ -188,39 +245,78 @@
         },
         computed: {
             role() {
-                return this.name === 'admin' ? '超级管理员' : '普通用户';
+                return this.user.groupName
             }
         },
-        created(){
+        created() {
             this.handleListener();
             this.changeDate();
+            this.getuser();
         },
-        activated(){
+
+        activated() {
             this.handleListener();
         },
-        deactivated(){
+        deactivated() {
             window.removeEventListener('resize', this.renderChart);
             bus.$off('collapse', this.handleBus);
         },
         methods: {
-            changeDate(){
+            zt(row) {
+                axios.get(this.ip + '/sqb/zt', {
+                    params: {
+                        pi: row.pi
+                    }
+                })
+                    .then(res => {
+                        //得到图片流
+                        this.src = 'data:image/png;base64,' + res.data;
+                        this.show_zt = true
+                    })
+            },
+
+            //确定申请
+            qdsq() {
+                axios.post(this.ip + '/sqb/startsq', this.sqb)
+                    .then(res => {
+                        if (res.data) {
+                            console.log(res.data)
+                            this.show_xjsq = false;
+                            this.todoList.push({
+                                title: this.sqb.xmmc,
+                                pi: res.data
+                            })
+                            alert("已经开始申请流程，转到部门经理！")
+                        }
+                    })
+            },
+            getuser() {
+                axios.get(this.ip + '/user/getuser', {
+                    params: {
+                        userId: localStorage.getItem('userId')
+                    }
+                }).then(res => {
+                    this.user = res.data;
+                })
+            },
+            changeDate() {
                 const now = new Date().getTime();
                 this.data.forEach((item, index) => {
                     const date = new Date(now - (6 - index) * 86400000);
-                    item.name = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`
+                    item.name = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
                 })
             },
-            handleListener(){
+            handleListener() {
                 bus.$on('collapse', this.handleBus);
                 // 调用renderChart方法对图表进行重新渲染
                 window.addEventListener('resize', this.renderChart)
             },
-            handleBus(msg){
+            handleBus(msg) {
                 setTimeout(() => {
                     this.renderChart()
                 }, 300);
             },
-            renderChart(){
+            renderChart() {
                 this.$refs.bar.renderChart();
                 this.$refs.line.renderChart();
             }
@@ -328,11 +424,6 @@
 
     .todo-item {
         font-size: 14px;
-    }
-
-    .todo-item-del {
-        text-decoration: line-through;
-        color: #999;
     }
 
     .schart {
