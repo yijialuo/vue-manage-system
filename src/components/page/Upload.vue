@@ -15,7 +15,7 @@
             <el-upload
                 class="upload-demo"
                 drag
-                action="/api/posts/"
+                action="http://localhost:8080/sqb/upload?pId=5&userId=000"
                 multiple>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>

@@ -50,8 +50,8 @@
                     },
                     {
                         icon: 'el-icon-lx-copy',
-                        index: 'tabs',
-                        title: 'tab选项卡'
+                        index: 'news',
+                        title: '消息'
                     },
                     {
                         icon: 'el-icon-lx-calendar',

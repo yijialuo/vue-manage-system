@@ -7,10 +7,9 @@
                         <img src="../../assets/img/img.jpg" class="user-avator" alt="">
                         <div class="user-info-cont">
                             <div class="user-info-name">{{user.userName}}</div>
-                            <div>{{role}}</div>
                         </div>
                     </div>
-                    <div class="user-info-list">上次登录时间：<span>2019-01-11</span></div>
+                    <div class="user-info-list">{{user.groupName}}<span>{{user.departmentName}}</span></div>
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
                     <div slot="header" class="clearfix">
@@ -66,15 +65,21 @@
                         <el-button style="float: right; padding: 3px 0" type="text" @click="show_xjsq=true">新建申请
                         </el-button>
                     </div>
-                    <el-table :data="todoList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
-                        <el-table-column>
+                    <el-table :data="xmList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
+                        <el-table-column label="项目名称">
                             <template slot-scope="scope">
-                                <div class="todo-item">{{scope.row.title}}</div>
+                                <div class="todo-item">{{scope.row.projectNam}}</div>
                             </template>
                         </el-table-column>
-                        <el-table-column width="60">
+                        <el-table-column label="申请时间">
+                            <template slot-scope="scope">
+                                <div class="todo-item">{{scope.row.applicationDte}}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="130">
                             <template slot-scope="scope">
                                 <el-button type="text" @click="zt(scope.row)" icon="el-icon-edit">状态</el-button>
+                                <el-button type="text" @click="xq(scope.row)" icon="el-icon-edit">详情</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -106,10 +111,10 @@
         <el-dialog title="申请项目" :visible.sync="show_xjsq" width="50%">
             <el-form ref="form" :model="sqb" label-width="100px">
                 <el-form-item label="项目名称">
-                    <el-input v-model="sqb.xmmc"></el-input>
+                    <el-input v-model="sqb.project_name"></el-input>
                 </el-form-item>
                 <el-form-item label="项目类别">
-                    <el-select v-model="sqb.xmlb" placeholder="请选择">
+                    <el-select v-model="sqb.project_type" placeholder="请选择">
                         <el-option
                                 v-for="item in xmlb"
                                 :key="item.value"
@@ -119,25 +124,25 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="投资概算">
-                    <el-input v-model="sqb.tzgs"></el-input>
+                    <el-input v-model="sqb.investment_establish"></el-input>
                 </el-form-item>
                 <el-form-item label="项目负责人">
-                    <el-input v-model="sqb.xmfzr"></el-input>
+                    <el-input v-model="sqb.person_in_charge"></el-input>
                 </el-form-item>
                 <el-form-item label="立项背景理由">
-                    <el-input v-model="sqb.lxbjly" type="textarea"
-                              placeholder="项目内容概要"
+                    <el-input v-model="sqb.establish_reason" type="textarea"
+                              placeholder="立项背景理由"
                               :autosize="{ minRows: 2, maxRows: 4}"
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="立项内容规模">
-                    <el-input v-model="sqb.lxlrgm" type="textarea"
+                    <el-input v-model="sqb.scale" type="textarea"
                               placeholder="立项内容规模"
                               :autosize="{ minRows: 2, maxRows: 4}"
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="投资概算说明">
-                    <el-input v-model="sqb.tzgssm" type="textarea"
+                    <el-input v-model="sqb.illustration" type="textarea"
                               placeholder="投资概算说明"
                               :autosize="{ minRows: 2, maxRows: 4}"
                     ></el-input>
@@ -146,6 +151,65 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="show_xjsq = false">取 消</el-button>
                 <el-button type="primary" @click="qdsq">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog title="项目详情" :visible.sync="show_xq" width="50%" center>
+            <el-form label-width="100px">
+                <el-form-item label="项目名称">
+                    <el-input :disabled="true" v-model="xm.projectNam"></el-input>
+                </el-form-item>
+                <el-form-item label="申报部门">
+                    <el-input :disabled="true" v-model="xm.declarationDep"></el-input>
+                </el-form-item>
+                <el-form-item label="项目类别">
+                    <el-input :disabled="true" v-model="xm.projectType"></el-input>
+                </el-form-item>
+                <el-form-item label="投资概算">
+                    <el-input :disabled="true" v-model="xm.investmentEstimate"></el-input>
+                </el-form-item>
+                <el-form-item label="项目负责人">
+                    <el-input :disabled="true" v-model="xm.personInCharge"></el-input>
+                </el-form-item>
+                <el-form-item label="立项背景理由">
+                    <el-input :disabled="true" v-model="xm.establishReason" type="textarea"
+                              placeholder="立项背景理由"
+                              :autosize="{ minRows: 2, maxRows: 4}"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="立项内容规模">
+                    <el-input :disabled="true" v-model="xm.scale" type="textarea"
+                              placeholder="立项内容规模"
+                              :autosize="{ minRows: 2, maxRows: 4}"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="投资概算说明">
+                    <el-input :disabled="true" v-model="xm.illustration" type="textarea"
+                              placeholder="投资概算说明"
+                              :autosize="{ minRows: 2, maxRows: 4}"
+                    ></el-input>
+                </el-form-item>
+                <el-table
+                        :data="commentList"
+                        style="width: 100%">
+                    <el-table-column
+                            prop="time"
+                            label="日期"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="usernam"
+                            label="姓名"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="comment"
+                            label="审批">
+                    </el-table-column>
+                </el-table>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="show_xq=false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -162,8 +226,11 @@
         data() {
             return {
                 src: '',
+                show_xq:false,
                 show_xjsq: false,
                 show_zt: false,
+                commentList:[],
+                xm:{},
                 ip: 'http://192.168.0.154:8080',
                 xmlb: [{
                     value: '固定资产',
@@ -176,23 +243,19 @@
                     label: '物资采购'
                 }],
                 sqb: {//申请表
-                    pi: '',
-                    userId: localStorage.getItem('userId'),
-                    bh: '',
-                    sbbm: '',
-                    xmmc: '',
-                    xmlb: '',
-                    tzgs: '',//投资概算
-                    xmfzr: '',//项目负责人
-                    lxbjly: '',
-                    lxlrgm: '',
-                    tzgssm: '',
-                    bmshyj: '',//部门审核意见
-                    zgbmyj: ''//主管部门意见
+                    userId: localStorage.getItem('userId'), //用户id
+                    project_name: "",  //项目名称
+                    project_type: '',  //项目类型
+                    person_in_charge: '', //     负责人
+                    investment_establish: '',//     投资概算
+                    establish_reason: '',//      立项理由
+                    scale: '', //      内容规模
+                    illustration: ''//         概要说明
                 },
                 user: {},
-                //申请列表
-                todoList: [],
+                //项目列表
+                xmList: [],
+                xmDetails: {},
                 data: [{
                     name: '2018/09/04',
                     value: 1083
@@ -252,6 +315,7 @@
             this.handleListener();
             this.changeDate();
             this.getuser();
+            this.getxmList();
         },
 
         activated() {
@@ -262,10 +326,41 @@
             bus.$off('collapse', this.handleBus);
         },
         methods: {
-            zt(row) {
-                axios.get(this.ip + '/sqb/zt', {
+            //得到该用户下的项目
+            getxmList() {
+                axios.get(this.ip + '/projectApplication/getallproject', {
                     params: {
-                        pi: row.pi
+                        userId: localStorage.getItem('userId')
+                    }
+                })
+                    .then(res => {
+                        console.log(res.data)
+                        if (res.data) {
+                           this.xmList=res.data;
+                        }
+                    })
+            },
+            //详情
+            xq(row) {
+                this.xm=row
+                //领取评论
+                    axios.get(this.ip + '/projectApplication/projecttocomment', {
+                        params: {
+                            pid: row.pid
+                        }
+                    })
+                        .then(res => {
+                            if (res.data) {
+                                this.commentList = res.data
+                                this.show_xq=true
+                            }
+                        })
+                },
+            //状态
+            zt(row) {
+                axios.get(this.ip + '/projectApplication/zt', {
+                    params: {
+                        pi: row.pid
                     }
                 })
                     .then(res => {
@@ -277,23 +372,21 @@
 
             //确定申请
             qdsq() {
-                axios.post(this.ip + '/sqb/startsq', this.sqb)
+                axios.post(this.ip + '/projectApplication/startapplication', this.sqb)
                     .then(res => {
                         if (res.data) {
                             console.log(res.data)
                             this.show_xjsq = false;
-                            this.todoList.push({
-                                title: this.sqb.xmmc,
-                                pi: res.data
-                            })
-                            alert("已经开始申请流程，转到部门经理！")
+                            this.getxmList();
+                            alert("已经开始申请流程，转到主管经理！")
                         }
                     })
             },
             getuser() {
                 axios.get(this.ip + '/user/getuser', {
                     params: {
-                        userId: localStorage.getItem('userId')
+                        userId: localStorage.getItem('userId'),
+                        passWord: localStorage.getItem('passWord')
                     }
                 }).then(res => {
                     this.user = res.data;

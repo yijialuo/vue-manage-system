@@ -16,7 +16,7 @@
                 <!-- 消息中心 -->
                 <div class="btn-bell">
                     <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <router-link to="/tabs">
+                        <router-link to="/news">
                             <i class="el-icon-bell"></i>
                         </router-link>
                     </el-tooltip>
@@ -39,13 +39,15 @@
 </template>
 <script>
     import bus from '../common/bus';
+    import axios from 'axios'
     export default {
         data() {
             return {
+                ip:'http://192.168.0.154:8080',
                 collapse: false,
                 fullscreen: false,
                 name: 'linxin',
-                message: 2
+                message: 0
             }
         },
         computed:{
@@ -54,7 +56,23 @@
                 return username ? username : this.name;
             }
         },
+        created(){
+            this.xmsl()
+        },
         methods:{
+            //领取消息数量
+            xmsl(){
+                axios.get(this.ip+'/projectApplication/lqxxs',{
+                    params:{
+                        userId:localStorage.getItem('userId'),
+                    }
+                }).then(res=>{
+                    if(res.data){
+                        //console.log(res.data)
+                        this.message=res.data;
+                    }
+                })
+            },
             // 用户名下拉菜单选择事件
             handleCommand(command) {
                 if(command == 'loginout'){
