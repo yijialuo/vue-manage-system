@@ -102,7 +102,10 @@
                     <el-upload
                             class="upload-demo"
                             drag
-                            action="http://localhost:8080/sqb/upload?pId=5&userId=000"
+                            :action="url"
+                            :on-preview="handlePreview"
+                            :on-remove="handleRemove"
+                            :on-success="handleSuccess"
                             multiple
                             :file-list="fileList"
                     >
@@ -128,53 +131,39 @@
         created() {
             //领取项目
             this.lqxm()
-            //查找审批评论
         },
         data() {
             return {
                 url: '',
-                fileList: [{
-                    name: '附件一',
-                    url:'xxxx'
-                }, {
-                    name: '附件二',
-                    url:'xxx'
-                }, {
-                    name: '附件三',
-                    url:'xxx'
-                }],
+                fileList: [],
                 commentList: [],
                 show_xq: false,
                 show_bl: false,
                 comment: '',
                 xm: {},
-                ip: 'http://192.168.0.154:8080',
+                ip: 'http://localhost:8080',
                 message: 'first',
                 //没有处理的项目
                 undoXm: []
             }
         },
         methods: {
-            onProgress(event, file, fileList) {
-                if (this.somename)
-                    file.name = file.name.split(".")[0] + "副本." + file.name.split(".")[1]
-            },
-            //上传前判断文件名是否重复
-            handleBeforeupload(file) {
-                console.log("handleBeforeupload")
-                this.somename = false
-                for (var i = 0; i < this.fileList.length; i++) {
-                    if (this.fileList[i].name == file.name) {
-                        this.$message.warning("存在相同文件名称，已修改文件名！");
-                        this.somename = true
-                    }
-                }
-            },
-            //删除前确认
-            handleBeforeRemove(file, fileList) {
-                console.log("handleBeforeRemove")
-                return this.$confirm(`确定移除 ${ file.name }？`);
-            },
+            // onProgress(event, file, fileList) {
+            //     if (this.somename)
+            //         file.name = file.name.split(".")[0] + "副本." + file.name.split(".")[1]
+            // },
+            // //上传前判断文件名是否重复
+            // handleBeforeupload(file) {
+            //     this.somename = false
+            //     for (var i = 0; i < this.fileList.length; i++) {
+            //         if (this.fileList[i].name == file.name) {
+            //             this.$message.warning("存在相同文件名称，已修改文件名！");
+            //             this.somename = true
+            //         }
+            //     }
+            // },
+
+
             //删除数组中指定元素
             removeByValue(arr, val) {
                 for (var i = 0; i < arr.length; i++) {
@@ -184,48 +173,74 @@
                     }
                 }
             },
+
+            //上传成功，重新请求
+            handleSuccess(){
+                console.log('handleSuccess')
+                //重新请求
+                axios.get(this.ip+'/Attachment/getattachment',{
+                    params:{
+                        pid:this.xm.pid
+                    }
+                })
+                    .then(res=>{
+                        if(res.data){
+                            this.fileList=[]
+                            for(let i=0;i<res.data.length;i++){
+                                this.fileList.push({
+                                    name:res.data[i].attachment_nam,
+                                    id:res.data[i].attachment_id
+                                })
+                            }
+                        }
+                        //    return false
+                    })
+            },
             //删除请求
             handleRemove(file, fileList) {
-                console.log("handleRemove")
-                axios.get("http://localhost:8080/fj/deletFj", {
-                    params: {
-                        fjid: file.fjid
-                    }
-                })
-                    .then(res => {
-                        this.removeByValue(this.fileList, file)
+                this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(()=>{
+                    axios.get(this.ip+'/Attachment/deletAttachment',{
+                        params:{
+                            userId:localStorage.getItem('userId'),
+                            attachment_id:file.id
+                        }
                     })
-                    .catch(err => {
-                        console.log(err)
+                        .then(res=>{
+                                this.$message.info("删除成功！")
+                        })
+                })
+                    .catch(()=>{
+                        //重新请求
+                        axios.get(this.ip+'/Attachment/getattachment',{
+                            params:{
+                                pid:this.xm.pid
+                            }
+                        })
+                            .then(res=>{
+                                if(res.data){
+                                    this.fileList=[]
+                                    for(let i=0;i<res.data.length;i++){
+                                        this.fileList.push({
+                                            name:res.data[i].attachment_nam,
+                                            id:res.data[i].attachment_id
+                                        })
+                                    }
+                                }
+                                //    return false
+                            })
                     })
             },
-            //上传成功
-            handleSuccess(response, file, fileList) {
-                console.log("handleSuccess")
-                console.log("file:")
-                console.log(file)
-                axios.get('http://localhost:8080/fj/save', {
-                    params: {
-                        xmid: this.project.xmid,
-                        fjmc: file.name,
-                    }
-                })
-                    .then(res => {
-                        var file = new Object()
-                        file.name = res.data.fjmc
-                        file.url = res.data.fjurl
-                        file.fjid = res.data.fjid
-                        this.fileList.push(file)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            },
-            //预览文件
+
+
+
+
+            //点击文件下载
             handlePreview(file) {
-                console.log("handlePreview")
-                console.log(file);
-                window.open(file.url, top)
+                window.open(this.ip+'/Attachment/getattachment1?attachment_id='+file.id)
             },
 
 
@@ -238,7 +253,6 @@
                 })
                     .then(res => {
                         if (res.data) {
-                            console.log(res.data)
                             this.commentList = res.data
                         }
                     })
@@ -260,11 +274,12 @@
                         })
                             .then(res => {
                                 if (res.data) {
-                                    this.$message.info("处理完成")
                                     this.show_xq = false
                                     this.lqxm()
                                 }
                             })
+                        location.reload()
+                        this.$message.info("处理完成")
                     }).catch(() => {
                     })
                 } else {
@@ -277,21 +292,42 @@
                     })
                         .then(res => {
                             if (res.data) {
-                                this.$message.info("处理完成")
                                 this.show_xq = false
                                 this.lqxm()
                             }
                         })
+                    location.reload()
+                    this.$message.info("处理完成")
                 }
-
-
             },
             //项目详情
             xmxq(row) {
                 this.show_xq = true
                 this.xm = row
+                //领取评论
                 this.lqpl(row.pid)
-                console.log(row)
+                //领取附件
+                this.lqfj(row.pid)
+                this.url='http://localhost:8080/projectApplication/uploadFile?pId='+row.pid+'&userId='+localStorage.getItem('userId')
+            },
+            //领取附件
+            lqfj(pid){
+                axios.get(this.ip+'/Attachment/getattachment',{
+                    params:{
+                        pid:pid
+                    }
+                })
+                    .then(res=>{
+                        if(res.data){
+                            this.fileList=[]
+                            for(let i=0;i<res.data.length;i++){
+                                this.fileList.push({
+                                    name:res.data[i].attachment_nam,
+                                    id:res.data[i].attachment_id
+                                })
+                            }
+                        }
+                    })
             },
             //领取需要自己处理的项目
             lqxm() {
@@ -301,21 +337,12 @@
                     }
                 }).then(res => {
                     if (res.data) {
-                        //console.log(res.data)
                         this.undoXm = res.data;
                     } else {
                         undoXm = []
                     }
                 })
             },
-            bl() {
-
-            },
-        },
-        computed: {
-            xmNum() {
-                return this.undoXm.length;
-            }
         }
     }
 

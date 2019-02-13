@@ -4,7 +4,7 @@ import router from './router'
 import axios from 'axios';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
-// import '../static/css/theme-green/index.css';       // 浅绿色主题
+//import '../static/css/theme-green/index.css';       // 浅绿色主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import "babel-polyfill";
@@ -23,7 +23,7 @@ router.beforeEach((to, from, next) => {
         next('/login');
     } else if (to.meta.permission) {
         // 如果是管理员权限则可进入
-        axios.get("http://192.168.0.154:8080/user/checkadmin",{
+        axios.get("http://localhost:8080/user/checkadmin",{
             params:{
                 userId:userId
             }

@@ -412,7 +412,7 @@
                                                 })
                                             }
                                         }
-                                  //      return true
+                                        //      return true
                                     })
                             }else {
                                 this.$message.info("删除失败！您可能没有权限！")
@@ -432,7 +432,7 @@
                                                 })
                                             }
                                         }
-                                    //    return false
+                                        //    return false
                                     })
                             }
                         })
@@ -454,7 +454,7 @@
                                         })
                                     }
                                 }
-                            //    return false
+                                //    return false
                             })
                     })
             },
@@ -470,7 +470,7 @@
                     .then(res => {
                         console.log(res.data)
                         if (res.data) {
-                           this.xmList=res.data;
+                            this.xmList=res.data;
                         }
                     })
             },
@@ -479,20 +479,20 @@
                 this.xm=row
                 //领取评论
                 axios.get(this.ip + '/projectApplication/projecttocomment', {
-                        params: {
-                            pid: row.pid
+                    params: {
+                        pid: row.pid
+                    }
+                })
+                    .then(res => {
+                        if (res.data) {
+                            this.commentList = res.data
+                            this.show_xq=true
                         }
                     })
-                        .then(res => {
-                            if (res.data) {
-                                this.commentList = res.data
-                                this.show_xq=true
-                            }
-                        })
                 //领取附件
                 this.lqfj(row.pid)
                 this.url='http://localhost:8080/projectApplication/uploadFile?pId='+row.pid+'&userId='+localStorage.getItem('userId')
-                },
+            },
             //状态
             zt(row) {
                 axios.get(this.ip + '/projectApplication/zt', {

@@ -41,87 +41,97 @@
                     {
                         icon: 'el-icon-lx-home',
                         index: 'dashboard',
-                        title: '系统首页'
+                        title: '工程管理',
+                        subs: [
+                            {
+                                index: '/qqgl',
+                                title: '前期管理'
+                            },
+                            {
+                                index: '/zbgl',
+                                title: '招标管理'
+                            },
+                            {
+                                index: '/htgl',
+                                title: '合同管理'
+                            },
+                            {
+                                index: '/sggl',
+                                title: '施工管理'
+                            },
+                            {
+                                index: '/ysgl',
+                                title: '验收管理'
+                            },
+                            {
+                                index: '/jsgl',
+                                title: '结算管理'
+                            }
+                            ]
                     },
                     {
                         icon: 'el-icon-lx-cascades',
                         index: 'table',
-                        title: '基础表格'
+                        title: '系统管理',
+                        subs:[
+                            {
+                                index: '/qxgl',
+                                title: '权限管理'
+                            },
+                            {
+                                //index:'/#',
+                                title:'工作流管理',
+                                subs:[
+                                    {
+                                        index:'/lxsp',
+                                        title:'立项审批'
+                                    },
+                                    {
+                                        index:'/zbsp',
+                                        title:'招标审批'
+                                    },
+                                    {
+                                        index:'/htsp',
+                                        title:'合同审批'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'el-icon-lx-calendar',
+                        index: '3',
+                        title: '统计报表',
+                        subs: [
+                            {
+                                index: '/ndlxb',
+                                title: '年度立项表'
+                            },
+                            // {
+                            //     index: '3-2',
+                            //     title: '三级菜单',
+                            //     subs: [
+                            //         {
+                            //             index: 'editor',
+                            //             title: '富文本编辑器'
+                            //         },
+                            //         {
+                            //             index: 'markdown',
+                            //             title: 'markdown编辑器'
+                            //         },
+                            //     ]
+                            // },
+                            // {
+                            //     index: 'upload',
+                            //     title: '文件上传'
+                            // }
+                        ]
                     },
                     {
                         icon: 'el-icon-lx-copy',
                         index: 'news',
                         title: '消息'
                     },
-                    {
-                        icon: 'el-icon-lx-calendar',
-                        index: '3',
-                        title: '表单相关',
-                        subs: [
-                            {
-                                index: 'form',
-                                title: '基本表单'
-                            },
-                            {
-                                index: '3-2',
-                                title: '三级菜单',
-                                subs: [
-                                    {
-                                        index: 'editor',
-                                        title: '富文本编辑器'
-                                    },
-                                    {
-                                        index: 'markdown',
-                                        title: 'markdown编辑器'
-                                    },
-                                ]
-                            },
-                            {
-                                index: 'upload',
-                                title: '文件上传'
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-lx-emoji',
-                        index: 'icon',
-                        title: '自定义图标'
-                    },
-                    {
-                        icon: 'el-icon-lx-favor',
-                        index: 'charts',
-                        title: 'schart图表'
-                    },
-                    {
-                        icon: 'el-icon-rank',
-                        index: '6',
-                        title: '拖拽组件',
-                        subs: [
-                            {
-                                index: 'drag',
-                                title: '拖拽列表',
-                            },
-                            {
-                                index: 'dialog',
-                                title: '拖拽弹框',
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-lx-warn',
-                        index: '7',
-                        title: '设置',
-                        subs: [
-                            {
-                                index: 'account',
-                                title: '账号管理'
-                            },
-                            {
-                                index: 'setting',
-                                title: '设置页面'
-                            }
-                        ]
-                    }
                 ]
             }
         },

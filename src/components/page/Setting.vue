@@ -122,7 +122,7 @@
         name: 'setting',
         data() {
             return {
-                ip: 'http://192.168.0.154:8080',
+                ip: 'http://localhost:8080',
                 show_addDepartment: false,
                 show_editDepartment: false,
                 show_addGroup: false,

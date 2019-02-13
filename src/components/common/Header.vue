@@ -43,8 +43,8 @@
     export default {
         data() {
             return {
-                ip:'http://192.168.0.154:8080',
-                collapse: false,
+                ip:'http://localhost:8080',
+                collapse: true,
                 fullscreen: false,
                 name: 'linxin',
                 message: 0
@@ -82,8 +82,8 @@
             },
             // 侧边栏折叠
             collapseChage(){
-                this.collapse = !this.collapse;
-                bus.$emit('collapse', this.collapse);
+                // this.collapse = !this.collapse;
+                // bus.$emit('collapse', this.collapse);
             },
             // 全屏事件
             handleFullScreen(){
