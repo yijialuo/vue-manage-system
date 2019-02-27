@@ -1,5 +1,5 @@
 <template>
-    <div class="header">
+    <div style="background-color:  #417e9f" class="header">
         <!-- 折叠按钮 -->
         <div class="collapse-btn" @click="collapseChage">
             <i class="el-icon-menu"></i>
@@ -16,7 +16,7 @@
                 <!-- 消息中心 -->
                 <div class="btn-bell">
                     <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <router-link to="/news">
+                        <router-link to="/dashboard">
                             <i class="el-icon-bell"></i>
                         </router-link>
                     </el-tooltip>

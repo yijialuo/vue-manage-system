@@ -1,6 +1,6 @@
 <template>
     <div class="sidebar">
-        <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
+        <el-menu  class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
             text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
             <template v-for="item in items">
                 <template v-if="item.subs">
@@ -39,7 +39,7 @@
                 collapse: false,
                 items: [
                     {
-                        icon: 'el-icon-lx-home',
+                        icon: 'el-icon-lx-copy',
                         index: 'dashboard',
                         title: '工程管理',
                         subs: [
@@ -66,6 +66,10 @@
                             {
                                 index: '/jsgl',
                                 title: '结算管理'
+                            },
+                            {
+                                index:'/gysgl',
+                                title:'供应商管理'
                             }
                             ]
                     },
@@ -79,7 +83,7 @@
                                 title: '权限管理'
                             },
                             {
-                                //index:'/#',
+                                index:'2',
                                 title:'工作流管理',
                                 subs:[
                                     {
@@ -128,9 +132,9 @@
                         ]
                     },
                     {
-                        icon: 'el-icon-lx-copy',
-                        index: 'news',
-                        title: '消息'
+                        icon: 'el-icon-lx-home',
+                        index: '/dashboard',
+                        title: '系统首页'
                     },
                 ]
             }

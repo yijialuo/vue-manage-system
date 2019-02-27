@@ -45,9 +45,14 @@ export default new Router({
                     meta: { title: '结算管理' }
                 },
                 {
+                    path:'/gysgl',
+                    component:resolve => require(['../components/page/gysgl.vue'], resolve),
+                    meta:{title:'供应商管理'}
+                },
+                {
                     path: '/qxgl',
                     component: resolve => require(['../components/page/qxgl.vue'], resolve),
-                    meta: { title: '权限管理' }
+                    meta: { title: '权限管理' ,permission: true}
                 },
                 {
                     path: '/lxsp',

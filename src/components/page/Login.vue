@@ -62,6 +62,16 @@
                         if (res.data) {
                             localStorage.setItem('userId', this.ruleForm.username);
                             localStorage.setItem('passWord',this.ruleForm.password);
+                            axios.get(this.ip+'/user/getuser',{
+                                params:{
+                                    userId: localStorage.getItem('userId'),
+                                    passWord: localStorage.getItem('passWord')
+                                }
+                            })
+                                .then(res=>{
+                                    localStorage.setItem('groupId',res.data.groupId)
+                                    localStorage.setItem('userName',res.data.userName)
+                                })
                             this.$router.push('/');
                         } else {
                             alert("用户名或者密码错误！")

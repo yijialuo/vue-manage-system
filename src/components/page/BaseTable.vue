@@ -212,4 +212,8 @@
     .mr10{
         margin-right: 10px;
     }
+    .pagination {
+        margin: 20px 0;
+        text-align: right;
+    }
 </style>

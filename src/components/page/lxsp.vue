@@ -1,234 +1,226 @@
 <template>
+
     <div>
-        <el-row :gutter="20">
-            <el-col :span="8">
-                <el-card shadow="hover" class="mgb20" style="height:252px;">
-                    <div class="user-info">
-                        <img src="../../assets/img/img.jpg" class="user-avator" alt="">
-                        <div class="user-info-cont">
-                            <div class="user-info-name">{{user.userName}}</div>
-                        </div>
-                    </div>
-                    <div class="user-info-list">{{user.groupName}}<span>{{user.departmentName}}</span></div>
-                </el-card>
-                <el-card shadow="hover" style="height:252px;">
-                    <div slot="header" class="clearfix">
-                        <span>项目占比</span>
-                    </div>
-                    固定资产
-                    <el-progress :percentage="71.3" color="#42b983"></el-progress>
-                    维修
-                    <el-progress :percentage="24.1" color="#f1e05a"></el-progress>
-                    物资采购
-                    <el-progress :percentage="30.7"></el-progress>
-                </el-card>
-            </el-col>
-            <el-col :span="16">
-                <el-row :gutter="20" class="mgb20">
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-1">
-                                <i class="el-icon-lx-people grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
-                                    <div>总项目</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-2">
-                                <i class="el-icon-lx-notice grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">321</div>
-                                    <div>已完结</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-3">
-                                <i class="el-icon-lx-goods grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">500</div>
-                                    <div>未完结</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <el-card shadow="hover" style="height:403px;">
-                    <div slot="header" class="clearfix">
-                        <span>我的项目</span>
-                        <el-button style="float: right; padding: 3px 0" v-show="user.groupName=='办事员'||user.groupName=='技术部办事员'" type="text" @click="show_xjsq=true">新建申请
-                        </el-button>
-
-                    </div>
-                    <el-table :data="xmList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
-                        <el-table-column label="项目名称">
-                            <template slot-scope="scope">
-                                <div class="todo-item">{{scope.row.projectNam}}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="申请时间">
-                            <template slot-scope="scope">
-                                <div class="todo-item">{{scope.row.applicationDte}}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="130">
-                            <template slot-scope="scope">
-                                <el-button type="text" @click="zt(scope.row)" icon="el-icon-edit">状态</el-button>
-                                <el-button type="text" @click="xq(scope.row)" icon="el-icon-edit">详情</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-card>
-            </el-col>
-        </el-row>
-        <el-row :gutter="20">
-            <el-col :span="12">
-                <el-card shadow="hover">
-                    <schart ref="bar" class="schart" canvasId="bar" :data="data" type="bar" :options="options"></schart>
-                </el-card>
-            </el-col>
-            <el-col :span="12">
-                <el-card shadow="hover">
-                    <schart ref="line" class="schart" canvasId="line" :data="data" type="line"
-                            :options="options2"></schart>
-                </el-card>
-            </el-col>
-        </el-row>
-
-        <el-dialog title="状态" :visible.sync="show_zt" width="70%">
-            <img :src='src'/>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="show_zt=false">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <!-- 新建申请弹窗 -->
-        <el-dialog title="申请项目" :visible.sync="show_xjsq" width="50%">
-            <el-form ref="form" :model="sqb" label-width="100px">
-                <el-form-item label="项目名称">
-                    <el-input v-model="sqb.project_name"></el-input>
-                </el-form-item>
-                <el-form-item label="项目类别">
-                    <el-select v-model="sqb.project_type" placeholder="请选择">
-                        <el-option
-                                v-for="item in xmlb"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="投资概算">
-                    <el-input v-model="sqb.investment_establish"></el-input>
-                </el-form-item>
-                <el-form-item label="项目负责人">
-                    <el-input v-model="sqb.person_in_charge"></el-input>
-                </el-form-item>
-                <el-form-item label="立项背景理由">
-                    <el-input v-model="sqb.establish_reason" type="textarea"
-                              :autosize="{ minRows: 2, maxRows: 4}"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item label="立项内容规模">
-                    <el-input v-model="sqb.scale" type="textarea"
-                              :autosize="{ minRows: 2, maxRows: 4}"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item label="投资概算说明">
-                    <el-input v-model="sqb.illustration" type="textarea"
-                              :autosize="{ minRows: 2, maxRows: 4}"
-                    ></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="show_xjsq = false">取 消</el-button>
-                <el-button type="primary" @click="qdsq">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <el-dialog title="项目详情" :visible.sync="show_xq" width="50%" center>
-            <el-form label-width="100px">
-                <el-form-item label="项目名称">
-                    <el-input :disabled="true" v-model="xm.projectNam"></el-input>
-                </el-form-item>
-                <el-form-item label="申报部门">
-                    <el-input :disabled="true" v-model="xm.declarationDep"></el-input>
-                </el-form-item>
-                <el-form-item label="项目类别">
-                    <el-input :disabled="true" v-model="xm.projectType"></el-input>
-                </el-form-item>
-                <el-form-item label="投资概算">
-                    <el-input :disabled="true" v-model="xm.investmentEstimate"></el-input>
-                </el-form-item>
-                <el-form-item label="项目负责人">
-                    <el-input :disabled="true" v-model="xm.personInCharge"></el-input>
-                </el-form-item>
-                <el-form-item label="立项背景理由">
-                    <el-input :disabled="true" v-model="xm.establishReason" type="textarea"
-                              placeholder="立项背景理由"
-                              :autosize="{ minRows: 2, maxRows: 4}"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item label="立项内容规模">
-                    <el-input :disabled="true" v-model="xm.scale" type="textarea"
-                              placeholder="立项内容规模"
-                              :autosize="{ minRows: 2, maxRows: 4}"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item label="投资概算说明">
-                    <el-input :disabled="true" v-model="xm.illustration" type="textarea"
-                              placeholder="投资概算说明"
-                              :autosize="{ minRows: 2, maxRows: 4}"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-table
-                            :data="commentList"
-                            style="width: 100%">
-                        <el-table-column
-                                prop="time"
-                                label="日期"
-                                width="180">
-                        </el-table-column>
-                        <el-table-column
-                                prop="usernam"
-                                label="姓名"
-                                width="180">
-                        </el-table-column>
-                        <el-table-column
-                                prop="comment"
-                                label="审批">
-                        </el-table-column>
-                    </el-table>
-                </el-form-item>
-
-                <el-form-item>
-                    <el-upload
-                            class="upload-demo"
-                            drag
-                            :action="url"
-                            :on-preview="handlePreview"
-                            :before-remove="handleBeforeRemove"
-                            :on-success="handleSuccess"
-                            multiple
-                            :file-list="fileList"
-                    >
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                    </el-upload>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="show_xq=false">确 定</el-button>
-            </span>
-        </el-dialog>
+        立项审批
     </div>
+    <!--<div>-->
+        <!--<el-row :gutter="20">-->
+            <!--<el-col :span="8">-->
+                <!--<el-card shadow="hover" class="mgb20" style="height:252px;">-->
+                    <!--<div class="user-info">-->
+                        <!--<img src="../../assets/img/img.jpg" class="user-avator" alt="">-->
+                        <!--<div class="user-info-cont">-->
+                            <!--<div class="user-info-name">{{user.userName}}</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="user-info-list">{{user.groupName}}<span>{{user.departmentName}}</span></div>-->
+                <!--</el-card>-->
+                <!--<el-card shadow="hover" style="height:252px;">-->
+                    <!--<div slot="header" class="clearfix">-->
+                        <!--<span>项目占比</span>-->
+                    <!--</div>-->
+                    <!--固定资产-->
+                    <!--<el-progress :percentage="71.3" color="#42b983"></el-progress>-->
+                    <!--维修-->
+                    <!--<el-progress :percentage="24.1" color="#f1e05a"></el-progress>-->
+                    <!--物资采购-->
+                    <!--<el-progress :percentage="30.7"></el-progress>-->
+                <!--</el-card>-->
+            <!--</el-col>-->
+            <!--<el-col :span="16">-->
+                <!--<el-row :gutter="20" class="mgb20">-->
+                    <!--<el-col :span="8">-->
+                        <!--<el-card shadow="hover" :body-style="{padding: '0px'}">-->
+                            <!--<div class="grid-content grid-con-1">-->
+                                <!--<i class="el-icon-lx-people grid-con-icon"></i>-->
+                                <!--<div class="grid-cont-right">-->
+                                    <!--<div class="grid-num">1234</div>-->
+                                    <!--<div>总项目</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</el-card>-->
+                    <!--</el-col>-->
+                    <!--<el-col :span="8">-->
+                        <!--<el-card shadow="hover" :body-style="{padding: '0px'}">-->
+                            <!--<div class="grid-content grid-con-2">-->
+                                <!--<i class="el-icon-lx-notice grid-con-icon"></i>-->
+                                <!--<div class="grid-cont-right">-->
+                                    <!--<div class="grid-num">321</div>-->
+                                    <!--<div>已完结</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</el-card>-->
+                    <!--</el-col>-->
+                    <!--<el-col :span="8">-->
+                        <!--<el-card shadow="hover" :body-style="{padding: '0px'}">-->
+                            <!--<div class="grid-content grid-con-3">-->
+                                <!--<i class="el-icon-lx-goods grid-con-icon"></i>-->
+                                <!--<div class="grid-cont-right">-->
+                                    <!--<div class="grid-num">500</div>-->
+                                    <!--<div>未完结</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</el-card>-->
+                    <!--</el-col>-->
+                <!--</el-row>-->
+                <!--<el-card shadow="hover" style="height:403px;">-->
+                    <!--<div slot="header" class="clearfix">-->
+                        <!--<span>我的项目</span>-->
+                        <!--<el-button style="float: right; padding: 3px 0" v-show="user.groupName=='办事员'||user.groupName=='技术部办事员'" type="text" @click="show_xjsq=true">新建申请-->
+                        <!--</el-button>-->
+
+                    <!--</div>-->
+                    <!--<el-table :data="xmList" :show-header="false" height="280" style="width: 100%;font-size:14px;">-->
+                        <!--<el-table-column label="项目名称">-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<div class="todo-item">{{scope.row.projectNam}}</div>-->
+                            <!--</template>-->
+                        <!--</el-table-column>-->
+                        <!--<el-table-column label="申请时间">-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<div class="todo-item">{{scope.row.applicationDte}}</div>-->
+                            <!--</template>-->
+                        <!--</el-table-column>-->
+                        <!--<el-table-column width="130">-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<el-button type="text" @click="zt(scope.row)" icon="el-icon-edit">状态</el-button>-->
+                                <!--<el-button type="text" @click="xq(scope.row)" icon="el-icon-edit">详情</el-button>-->
+                            <!--</template>-->
+                        <!--</el-table-column>-->
+                    <!--</el-table>-->
+                    <!--<div style="text-align: center">-->
+                        <!--<el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="1000">-->
+                        <!--</el-pagination>-->
+                    <!--</div>-->
+                <!--</el-card>-->
+            <!--</el-col>-->
+        <!--</el-row>-->
+
+
+        <!--<el-dialog title="状态" :visible.sync="show_zt" width="70%">-->
+            <!--<img :src='src'/>-->
+            <!--<span slot="footer" class="dialog-footer">-->
+                <!--<el-button type="primary" @click="show_zt=false">确 定</el-button>-->
+            <!--</span>-->
+        <!--</el-dialog>-->
+
+        <!--&lt;!&ndash; 新建申请弹窗 &ndash;&gt;-->
+        <!--<el-dialog title="申请项目" :visible.sync="show_xjsq" width="50%">-->
+            <!--<el-form ref="form" :model="sqb" label-width="100px">-->
+                <!--<el-form-item label="项目名称">-->
+                    <!--<el-input v-model="sqb.project_name"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="项目类别">-->
+                    <!--<el-select v-model="sqb.project_type" placeholder="请选择">-->
+                        <!--<el-option-->
+                                <!--v-for="item in xmlb"-->
+                                <!--:key="item.value"-->
+                                <!--:label="item.label"-->
+                                <!--:value="item.value">-->
+                        <!--</el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="投资概算(万)">-->
+                    <!--<el-input type="number" style="width: 215px;padding-right: 20px" v-model="sqb.investment_establish"></el-input>-->
+                    <!--项目负责人 <el-input  style="width: 215px" v-model="sqb.person_in_charge"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="立项背景理由">-->
+                    <!--<el-input v-model="sqb.establish_reason" type="textarea"-->
+                              <!--:autosize="{ minRows: 2, maxRows: 4}"-->
+                    <!--&gt;</el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="立项内容规模">-->
+                    <!--<el-input v-model="sqb.scale" type="textarea"-->
+                              <!--:autosize="{ minRows: 2, maxRows: 4}"-->
+                    <!--&gt;</el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="投资概算说明">-->
+                    <!--<el-input v-model="sqb.illustration" type="textarea"-->
+                              <!--:autosize="{ minRows: 2, maxRows: 4}"-->
+                    <!--&gt;</el-input>-->
+                <!--</el-form-item>-->
+            <!--</el-form>-->
+            <!--<span slot="footer" class="dialog-footer">-->
+                <!--<el-button @click="show_xjsq = false">取 消</el-button>-->
+                <!--<el-button type="primary" @click="qdsq">确 定</el-button>-->
+            <!--</span>-->
+        <!--</el-dialog>-->
+
+        <!--<el-dialog title="项目详情" :visible.sync="show_xq" width="50%" center>-->
+            <!--<el-form label-width="100px">-->
+                <!--<el-form-item label="项目名称">-->
+                    <!--<el-input :disabled="true" v-model="xm.projectNam"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="申报部门">-->
+                    <!--<el-input :disabled="true" v-model="xm.declarationDep"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="项目类别">-->
+                    <!--<el-input :disabled="true" v-model="xm.projectType"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="投资概算">-->
+                    <!--<el-input style="width: 215px;padding-right: 15px"  :disabled="true" v-model="xm.investmentEstimate"></el-input>-->
+                    <!--项目负责人 <el-input style="width: 215px"  :disabled="true" v-model="xm.personInCharge"></el-input>-->
+                <!--</el-form-item>-->
+
+                <!--<el-form-item label="立项背景理由">-->
+                    <!--<el-input :disabled="true" v-model="xm.establishReason" type="textarea"-->
+                              <!--placeholder="立项背景理由"-->
+                              <!--:autosize="{ minRows: 2, maxRows: 4}"-->
+                    <!--&gt;</el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="立项内容规模">-->
+                    <!--<el-input :disabled="true" v-model="xm.scale" type="textarea"-->
+                              <!--placeholder="立项内容规模"-->
+                              <!--:autosize="{ minRows: 2, maxRows: 4}"-->
+                    <!--&gt;</el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="投资概算说明">-->
+                    <!--<el-input :disabled="true" v-model="xm.illustration" type="textarea"-->
+                              <!--placeholder="投资概算说明"-->
+                              <!--:autosize="{ minRows: 2, maxRows: 4}"-->
+                    <!--&gt;</el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-table-->
+                            <!--:data="commentList"-->
+                            <!--style="width: 100%">-->
+                        <!--<el-table-column-->
+                                <!--prop="time"-->
+                                <!--label="日期"-->
+                                <!--width="180">-->
+                        <!--</el-table-column>-->
+                        <!--<el-table-column-->
+                                <!--prop="usernam"-->
+                                <!--label="姓名"-->
+                                <!--width="180">-->
+                        <!--</el-table-column>-->
+                        <!--<el-table-column-->
+                                <!--prop="comment"-->
+                                <!--label="审批">-->
+                        <!--</el-table-column>-->
+                    <!--</el-table>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-upload-->
+                            <!--class="upload-demo"-->
+                            <!--drag-->
+                            <!--:action="url"-->
+                            <!--:on-preview="handlePreview"-->
+                            <!--:before-remove="handleBeforeRemove"-->
+                            <!--:on-success="handleSuccess"-->
+                            <!--multiple-->
+                            <!--:file-list="fileList"-->
+                    <!--&gt;-->
+                        <!--<i class="el-icon-upload"></i>-->
+                        <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+                    <!--</el-upload>-->
+                <!--</el-form-item>-->
+            <!--</el-form>-->
+            <!--<span slot="footer" class="dialog-footer">-->
+                <!--<el-button type="primary" @click="show_xq=false">确 定</el-button>-->
+            <!--</span>-->
+        <!--</el-dialog>-->
+    <!--</div>-->
 </template>
 
 <script>
@@ -243,6 +235,7 @@
             return {
                 url:'',
                 src: '',
+                cur_page:1,
                 show_xq:false,
                 show_xjsq: false,
                 show_zt: false,
@@ -330,17 +323,15 @@
             }
         },
         created() {
-            this.handleListener();
-            this.changeDate();
             this.getuser();
             this.getxmList();
         },
+
 
         activated() {
             this.handleListener();
         },
         deactivated() {
-            window.removeEventListener('resize', this.renderChart);
             bus.$off('collapse', this.handleBus);
         },
         methods: {
@@ -356,6 +347,12 @@
             //             return res.data;
             //         })
             // },
+
+            // 分页导航
+            handleCurrentChange(val) {
+                this.cur_page = val;
+                this.getData();
+            },
 
             //上传成功，重新请求
             handleSuccess(){
@@ -525,7 +522,7 @@
 
             //确定申请
             qdsq() {
-                axios.post(this.ip + '/projectApplication/startapplication', this.sqb)
+                axios.post(this.ip + '/projectApplication/startApplication', this.sqb)
                     .then(res => {
                         if (res.data) {
                             this.show_xjsq = false;
@@ -567,27 +564,12 @@
                     this.user = res.data;
                 })
             },
-            changeDate() {
-                const now = new Date().getTime();
-                this.data.forEach((item, index) => {
-                    const date = new Date(now - (6 - index) * 86400000);
-                    item.name = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
-                })
-            },
             handleListener() {
                 bus.$on('collapse', this.handleBus);
-                // 调用renderChart方法对图表进行重新渲染
-                window.addEventListener('resize', this.renderChart)
+
             },
-            handleBus(msg) {
-                setTimeout(() => {
-                    this.renderChart()
-                }, 300);
-            },
-            renderChart() {
-                this.$refs.bar.renderChart();
-                this.$refs.line.renderChart();
-            }
+
+
         }
     }
 
