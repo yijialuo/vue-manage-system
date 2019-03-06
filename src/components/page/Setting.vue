@@ -119,6 +119,7 @@
     import axios from 'axios'
 
     export default {
+        inject:['reload'],
         name: 'setting',
         data() {
             return {

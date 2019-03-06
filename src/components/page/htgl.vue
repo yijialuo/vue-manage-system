@@ -13,7 +13,7 @@
                 <el-input placeholder="合同编号" v-model="contractNo" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search"  @click="htSearch">搜索</el-button>
             </div>
-            <el-table :data="contracts" style="width: 100%">
+            <el-table height="500"  :data="contracts" style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
@@ -41,9 +41,11 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column prop="contractNo" label="合同编号" sortable width="150">
+                <el-table-column prop="contractNo" label="合同编号" width="150">
                 </el-table-column>
                 <el-table-column prop="projectName" label="合同项目" width="120">
+                </el-table-column>
+                <el-table-column prop="rq" sortable  label="合同日期" width="120">
                 </el-table-column>
                 <el-table-column prop="dfdsr" label="对方当事人">
                 </el-table-column>
@@ -61,11 +63,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="pagination">
-                <el-pagination background layout="prev, pager, next"
-                               :total="1000">
-                </el-pagination>
-            </div>
         </div>
 
         <!--上传附件弹窗 -->
@@ -93,13 +90,9 @@
                 </el-form-item>
                 <el-form-item label="合同项目">
                     <el-select
-                            v-model="contract.projectId"
                             filterable
-                            remote
-                            reserve-keyword
-                            placeholder="请输入关键词"
-                            :remote-method="remoteMethod"
-                            :loading="loading">
+                            v-model="contract.projectId"
+                      >
                         <el-option
                                 v-for="item in xms"
                                 :key="item.value"
@@ -107,6 +100,8 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp合同日期&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <el-date-picker style="width: 205px" type="date" placeholder="选择日期" v-model="contract.rq" value-format="yyyy-MM-dd"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
@@ -164,6 +159,7 @@
                 </el-form-item>
                 <el-form-item label="合同项目">
                     <el-select
+                            :disabled="true"
                             v-model="contract.projectId"
                             filterable
                             remote
@@ -178,6 +174,9 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp合同日期&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <el-date-picker type="date" placeholder="选择日期" v-model="contract.rq" value-format="yyyy-MM-dd"
+                                    style="width: 205px" ></el-date-picker>
                 </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
@@ -222,7 +221,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="show_bjht = false,contract={}">取 消</el-button>
+                <el-button @click="qxbj">取 消</el-button>
                 <el-button type="primary" @click="qdbj">确定编辑</el-button>
             </span>
         </el-dialog>
@@ -233,6 +232,7 @@
     import axios from 'axios'
 
     export default {
+        inject:['reload'],
         name: 'htgl',
         data() {
             return {
@@ -260,6 +260,7 @@
                     cwbmyj:'',
                     fgldyj:'',
                     zjlyj:'',
+                    rq:''
                 },
                 //对方资质审查,数组
                 zzsc:[],
@@ -274,8 +275,37 @@
         },
         created() {
             this.getAllht()
+            this.getXms()
+        },
+        computed:{
+          projectId(){
+              return this.contract.projectId;
+          }
+        },
+        watch:{
+            //判断当前项目是否绑定了合同，如果绑定，则不能继续绑定
+            projectId(newvalue,oldValue){
+                if(newvalue!=null&&newvalue!=''&&this.show_bjht==false){
+                    axios.get(this.ip+'/contract/isXjht',{
+                        params:{
+                            projectId:newvalue
+                        }
+                    }).then(res=>{
+                        if(!res.data){
+                            this.$message.error("该项目已经绑定合同、不能再次绑定")
+                            this.contract.projectId=null
+                        }
+                    })
+                }
+            }
         },
         methods: {
+            //取消编辑
+            qxbj(){
+                    this.show_bjht = false,
+                    this.contract={},
+                    this.getAllht()
+            },
             //合同搜索
             htSearch(){
                 axios.get(this.ip+'/contract/contractNoss',{
@@ -312,10 +342,8 @@
                         })
                 }).catch(()=>{this.$message.info("已取消删除")})
             },
-
             //删除附件
             handleBeforeRemove(file, fileList){
-                console.log(file)
                 this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -341,7 +369,7 @@
             },
             //编辑合同
             bjht(row){
-                console.log(row)
+                this.remoteMethod(row.projectName)
                 this.contract=row
                 this.zzsc=row.zzsc.split('/')
                 this.show_bjht=true
@@ -446,7 +474,7 @@
             getXms(){
               axios.get(this.ip+'/projectApplication/getAllXmIdAndXmname')
                   .then(res=>{
-                      this.list=res.data
+                      this.xms=res.data
                   })
             },
             //拿到所有合同
@@ -455,6 +483,7 @@
                 this.contract={}
                 axios.get(this.ip+'/contract/getAllContracts')
                     .then(res=>{
+                        console.log(res.data)
                         this.contracts=res.data
                     })
             },

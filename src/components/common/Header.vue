@@ -68,7 +68,6 @@
                     }
                 }).then(res=>{
                     if(res.data){
-                        //console.log(res.data)
                         this.message=res.data;
                     }
                 })

@@ -1,56 +1,594 @@
 <template>
-  <div class="error-page">
-      <div class="error-code">结算管理</div>
-      <div class="error-desc">结算管理</div>
-      <div class="error-handle">
-          <router-link to="/">
-            <el-button type="primary" size="large">返回首页</el-button>
-          </router-link>
-          <el-button class="error-btn" type="primary" size="large" @click="goBack">返回上一页</el-button>
-      </div>
-  </div>
+    <div>
+        <div class="table">
+            <div class="crumbs">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item><i class="el-icon-lx-cascades"></i>结算表单</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div class="container">
+                <div class="handle-box">
+                    <el-button type="primary" @click="xzjs" icon="el-icon-circle-plus" class="handle-del mr10">
+                        新增结算
+                    </el-button>
+                    <el-select
+                            v-model="projectId"
+                            filterable
+                            placeholder="请输入或选择项目"
+                    >
+                        <el-option
+                                v-for="item in xms"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-button type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
+                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getALLJsjl">全部
+                    </el-button>
+                </div>
+                <el-table height="500" style="width: 100%" :data="jss">
+                    <el-table-column type="expand">
+                        <template slot-scope="props">
+                            <el-form label-position="left" inline class="demo-table-expand">
+                                <el-form-item label="发票号码:">
+                                    <span>{{ props.row.invoice_no }}</span>
+                                </el-form-item>
+                                <el-form-item label="银行账号:">
+                                    <span>{{ props.row.account }}</span>
+                                </el-form-item>
+                                <el-form-item label="开户银行:">
+                                    <span>{{ props.row.bank }}</span>
+                                </el-form-item>
+                                <el-form-item label="经办部门负责人:">
+                                    <span>{{ props.row.jbbmfzr }}</span>
+                                </el-form-item>
+                                <el-form-item label="主管部门负责人:">
+                                    <span>{{ props.row.zgbmfzr }}</span>
+                                </el-form-item>
+                                <el-form-item label="财务总监:">
+                                    <span>{{ props.row.cwzj }}</span>
+                                </el-form-item>
+                                <el-form-item label="分管领导:">
+                                    <span>{{ props.row.fgld }}</span>
+                                </el-form-item>
+                                <el-form-item label="公司总经理:">
+                                    <span>{{ props.row.gszjl }}</span>
+                                </el-form-item>
+                                <el-form-item label="分管领导:">
+                                    <span>{{ props.row.fgld }}</span>
+                                </el-form-item>
+                                <el-form-item label="合同日期:">
+                                    <span>{{ props.row.htrq }}</span>
+                                </el-form-item>
+                                <el-form-item label="合同金额:">
+                                    <span>{{ props.row.htje }}</span>
+                                </el-form-item>
+                                <el-form-item label="未支付金额:">
+                                    <span>{{ props.row.wfje }}</span>
+                                </el-form-item>
+                                <el-form-item label="已支付金额:">
+                                    <span>{{ props.row.yzfje }}</span>
+                                </el-form-item>
+                            </el-form>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column prop="project_name" label="项目名" width="150">
+                    </el-table-column>
+                    <el-table-column prop="contract_no" sortable label="合同号" width="120">
+                    </el-table-column>
+                    <el-table-column prop="rq" sortable label="创建日期" width="150">
+                    </el-table-column>
+                    <el-table-column prop="jbbm" label="经办部门" width="150">
+                    </el-table-column>
+                    <el-table-column prop="jbr" label="经办人" width="150">
+                    </el-table-column>
+                    <el-table-column prop="yszmr" label="验收证明人" width="150">
+                    </el-table-column>
+                    <el-table-column prop="skdw" label="收款单位">
+                    </el-table-column>
+                    <el-table-column prop="bqyf" label="本期已付">
+                    </el-table-column>
+
+                    <el-table-column label="操作" width="180" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-upload" @click="fj(scope.row.id)">附件
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+
+        <!--添加评价弹窗 -->
+        <el-dialog title="新增结算" :visible.sync="show_xzjs" width="50%">
+            <el-form label-width="100px" label-position='left'>
+                <el-form-item style="margin-top:15px" label="合同号">
+                    <el-select
+                            v-model="Payable.contract_id"
+                            filterable
+                            placeholder="请输入或选择合同号"
+                         >
+                        <el-option
+                                v-for="item in hts"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp经办部门&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <el-input style="width: 200px" v-model="Payable.jbbm"></el-input>
+                </el-form-item>
+                <el-form-item style="margin-top: 15px" label="经办人">
+                    <el-input v-model="Payable.jbr" style="width: 215px;margin-right: 20px"></el-input>
+                    验收证明人&nbsp&nbsp
+                    <el-input style="width: 200px" v-model="Payable.yszmr"></el-input>
+                </el-form-item>
+
+                <el-form-item label="发票号码">
+                    <el-input v-model="Payable.invoice_no"></el-input>
+                </el-form-item>
+                <el-form-item label="收款单位">
+                    <el-input :disabled="true" v-model="skdw"></el-input>
+                </el-form-item>
+                <el-form-item label="银行账号">
+                    <el-input v-model="Payable.account"></el-input>
+                </el-form-item>
+                <el-form-item label="开户银行">
+                    <el-input v-model="Payable.bank"></el-input>
+                </el-form-item>
+                <el-form-item label="支付项目">
+                    <el-input :disabled="true" v-model="zfxm"></el-input>
+                </el-form-item>
+                <el-form-item label="合同签订时间">
+                    <el-input v-model="htrq" :disabled="true"></el-input>
+                </el-form-item>
+
+                <el-form-item style="margin-top: 15px" label="合同总额">
+                    <el-input v-model="htzje" :disabled="true" style="width: 215px;margin-right: 20px"></el-input>
+                    已支付金额&nbsp&nbsp
+                    <el-input v-model="yzfje" :disabled="true" style="width: 200px"></el-input>
+                </el-form-item>
+
+                <el-form-item style="margin-top: 15px" label="未付金额">
+                    <el-input v-model="wzfje" :disabled="true" style="width: 215px;margin-right: 20px"></el-input>
+                    本期应支付金额&nbsp&nbsp
+                    <el-input v-model="Payable.bqyf" type="number" style="width: 170px"></el-input>
+                </el-form-item>
+
+                <el-form-item style="margin-top: 10px" label="经办部门负责人">
+                    <el-input type="textarea" v-model="Payable.jbbmfzr" :rows="2"></el-input>
+                </el-form-item>
+                <el-form-item label="主管部门负责人">
+                    <el-input type="textarea" v-model="Payable.zgbmfzr" :rows="2"></el-input>
+                </el-form-item>
+                <el-form-item label="财务总监">
+                    <el-input type="textarea" v-model="Payable.cwzj" :rows="2"></el-input>
+                </el-form-item>
+                <el-form-item label="分管领导">
+                    <el-input type="textarea" v-model="Payable.fgld" :rows="2"></el-input>
+                </el-form-item>
+                <el-form-item label="公司总经理">
+                    <el-input type="textarea" v-model="Payable.gszjl" :rows="2"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="show_xzjs=false">取消</el-button>
+                 <el-button type="primary" @click="ljcj">立即创建</el-button>
+            </span>
+        </el-dialog>
+
+        <!--上传附件弹窗 -->
+        <el-dialog title="上传附件" :visible.sync="show_scfj" width="30%">
+            <el-upload
+                    class="upload-demo"
+                    drag
+                    :action="url"
+                    :on-preview="handlePreview"
+                    :before-remove="handleBeforeRemove"
+                    :on-success="handleSuccess"
+                    multiple
+                    :file-list="fileList"
+            >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
-export default {
-  methods: {
-      goBack(){
-          this.$router.go(-1);
-      }
-  }
-}
+    import axios from 'axios'
+
+    export default {
+        inject:['reload'],
+        name: 'jsgl',
+        data() {
+            return {
+                Payable: {
+                    jbbm: '',
+                    jbr: '',
+                    yszmr: '',
+                    invoice_no: '',
+                    account: '',
+                    bank: '',
+                    project: '',
+                    contract_id: '',
+                    bqyf: 0,
+                    jbbmfzr: '',
+                    zgbmfzr: '',
+                    cwzj: '',
+                    fgld: '',
+                    gszjl: '',
+                    rq: '',
+                },
+                //上传附件弹窗
+                show_scfj: false,
+                //付款单位
+                skdw: '',
+                //付款项目
+                zfxm: '',
+                url: '',
+                //合同日期
+                htrq: '',
+                //合同总金额
+                htzje: '',
+                //已支付金额
+                yzfje: 0.00,
+                //未支付金额
+                wzfje: 0.00,
+                projectId: '',
+                cid: '',
+                htid: '',
+                hts: [],
+                show_xzjs: false,
+                list: [],
+                list2: [],
+                ip: 'http://localhost:8080',
+                loading: false,
+                loading2: false,
+                //结算数组
+                jss: [],
+                fileList: [],
+                xms: [],
+            }
+        },
+        computed: {
+            contract_id() {
+                return this.Payable.contract_id
+            },
+            bqyf() {
+                return this.Payable.bqyf
+            }
+        },
+        watch: {
+            bqyf(newValue, oldValue) {
+                if (newValue > this.wzfje) {
+                    this.$message.error("已支付金额不能大于未支付金额")
+                    this.Payable.bqyf = 0
+                    return
+                }
+                if (newValue < 0) {
+                    this.Payable.bqyf = 1
+                    return
+                }
+            },
+            contract_id(newValue, oldValue) {
+                if (newValue != '' && newValue != null) {
+                    //拿到付款单位
+                    axios.get(this.ip + '/contract/getDfdsr', {
+                        params: {
+                            contractId: newValue
+                        }
+                    }).then(res => {
+                        this.skdw = res.data
+                    })
+                    //拿到付款项目
+                    axios.get(this.ip + '/contract/cidToPnam', {
+                        params: {
+                            cid: newValue
+                        }
+                    }).then(res => {
+                        this.zfxm = res.data
+                    })
+
+                    //拿到合同
+                    axios.get(this.ip + '/contract/selectContract', {
+                        params: {
+                            contractId: newValue
+                        }
+                    }).then(res => {
+                        this.htrq = res.data.rq
+                        this.htzje = res.data.price
+                        this.Payable.project = res.data.projectId
+                    })
+
+                    //拿到未支付
+                    axios.get(this.ip + '/payable/cidToWf', {
+                        params: {
+                            cid: newValue
+                        }
+                    })
+                        .then(res => {
+                            this.wzfje = res.data
+                        })
+
+                    //拿到已支付
+                    axios.get(this.ip + '/payable/cidToYf', {
+                        params: {
+                            cid: newValue
+                        }
+                    })
+                        .then(res => {
+                            this.yzfje = res.data
+                        })
+                }
+            }
+        },
+        created() {
+            this.getALLJsjl()
+            this.getXms()
+            this.getHts()
+        },
+        methods: {
+            ss() {
+                axios.get(this.ip + '/payable/pidToPaybles', {
+                    params: {
+                        projectId: this.projectId
+                    }
+                }).then(res => {
+                    if (res.data.length != 0)
+                        this.jss = res.data
+                    else
+                        this.$message.error("没找到相关数据！")
+                })
+            },
+            //拿到项目下拉框数据
+            getXms() {
+                axios.get(this.ip + '/projectApplication/getAllXmIdAndXmname')
+                    .then(res => {
+                        console.log(res.data)
+                        this.xms = res.data
+                    })
+            },
+
+            remoteMethod(query) {
+                if (query !== '') {
+                    this.loading = true;
+                    setTimeout(() => {
+                        this.loading = false;
+                        this.xms = this.list.filter(item => {
+                            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
+                        });
+                    }, 200);
+                } else {
+                    this.xms = [];
+                }
+            },
+            remoteMethod2(query) {
+                if (query !== '') {
+                    this.loading2 = true;
+                    setTimeout(() => {
+                        this.loading2 = false;
+                        this.hts = this.list2.filter(item => {
+                            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
+                        });
+                    }, 200);
+                } else {
+                    this.hts = [];
+                }
+            },
+            //点击文件下载
+            handlePreview(file) {
+                window.open(this.ip + '/contract/getFj?fid=' + file.id + '&fname=' + file.name)
+            },
+            //上传成功，重新请求
+            handleSuccess() {
+                this.fj(this.cid)
+            },
+            //删除请求
+            handleRemove(file, fileList) {
+                this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.get(this.ip + '/contract/deletFj', {
+                        params: {
+                            Fjid: file.id
+                        }
+                    })
+                        .then(res => {
+                            this.$message.info("删除成功！")
+                        })
+                })
+            },
+            //删除附件
+            handleBeforeRemove(file, fileList) {
+                this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.get(this.ip + '/contract/deletFj', {
+                        params: {
+                            fid: file.id
+                        }
+                    })
+                        .then(res => {
+                            if (res.data) {
+                                this.$message.success("删除成功！")
+                            } else {
+                                this.$message.error("删除失败！")
+                            }
+                            this.getFileList(this.cid)
+                        })
+                })
+                    .catch(() => {
+                        this.getFileList(this.cid)
+                    })
+            },
+            //点击附件
+            fj(id) {
+                this.cid = id
+                this.getFileList()
+                this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + id
+                this.show_scfj = true
+            },
+            //拿所有的结算记录
+            getALLJsjl() {
+                axios.get(this.ip + '/payable/getAllPayble')
+                    .then(res => {
+                        this.jss = res.data;
+                    })
+            },
+            //填充附件列表
+            getFileList() {
+                //请求附件名
+                axios.get(this.ip + '/contract/getFjs', {
+                    params: {
+                        cid: this.cid
+                    }
+                })
+                    .then(res => {
+                        this.fileList = []
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.fileList.push({
+                                name: res.data[i].fname,
+                                id: res.data[i].fid
+                            })
+                        }
+                    })
+            },
+            //新增结算
+            xzjs() {
+                this.getHts()
+                this.Payable = {}
+                this.projectId = ''
+                this.skdw = ''
+                this.zfxm = ''
+                this.htzje = ''
+                this.htrq=''
+                this.yzfje = 0.00
+                this.wzfje = 0.00
+                this.show_xzjs = true
+            },
+            //拿到项目下拉框数据
+            getHts() {
+                axios.get(this.ip + '/contract/getAllHtidAndHtno')
+                    .then(res => {
+                        this.hts = res.data
+                    })
+            },
+            //根据合同id拿到对方当事人(收款单位)
+            getskdw() {
+                axios.get(this.ip + '/contract/getDfdsr', {
+                    params: {
+                        htId: this.htId
+                    }
+                }).then(res => {
+
+                })
+            },
+            //立即创建
+            ljcj() {
+                axios.post(this.ip + '/payable/addPayable', this.Payable)
+                    .then(res => {
+                        if (res.data) {
+                            this.$message.success("新建成功！")
+                            this.getALLJsjl()
+                        } else
+                            this.$message.error("新建失败！")
+                    })
+                this.show_xzjs = false
+            },
+
+
+        }
+    }
 </script>
 
 
 <style scoped>
-    .error-page{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+    .handle-box {
+        margin-bottom: 20px;
+    }
+
+    .handle-select {
+        width: 120px;
+    }
+
+    .handle-input {
+        width: 150px;
+        display: inline-block;
+    }
+
+    .del-dialog-cnt {
+        font-size: 16px;
+        text-align: center
+    }
+
+    .demo-table-expand {
+        font-size: 0;
+    }
+
+    .table {
         width: 100%;
-        height: 100%;
-        background: #f3f3f3;
-        box-sizing: border-box;
+        font-size: 14px;
     }
-    .error-code{
-        line-height: 1;
-        font-size: 250px;
-        font-weight: bolder;
-        color: #f02d2d;
+
+    .red {
+        color: #ff0000;
     }
-    .error-code span{
-        color: #00a854;
+
+    .mr10 {
+        margin-right: 10px;
     }
-    .error-desc{
-        font-size: 30px;
-        color: #777;
+
+    .handle-box {
+        margin-bottom: 20px;
     }
-    .error-handle{
-        margin-top: 30px;
-        padding-bottom: 200px;
+
+    .handle-select {
+        width: 120px;
     }
-    .error-btn{
-        margin-left: 100px;
+
+    .handle-input {
+        width: 150px;
+        display: inline-block;
+    }
+
+    .del-dialog-cnt {
+        font-size: 16px;
+        text-align: center
+    }
+
+    .table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .red {
+        color: #ff0000;
+    }
+
+    .mr10 {
+        margin-right: 10px;
+    }
+
+    .demo-table-expand {
+        font-size: 0;
+    }
+
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+
+    .demo-table-expand .el-form-item {
+        margin-right: 0px;
+        margin-bottom: 0;
+        width: 50%;
     }
 </style>

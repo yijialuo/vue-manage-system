@@ -81,9 +81,7 @@
                 this.dialogVisible = false;
                 this.cropImg = this.defaultSrc;
             },
-            imageuploaded(res) {
-                console.log(res)
-            },
+
             handleError(){
                 this.$notify.error({
                     title: '上传失败',

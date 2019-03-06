@@ -130,8 +130,8 @@
 
 <script>
     import axios from 'axios'
-
     export default {
+        inject:['reload'],
         name:'account',
         data: function () {
             return {
@@ -173,7 +173,6 @@
               axios.get(this.ip+'/department/getAllDepartment')
                   .then(res=>{
                       if(res.data){
-                          console.log(res.data)
                           for(let i=0;i<res.data.length;i++){
                               this.department_options.push({
                                   value:res.data[i].id,

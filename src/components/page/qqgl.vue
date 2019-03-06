@@ -11,20 +11,15 @@
                     <el-button type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="xjxmlxd">
                         新建项目立项单
                     </el-button>
-                    <el-select v-model="select_cate" placeholder="项目类型" class="handle-select mr10">
-                        <el-option key="1" label="内部项目" value="内部项目"></el-option>
-                        <el-option key="2" label="下达项目" value="下达项目"></el-option>
-                    </el-select>
                     <el-input v-model="select_xmmc" placeholder="项目名称" class="handle-input mr10"></el-input>
                     <el-button type="primary" icon="el-icon-search" @click="xmmcSearch">搜索</el-button>
                     <el-input v-model="select_code" placeholder="项目编号" style="margin-left: 20px"
                               class="handle-input mr10"></el-input>
                     <el-button type="primary" icon="el-icon-search" @click="xmbhSearch">搜索</el-button>
-                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getProjects">全部
-                    </el-button>
+                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getProjects">全部</el-button>
                 </div>
-                <el-table stripe :data="projects" border class="table" ref="multipleTable">
-                    <el-table-column prop="applicationDte" label="申请日期" sortable width="150">
+                <el-table height="500" stripe :data="projects" border class="table" ref="multipleTable">
+                    <el-table-column prop="projectNo" sortable label="项目编号" width="120">
                     </el-table-column>
                     <el-table-column prop="projectNam" label="项目名称" width="120">
                     </el-table-column>
@@ -34,24 +29,17 @@
                     </el-table-column>
                     <el-table-column prop="projectType" label="项目类别">
                     </el-table-column>
-                    <el-table-column label="操作" width="180" align="center">
+                    <el-table-column prop="applicationDte" label="申请日期" sortable width="150">
+                    </el-table-column>
+                    <el-table-column label="操作" width="250" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-edit" @click="xmxq(scope.$index, scope.row)">详情
-                            </el-button>
-                            <el-button type="text" icon="el-icon-star-on" :disabled="!isSqs.get(scope.row.id)"
-                                       @click="kssq(scope.$index, scope.row)">申请
-                            </el-button>
-                            <el-button type="text" icon="el-icon-delete" class="red"
-                                       @click="handleDelete(scope.$index, scope.row)">删除
-                            </el-button>
+                            <el-button type="text" icon="el-icon-edit" @click="xmxq(scope.$index, scope.row)">详情</el-button>
+                            <el-button type="text" icon="el-icon-edit" @click="zt(scope.row)">状态</el-button>
+                            <el-button type="text" icon="el-icon-star-on" :disabled="!isSqs.get(scope.row.id)" @click="kssq(scope.$index, scope.row)">申请</el-button>
+                            <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="pagination">
-                    <el-pagination background  layout="prev, pager, next"
-                                   :total="1000">
-                    </el-pagination>
-                </div>
             </div>
 
 
@@ -86,7 +74,13 @@
 
             <!-- 新建项目项目立项单弹窗 -->
             <el-dialog title="申请项目" :visible.sync="show_xjxmlxd" width="50%">
-                <el-form ref="form" :model="project" label-width="100px">
+                <el-input
+                        placeholder="项目编号"
+                        v-model="project.projectNo"
+                        style="margin-left: 30px;width: 150px"
+                        clearable>
+                </el-input>
+                <el-form ref="form" style="margin-top: 10px" :model="project" label-width="100px">
                     <el-form-item label="项目名称">
                         <el-input v-model="project.projectNam"></el-input>
                     </el-form-item>
@@ -229,8 +223,13 @@
                 <el-button type="primary" @click="qdxg">确定修改</el-button>
             </span>
             </el-dialog>
+            <el-dialog title="状态" :visible.sync="show_zt" width="80%">
+                <img :src='src'/>
+                <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="show_zt=false">确 定</el-button>
+            </span>
+            </el-dialog>
         </div>
-
     </div>
 </template>
 
@@ -238,6 +237,7 @@
     import axios from 'axios'
 
     export default {
+        inject:['reload'],
         name: 'basetable',
         data() {
             return {
@@ -303,6 +303,8 @@
                 is_search: false,
                 editVisible: false,
                 delVisible: false,
+                src:'',
+                show_zt:false,
                 user: {},
                 form: {
                     name: '',
@@ -338,9 +340,25 @@
             }
         },
         methods: {
+            //状态
+            zt(row) {
+                if(row.pid!=null&&row.pid!=''){
+                    axios.get(this.ip + '/projectApplication/zt', {
+                        params: {
+                            pi: row.pid
+                        }
+                    })
+                        .then(res => {
+                            //得到图片流
+                            this.src = 'data:image/png;base64,' + res.data
+                            this.show_zt = true
+                        })
+                }else {
+                    this.$message.info("该项目还未开始申请！")
+                }
+            },
             //项目编号
             xmbhSearch() {
-                // console.log(this.isSqs)
                 axios.get(this.ip+'/projectApplication/xmbhss',{
                     params:{
                         projectNo:this.select_code
@@ -370,7 +388,6 @@
             //判断是否可申请
             isSq(row) {
                 if (localStorage.getItem('groupId') !== 'doman') {
-                    console.log('false')
                     return false
                 } else {
                     axios.get(this.ip + '/projectApplication/isSq', {
@@ -379,7 +396,6 @@
                         }
                     })
                         .then(res => {
-                            console.log(res.data)
                             return res.data
                         })
                 }
@@ -401,7 +417,7 @@
                         this.$message.success("申请成功！")
                         //申请成功，重新请求
                        // this.getProjects()
-                        location.reload()
+                        this.reload()
                     })
 
 
@@ -442,7 +458,6 @@
             },
             //确认修改
             qdxg() {
-                console.log("qdxg")
                 axios.get(this.ip + '/projectApplication/qdsqr', {//确定申请人
                     params: {
                         projectId: this.project.id,
@@ -453,7 +468,6 @@
                         if (res.data) {
                             axios.post(this.ip + '/projectApplication/updataXm', this.project)
                                 .then(res => {
-                                    console.log(res.data)
                                     if (res.data) {
                                         this.$message.success("修改成功!")
                                     } else {
@@ -509,7 +523,6 @@
                 axios.get(this.ip + '/department/getAllDepartment')
                     .then(res => {
                         if (res.data) {
-                            console.log(res.data)
                             for (let i = 0; i < res.data.length; i++) {
                                 this.department_options.push({
                                     value: res.data[i].id,
@@ -525,34 +538,20 @@
                     .then(res => {
                         if (res.data) {
                             this.$message.success('新建成功！')
-                            this.projects.push(this.project)
-                            this.project = {}
+                            this.reload()
+                            // this.projects.push(this.project)
+                            // this.project = {}
                         } else {
                             this.$message.error('新建失败！')
                         }
                     })
                 this.show_xjxmlxd = false
             },
-
-            // 获取 easy-mock 的模拟数据
-            // getData() {
-            //     // 开发环境使用 easy-mock 数据，正式环境使用 json 文件
-            //     if (process.env.NODE_ENV === 'development') {
-            //         this.url = '/ms/table/list';
-            //     };
-            //     this.$axios.post(this.url, {
-            //         page: this.cur_page
-            //     }).then((res) => {
-            //         this.tableData = res.data.list;
-            //     })
-            // },
             filterTag(value, row) {
                 return row.tag === value;
             },
             //项目详情
             xmxq(index, row) {
-                console.log(index)
-                console.log(row)
                 this.project = row
                 this.show_xq = true
                 // this.idx = index;
@@ -579,7 +578,6 @@
                 this.$message.error('删除了' + str);
                 this.multipleSelection = [];
             },
-
             // 保存编辑
             saveEdit() {
                 this.$set(this.tableData, this.idx, this.form);

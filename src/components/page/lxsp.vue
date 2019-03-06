@@ -356,7 +356,6 @@
 
             //上传成功，重新请求
             handleSuccess(){
-                console.log('handleSuccess')
                 //重新请求
                 axios.get(this.ip+'/Attachment/getattachment',{
                     params:{
@@ -465,7 +464,6 @@
                     }
                 })
                     .then(res => {
-                        console.log(res.data)
                         if (res.data) {
                             this.xmList=res.data;
                         }

@@ -218,6 +218,7 @@
     import axios from 'axios'
 
     export default {
+        inject:['reload'],
         name: 'news',
         created() {
             this.getuser()
@@ -266,7 +267,7 @@
               axios.post(this.ip+'/projectApplication/cxsq',this.xm)
                   .then(res=>{
                       this.show_xq=false
-                      location.reload()
+                      this.reload()
                   })
             },
             //完成备案
@@ -399,7 +400,7 @@
                     }
                 })
                     .then(res => {
-                        location.reload()//刷新
+                        this.reload()//刷新
                     })
             },
             //上传成功，重新请求
@@ -510,7 +511,7 @@
                                     this.lqslxm()
                                 }
                             })
-                        location.reload()
+                        this.reload()
                         this.$message.info("处理完成")
                     }).catch(() => {
                     })
@@ -528,7 +529,7 @@
                                 this.lqslxm()
                             }
                         })
-                    location.reload()
+                    this.reload()
                     this.$message.info("处理完成")
                 }
             },
@@ -573,10 +574,7 @@
                     if (res.data) {
                         if(this.user.groupId=='doman')//如果是办事员，收到的项目为驳回项目
                         {
-                            console.log('doman')
                             this.bhXms = res.data
-                            console.log(res.data.length)
-                            console.log(this.bhXms)
                         }
                         else
                             this.Xms = res.data

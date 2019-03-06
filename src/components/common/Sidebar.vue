@@ -39,6 +39,11 @@
                 collapse: false,
                 items: [
                     {
+                        icon: 'el-icon-lx-home',
+                        index: '/dashboard',
+                        title: '系统首页'
+                    },
+                    {
                         icon: 'el-icon-lx-copy',
                         index: 'dashboard',
                         title: '工程管理',
@@ -131,11 +136,7 @@
                             // }
                         ]
                     },
-                    {
-                        icon: 'el-icon-lx-home',
-                        index: '/dashboard',
-                        title: '系统首页'
-                    },
+
                 ]
             }
         },

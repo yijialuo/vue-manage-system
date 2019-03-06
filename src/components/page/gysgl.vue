@@ -14,7 +14,7 @@
                     <el-input v-model="gysmc" placeholder="供应商名称" class="handle-input mr10"></el-input>
                     <el-button type="primary" icon="el-icon-search" @click="gysmcSearch">搜索</el-button>
                 </div>
-                <el-table @row-dblclick="sjgys" stripe :data="suppliers" border class="table" ref="multipleTable">
+                <el-table height="500" @row-dblclick="sjgys" stripe :data="suppliers" border class="table" ref="multipleTable">
                     <el-table-column prop="name" label="供应商名称" sortable width="150">
                     </el-table-column>
                     <el-table-column prop="code" label="供应商编号" width="120">
@@ -42,11 +42,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="pagination">
-                    <el-pagination background layout="prev, pager, next"
-                                   :total="1000">
-                    </el-pagination>
-                </div>
             </div>
         </div>
 
@@ -60,20 +55,20 @@
                     <el-input v-model="supplier.code"></el-input>
                 </el-form-item>
                 <el-form-item label="座机">
-                    <el-input style="width: 215px;padding-right: 20px" v-model="supplier.phone"></el-input>
+                    <el-input style="width: 226px;padding-right: 20px" v-model="supplier.phone"></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp手机&nbsp&nbsp&nbsp&nbsp
-                    <el-input style="width: 215px" v-model="supplier.mobile"></el-input>
+                    <el-input style="width: 226px" v-model="supplier.mobile"></el-input>
                 </el-form-item>
                 <el-form-item label="联系人">
-                    <el-input style="width: 215px;padding-right: 20px" v-model="supplier.contact"></el-input>
+                    <el-input style="width: 226px;padding-right: 20px" v-model="supplier.contact"></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp传真&nbsp&nbsp&nbsp&nbsp
-                    <el-input style="width: 215px" v-model="supplier.fax"></el-input>
+                    <el-input style="width: 226px" v-model="supplier.fax"></el-input>
                 </el-form-item>
 
                 <el-form-item label="邮箱">
-                    <el-input  style="width: 215px;padding-right: 20px" v-model="supplier.email"></el-input>
+                    <el-input  style="width: 226px;padding-right: 20px" v-model="supplier.email"></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp地址&nbsp&nbsp&nbsp&nbsp
-                    <el-input style="width: 215px" v-model="supplier.address"></el-input>
+                    <el-input style="width: 226px" v-model="supplier.address"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -92,19 +87,19 @@
                     <el-input v-model="supplier.code"></el-input>
                 </el-form-item>
                 <el-form-item label="座机">
-                    <el-input style="width: 215px;padding-right: 20px" v-model="supplier.phone"></el-input>
+                    <el-input style="width: 226px;padding-right: 20px" v-model="supplier.phone"></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp手机&nbsp&nbsp&nbsp&nbsp
-                    <el-input style="width: 215px" v-model="supplier.mobile"></el-input>
+                    <el-input style="width: 226px" v-model="supplier.mobile"></el-input>
                 </el-form-item>
                 <el-form-item label="联系人">
-                    <el-input style="width: 215px;padding-right: 20px" v-model="supplier.contact"></el-input>
+                    <el-input style="width: 226px;padding-right: 20px" v-model="supplier.contact"></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp传真&nbsp&nbsp&nbsp&nbsp
-                    <el-input style="width: 215px" v-model="supplier.fax"></el-input>
+                    <el-input style="width: 226px" v-model="supplier.fax"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱">
-                    <el-input  style="width: 215px;padding-right: 20px" v-model="supplier.email"></el-input>
+                    <el-input  style="width: 226px;padding-right: 20px" v-model="supplier.email"></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp地址&nbsp&nbsp&nbsp&nbsp
-                    <el-input style="width: 215px" v-model="supplier.address"></el-input>
+                    <el-input style="width: 226px" v-model="supplier.address"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -327,6 +322,7 @@
     import axios from 'axios'
     export default {
         name:'gysgl',
+        inject:['reload'],
         data(){
             return {
                 form: {
@@ -589,7 +585,7 @@
                         axios.all(qq)
                             .then(axios.spread((acct, perms)=>{
                                 this.$message.success("创建成功！")
-                                location.reload()
+                                this.reload()
                             }))
                             .catch(()=>{
                                 this.$message.success("创建失败！")
@@ -630,7 +626,6 @@
                             this.pjbgData[i].xmwyh=xmwyh[i]
                         }
                     })
-              console.log(row)
             },
             //删除供应商
             deleteGys(index,row){
@@ -676,10 +671,8 @@
             },
             //确定添加供应商
             qdtjgys(){
-                console.log(this.supplier)
                 axios.post(this.ip+'/supplier/addSupplier',this.supplier)
                     .then(res=>{
-                        console.log(res.data)
                         this.supplier.id=res.data
                         this.suppliers.push(this.supplier)
                     })
@@ -705,7 +698,6 @@
                 })
                     .then(res=>{
                         this.zpj=res.data
-                        console.log(res.data)
                     })
             },
             //供应商名称搜索

@@ -1,14 +1,8 @@
 <template>
-  <div class="error-page">
-      <div class="error-code">招标审批</div>
-      <div class="error-desc">招标审批</div>
-      <div class="error-handle">
-          <router-link to="/">
-            <el-button type="primary" size="large">返回首页</el-button>
-          </router-link>
-          <el-button class="error-btn" type="primary" size="large" @click="goBack">返回上一页</el-button>
-      </div>
-  </div>
+
+    <div>
+        招标审批
+    </div>
 </template>
 
 <script>

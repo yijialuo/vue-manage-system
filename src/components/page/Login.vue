@@ -33,6 +33,7 @@
     import axios from 'axios'
 
     export default {
+        inject:['reload'],
         data: function () {
             return {
                 ip: 'http://localhost:8080',
@@ -71,8 +72,8 @@
                                 .then(res=>{
                                     localStorage.setItem('groupId',res.data.groupId)
                                     localStorage.setItem('userName',res.data.userName)
+                                    this.$router.push('/');
                                 })
-                            this.$router.push('/');
                         } else {
                             alert("用户名或者密码错误！")
                             return false;

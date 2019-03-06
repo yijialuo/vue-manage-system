@@ -10,7 +10,7 @@
                 <div class="handle-box">
                     <el-button type="primary" icon="delete" class="handle-del mr10" @click="visible=true">新建用户</el-button>
                 </div>
-                <el-table :data="users" border class="table">
+                <el-table :data="users" height="500px" border class="table">
                     <el-table-column prop="userId" label="账号" >
                     </el-table-column>
                     <el-table-column prop="userName" label="姓名" >
@@ -31,10 +31,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="pagination">
-                    <el-pagination background @current-change="" layout="prev, pager, next" :total="1000">
-                    </el-pagination>
-                </div>
             </div>
 
             <!--新建用户弹窗-->
@@ -140,7 +136,7 @@
                     <el-button type="primary" icon="delete" class="handle-del mr10" @click="show_addGroup=true">添加职位
                     </el-button>
                 </div>
-                <el-table :data="departments" border style="margin-top: 20px">
+                <el-table  :data="departments" border style="margin-top: 20px">
                     <el-table-column prop="dCod" label="部门编号" width="150">
                     </el-table-column>
                     <el-table-column prop="dNam" label="部门名字" width="150">
@@ -249,6 +245,7 @@
     import axios from 'axios'
 
     export default {
+        inject:['reload'],
         name:'account',
         data: function () {
             return {
@@ -308,7 +305,6 @@
                 axios.get(this.ip+'/department/getAllDepartment')
                     .then(res=>{
                         if(res.data){
-                            console.log(res.data)
                             for(let i=0;i<res.data.length;i++){
                                 this.department_options.push({
                                     value:res.data[i].id,
