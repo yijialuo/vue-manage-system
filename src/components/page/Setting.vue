@@ -47,7 +47,7 @@
             </el-table>
 
             <!-- 添加职位弹出框 -->
-            <el-dialog title="添加职位" :visible.sync="show_addGroup" width="30%">
+            <el-dialog title="添加职位" :visible.sync="show_addGroup" width="408px">
                 <el-form ref="form" :model="group" label-width="80px">
                     <el-form-item label="职位编号">
                         <el-input v-model="group.code"></el-input>
@@ -63,7 +63,7 @@
             </el-dialog>
 
             <!-- 添加部门弹出框 -->
-            <el-dialog title="添加部门" :visible.sync="show_addDepartment" width="30%">
+            <el-dialog title="添加部门" :visible.sync="show_addDepartment" width="408px">
                 <el-form ref="form" :model="department" label-width="80px">
                     <el-form-item label="部门编号">
                         <el-input v-model="department.dCod"></el-input>
@@ -79,7 +79,7 @@
             </el-dialog>
 
             <!-- 编辑部门弹出框 -->
-            <el-dialog title="编辑部门" :visible.sync="show_editDepartment" width="30%">
+            <el-dialog title="编辑部门" :visible.sync="show_editDepartment" width="408px">
                 <el-form ref="form" :model="department" label-width="80px">
                     <el-form-item label="部门编号">
                         <el-input v-model="department.dCod"></el-input>
@@ -95,7 +95,7 @@
             </el-dialog>
 
             <!-- 编辑职位弹出框 -->
-            <el-dialog title="编辑职位" :visible.sync="show_editGroup" width="30%">
+            <el-dialog title="编辑职位" :visible.sync="show_editGroup" width="408px">
                 <el-form ref="form" :model="group" label-width="80px">
                     <el-form-item label="职位编号">
                         <el-input v-model="group.code"></el-input>

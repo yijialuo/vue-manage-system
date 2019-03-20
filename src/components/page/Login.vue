@@ -1,11 +1,11 @@
 <template>
     <div style="height: 100%;width: 100%">
         <el-header style="background-color: #417e9f;height: 85px">
-            <img style="margin-left:80px;display:inline" src="../../assets/img/login_logo.png"><li class="active">世界大港&nbsp;&nbsp;&nbsp;服务世界</li>
+            <img style="margin-left:80px;display:inline" src="../../assets/img/login_logo1.png"><li class="active">世界大港&nbsp;&nbsp;&nbsp;服务世界</li>
         </el-header>
         <div class="login-wrap">
             <div class="ms-login" >
-                <div class="ms-title">新沙项目系统</div>
+                <div class="ms-title">新沙工程项目管理系统</div>
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
                     <el-form-item prop="username">
                         <el-input v-model="ruleForm.username" placeholder="username">
@@ -133,12 +133,13 @@
         color: #fff;
     }
     .active {
-        margin-left: 300px;
+        position: absolute;
+        right: 15px;
         display:inline;
         color: #FFF;
         font-size: 18px;
-        border-bottom: 3px solid #f46425;
-        height: 80px;
+        border-bottom: 4px solid #f46425;
+        height: 83px;
         line-height: 80px;
     }
 </style>

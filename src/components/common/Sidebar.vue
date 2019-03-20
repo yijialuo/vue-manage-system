@@ -98,10 +98,6 @@
                                     {
                                         index:'/zbsp',
                                         title:'招标审批'
-                                    },
-                                    {
-                                        index:'/htsp',
-                                        title:'合同审批'
                                     }
                                 ]
                             }
@@ -146,10 +142,229 @@
             }
         },
         created(){
+            //菜单获取
+            this.getSidebar()
+
             // 通过 Event Bus 进行组件间通信，来折叠侧边栏
             bus.$on('collapse', msg => {
                 this.collapse = msg;
             })
+        },
+        methods:{
+            getSidebar(){
+                let groupId=localStorage.getItem('groupId')
+                if(groupId==='admin'){
+                    this.items= [
+                        {
+                            icon: 'el-icon-lx-home',
+                            index: '/dashboard',
+                            title: '系统首页'
+                        },
+                        {
+                            icon: 'el-icon-lx-copy',
+                            index: 'dashboard',
+                            title: '工程管理',
+                            subs: [
+                                {
+                                    index: '/qqgl',
+                                    title: '前期管理'
+                                },
+                                {
+                                    index: '/zbgl',
+                                    title: '招标管理'
+                                },
+                                {
+                                    index: '/htgl',
+                                    title: '合同管理'
+                                },
+                                {
+                                    index: '/sggl',
+                                    title: '施工管理'
+                                },
+                                {
+                                    index: '/ysgl',
+                                    title: '验收管理'
+                                },
+                                {
+                                    index: '/jsgl',
+                                    title: '结算管理'
+                                },
+                                {
+                                    index:'/gysgl',
+                                    title:'供应商管理'
+                                }
+                            ]
+                        },
+                        {
+                            icon: 'el-icon-lx-cascades',
+                            index: 'table',
+                            title: '系统管理',
+                            subs:[
+                                {
+                                    index: '/qxgl',
+                                    title: '权限管理'
+                                },
+                                {
+                                    index:'2',
+                                    title:'工作流管理',
+                                    subs:[
+                                        {
+                                            index:'/lxsp',
+                                            title:'立项审批'
+                                        },
+                                        {
+                                            index:'/zbsp',
+                                            title:'招标审批'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            icon: 'el-icon-lx-calendar',
+                            index: '3',
+                            title: '统计报表',
+                            subs: [
+                                {
+                                    index: '/ndlxb',
+                                    title: '年度立项表'
+                                },
+                            ]
+                        },
+
+                    ]
+                }else if(groupId==='jsb_doman'||groupId==='jsb_jl'||groupId==='jsb_zgjl'){
+                    this.items= [
+                        {
+                            icon: 'el-icon-lx-home',
+                            index: '/dashboard',
+                            title: '系统首页'
+                        },
+                        {
+                            icon: 'el-icon-lx-copy',
+                            index: 'dashboard',
+                            title: '工程管理',
+                            subs: [
+                                {
+                                    index: '/qqgl',
+                                    title: '前期管理'
+                                },
+                                {
+                                    index: '/zbgl',
+                                    title: '招标管理'
+                                },
+                                {
+                                    index: '/htgl',
+                                    title: '合同管理'
+                                },
+                                {
+                                    index: '/sggl',
+                                    title: '施工管理'
+                                },
+                                {
+                                    index: '/ysgl',
+                                    title: '验收管理'
+                                },
+                                {
+                                    index: '/jsgl',
+                                    title: '结算管理'
+                                },
+                                {
+                                    index:'/gysgl',
+                                    title:'供应商管理'
+                                }
+                            ]
+                        },
+                        {
+                            icon: 'el-icon-lx-cascades',
+                            index: 'table',
+                            title: '系统管理',
+                            subs:[
+                                {
+                                    index:'2',
+                                    title:'工作流管理',
+                                    subs:[
+                                        {
+                                            index:'/lxsp',
+                                            title:'立项审批'
+                                        },
+                                        {
+                                            index:'/zbsp',
+                                            title:'招标审批'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            icon: 'el-icon-lx-calendar',
+                            index: '3',
+                            title: '统计报表',
+                            subs: [
+                                {
+                                    index: '/ndlxb',
+                                    title: '年度立项表'
+                                },
+                            ]
+                        },
+
+                    ]
+                } else if(groupId==='bgs'){
+                    this.items= [
+                        {
+                            icon: 'el-icon-lx-home',
+                            index: '/dashboard',
+                            title: '系统首页'
+                        },
+                        {
+                            icon: 'el-icon-lx-copy',
+                            index: 'dashboard',
+                            title: '工程管理',
+                            subs: [
+                                {
+                                    index: '/qqgl',
+                                    title: '前期管理'
+                                },
+                                {
+                                    index: '/zbgl',
+                                    title: '招标管理'
+                                },
+                                {
+                                    index: '/htgl',
+                                    title: '合同管理'
+                                },
+
+                            ]
+                        },
+                    ]
+                }else {
+                    this.items= [
+                        {
+                            icon: 'el-icon-lx-home',
+                            index: '/dashboard',
+                            title: '系统首页'
+                        },
+                        {
+                            icon: 'el-icon-lx-copy',
+                            index: 'dashboard',
+                            title: '工程管理',
+                            subs: [
+                                {
+                                    index: '/qqgl',
+                                    title: '前期管理'
+                                },
+                                {
+                                    index: '/zbgl',
+                                    title: '招标管理'
+                                },{
+                                    index: '/sggl',
+                                    title: '施工管理'
+                                }
+                            ]
+                        },
+                    ]
+                }
+            }
         }
     }
 </script>

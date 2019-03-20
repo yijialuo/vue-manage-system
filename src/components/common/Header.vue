@@ -4,26 +4,9 @@
         <div class="collapse-btn" @click="collapseChage">
             <i class="el-icon-menu"></i>
         </div>
-        <div class="logo">新沙项目管理</div>
+        <div class="logo">新沙工程项目管理系统</div>
         <div class="header-right">
             <div class="header-user-con">
-                <!-- 全屏显示 -->
-                <div class="btn-fullscreen" @click="handleFullScreen">
-                    <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
-                        <i class="el-icon-rank"></i>
-                    </el-tooltip>
-                </div>
-                <!-- 消息中心 -->
-                <div class="btn-bell">
-                    <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <router-link to="/dashboard">
-                            <i class="el-icon-bell"></i>
-                        </router-link>
-                    </el-tooltip>
-                    <span class="btn-bell-badge" v-if="message"></span>
-                </div>
-                <!-- 用户头像 -->
-                <div class="user-avator"><img src="../../assets/img/img.jpg"></div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
@@ -31,10 +14,27 @@
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item divided  command="loginout">退出登录</el-dropdown-item>
+                        <el-dropdown-item divided  command="xgmm">修改密码</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
         </div>
+
+        <!--修改密码弹窗-->
+        <el-dialog title="修改密码" :visible.sync="show_xgmm" width="350px">
+            <el-form >
+                <el-form-item label="新密码" label-width="100px">
+                    <el-input v-model="mm" placeholder="请输入密码" type="password"></el-input>
+                </el-form-item>
+                <el-form-item label="再次输入" label-width="100px">
+                    <el-input v-model="zcmm" placeholder="请输入密码" type="password"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="show_xgmm = false">取 消</el-button>
+                <el-button type="primary" @click="qdxgmm" >确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -43,6 +43,10 @@
     export default {
         data() {
             return {
+                mm:'',
+                zcmm:'',
+                //修改密码
+                show_xgmm:false,
                 ip:'http://localhost:8080',
                 collapse: true,
                 fullscreen: false,
@@ -52,23 +56,31 @@
         },
         computed:{
             username(){
-                let username = localStorage.getItem('userId');
+                let username = localStorage.getItem('userName');
                 return username ? username : this.name;
             }
         },
-        created(){
-            this.xmsl()
-        },
+
         methods:{
-            //领取消息数量
-            xmsl(){
-                axios.get(this.ip+'/projectApplication/lqxxs',{
+            //确定修改密码
+            qdxgmm(){
+                if(this.mm!==this.zcmm||this.mm==""||this.mm==null){
+                    this.$message.error("修改失败！")
+                    return
+                }
+                axios.get(this.ip+'/user/xgmm',{
                     params:{
                         userId:localStorage.getItem('userId'),
+                        oldPass:localStorage.getItem('passWord'),
+                        newPass:this.mm
                     }
                 }).then(res=>{
                     if(res.data){
-                        this.message=res.data;
+                        this.$message.success("修改成功！")
+                        localStorage.setItem("passWord",this.mm)
+                        this.show_xgmm=false
+                    }else {
+                        this.$message.error("修改失败！")
                     }
                 })
             },
@@ -77,6 +89,9 @@
                 if(command == 'loginout'){
                     localStorage.removeItem('userId')
                     this.$router.push('/login');
+                }else {
+                    this.show_xgmm=true
+                    console.log("xgmm!")
                 }
             },
             // 侧边栏折叠

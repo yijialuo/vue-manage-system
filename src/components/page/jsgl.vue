@@ -23,14 +23,28 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
-                    <el-button type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
+                    <el-button type="primary" style="margin-left: 10px" @click="xmss" icon="el-icon-search">搜索</el-button>
+                    <el-select
+                            style="margin-left: 30px"
+                            v-model="contractId"
+                            filterable
+                            placeholder="请输入或选择合同号"
+                    >
+                        <el-option
+                                v-for="item in hts"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-button type="primary" style="margin-left: 10px" @click="htss" icon="el-icon-search">搜索</el-button>
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getALLJsjl">全部
                     </el-button>
                 </div>
                 <el-table height="500" style="width: 100%" :data="jss">
                     <el-table-column type="expand">
                         <template slot-scope="props">
-                            <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
                                 <el-form-item label="发票号码:">
                                     <span>{{ props.row.invoice_no }}</span>
                                 </el-form-item>
@@ -43,21 +57,21 @@
                                 <el-form-item label="经办部门负责人:">
                                     <span>{{ props.row.jbbmfzr }}</span>
                                 </el-form-item>
-                                <el-form-item label="主管部门负责人:">
-                                    <span>{{ props.row.zgbmfzr }}</span>
-                                </el-form-item>
-                                <el-form-item label="财务总监:">
-                                    <span>{{ props.row.cwzj }}</span>
-                                </el-form-item>
-                                <el-form-item label="分管领导:">
-                                    <span>{{ props.row.fgld }}</span>
-                                </el-form-item>
-                                <el-form-item label="公司总经理:">
-                                    <span>{{ props.row.gszjl }}</span>
-                                </el-form-item>
-                                <el-form-item label="分管领导:">
-                                    <span>{{ props.row.fgld }}</span>
-                                </el-form-item>
+                                <!--<el-form-item label="主管部门负责人:">-->
+                                    <!--<span>{{ props.row.zgbmfzr }}</span>-->
+                                <!--</el-form-item>-->
+                                <!--<el-form-item label="财务总监:">-->
+                                    <!--<span>{{ props.row.cwzj }}</span>-->
+                                <!--</el-form-item>-->
+                                <!--<el-form-item label="分管领导:">-->
+                                    <!--<span>{{ props.row.fgld }}</span>-->
+                                <!--</el-form-item>-->
+                                <!--<el-form-item label="公司总经理:">-->
+                                    <!--<span>{{ props.row.gszjl }}</span>-->
+                                <!--</el-form-item>-->
+                                <!--<el-form-item label="分管领导:">-->
+                                    <!--<span>{{ props.row.fgld }}</span>-->
+                                <!--</el-form-item>-->
                                 <el-form-item label="合同日期:">
                                     <span>{{ props.row.htrq }}</span>
                                 </el-form-item>
@@ -98,11 +112,18 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div style="text-align: center">
+                    <el-pagination
+                            background
+                            layout="prev, pager, next"
+                            :total="jss.length">
+                    </el-pagination>
+                </div>
             </div>
         </div>
 
-        <!--添加评价弹窗 -->
-        <el-dialog title="新增结算" :visible.sync="show_xzjs" width="50%">
+        <!--添加结算弹窗 -->
+        <el-dialog title="新增结算" :visible.sync="show_xzjs" width="680px">
             <el-form label-width="100px" label-position='left'>
                 <el-form-item style="margin-top:15px" label="合同号">
                     <el-select
@@ -145,33 +166,33 @@
                     <el-input v-model="htrq" :disabled="true"></el-input>
                 </el-form-item>
 
-                <el-form-item style="margin-top: 15px" label="合同总额">
-                    <el-input v-model="htzje" :disabled="true" style="width: 215px;margin-right: 20px"></el-input>
-                    已支付金额&nbsp&nbsp
-                    <el-input v-model="yzfje" :disabled="true" style="width: 200px"></el-input>
+                <el-form-item style="margin-top: 15px" label="合同总额(元)">
+                    <el-input v-model="htzje" :disabled="true" style="width: 215px;margin-right:15px"></el-input>
+                    已支付金额(元)&nbsp&nbsp
+                    <el-input v-model="yzfje" :disabled="true" style="width: 190px;"></el-input>
                 </el-form-item>
 
-                <el-form-item style="margin-top: 15px" label="未付金额">
-                    <el-input v-model="wzfje" :disabled="true" style="width: 215px;margin-right: 20px"></el-input>
-                    本期应支付金额&nbsp&nbsp
+                <el-form-item style="margin-top: 15px" label="未付金额(元)">
+                    <el-input v-model="wzfje" :disabled="true" style="width: 215px;margin-right: 15px"></el-input>
+                    本期应支付金额(元)
                     <el-input v-model="Payable.bqyf" type="number" style="width: 170px"></el-input>
                 </el-form-item>
 
-                <el-form-item style="margin-top: 10px" label="经办部门负责人">
-                    <el-input type="textarea" v-model="Payable.jbbmfzr" :rows="2"></el-input>
-                </el-form-item>
-                <el-form-item label="主管部门负责人">
-                    <el-input type="textarea" v-model="Payable.zgbmfzr" :rows="2"></el-input>
-                </el-form-item>
-                <el-form-item label="财务总监">
-                    <el-input type="textarea" v-model="Payable.cwzj" :rows="2"></el-input>
-                </el-form-item>
-                <el-form-item label="分管领导">
-                    <el-input type="textarea" v-model="Payable.fgld" :rows="2"></el-input>
-                </el-form-item>
-                <el-form-item label="公司总经理">
-                    <el-input type="textarea" v-model="Payable.gszjl" :rows="2"></el-input>
-                </el-form-item>
+                <!--<el-form-item style="margin-top: 10px" label="经办部门负责人">-->
+                    <!--<el-input type="textarea" v-model="Payable.jbbmfzr" :rows="2"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="主管部门负责人">-->
+                    <!--<el-input type="textarea" v-model="Payable.zgbmfzr" :rows="2"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="财务总监">-->
+                    <!--<el-input type="textarea" v-model="Payable.cwzj" :rows="2"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="分管领导">-->
+                    <!--<el-input type="textarea" v-model="Payable.fgld" :rows="2"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="公司总经理">-->
+                    <!--<el-input type="textarea" v-model="Payable.gszjl" :rows="2"></el-input>-->
+                <!--</el-form-item>-->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="show_xzjs=false">取消</el-button>
@@ -180,7 +201,7 @@
         </el-dialog>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :visible.sync="show_scfj" width="30%">
+        <el-dialog title="上传附件" :visible.sync="show_scfj" width="408px">
             <el-upload
                     class="upload-demo"
                     drag
@@ -206,6 +227,8 @@
         name: 'jsgl',
         data() {
             return {
+                //合同id
+                contractId:'',
                 Payable: {
                     jbbm: '',
                     jbr: '',
@@ -332,7 +355,21 @@
             this.getHts()
         },
         methods: {
-            ss() {
+            //合同搜索
+            htss(){
+                axios.get(this.ip + '/payable/htidToPaybles', {
+                    params: {
+                        contractId: this.contractId
+                    }
+                }).then(res => {
+                    if (res.data.length != 0)
+                        this.jss = res.data
+                    else
+                        this.$message.error("没找到相关数据！")
+                })
+            },
+            //项目搜索
+            xmss() {
                 axios.get(this.ip + '/payable/pidToPaybles', {
                     params: {
                         projectId: this.projectId
@@ -348,7 +385,6 @@
             getXms() {
                 axios.get(this.ip + '/projectApplication/getAllXmIdAndXmname')
                     .then(res => {
-                        console.log(res.data)
                         this.xms = res.data
                     })
             },
@@ -493,6 +529,10 @@
             },
             //立即创建
             ljcj() {
+                if(this.Payable.bqyf==null||this.Payable.bqyf==0||this.Payable.contract_id==""||this.Payable.contract_id==null){
+                    this.$message.error("请填写应付金额和合同！")
+                    return;
+                }
                 axios.post(this.ip + '/payable/addPayable', this.Payable)
                     .then(res => {
                         if (res.data) {

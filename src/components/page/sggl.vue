@@ -20,11 +20,11 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
-                    <el-button type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
-                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllProject">全部
+                    <el-button style="margin-left: 20px" type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
+                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllProject(1,userId)">全部
                     </el-button>
                 </div>
-                <el-table @row-dblclick="sjxm" stripe :data="projects" border class="table" ref="multipleTable">
+                <el-table @row-dblclick="sjxm" height="550px" stripe :data="projects" border class="table" ref="multipleTable">
                     <el-table-column prop="projectNam" label="项目名称" width="120">
                     </el-table-column>
                     <el-table-column prop="declarationDep" label="立项部门">
@@ -37,16 +37,24 @@
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-edit" @click="sjxm(scope.row)">
-                                编辑
+                            <el-button type="text"  @click="sjxm(scope.row)">
+                                管理
                             </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
+                <div style="text-align: center">
+                    <el-pagination
+                            background
+                            @current-change="currentChange"
+                            layout="prev, pager, next"
+                            :total="count">
+                    </el-pagination>
+                </div>
             </div>
         </div>
         <!--进度弹窗 -->
-        <el-dialog title="施工进度" :visible.sync="show_sgjd" width="50%" @close="close">
+        <el-dialog title="施工进度" :visible.sync="show_sgjd" width="680px" @close="close">
             <h2 style="text-align: center"> {{projectName}}</h2>
             <el-form style="margin-top: 20px" label-width="70px" label-position='left'>
                 <el-form-item label="开工时间">
@@ -89,7 +97,7 @@
 
 
         <!--编辑节点弹窗 -->
-        <el-dialog title="添加施工进度" :visible.sync="show_bj" width="40%">
+        <el-dialog title="添加施工进度" :visible.sync="show_bj" width="550px">
             <h2 style="text-align: center"> {{projectName}}</h2>
             <el-form style="margin-top: 20px" label-width="70px" label-position='left'>
                 <el-form-item label="节点：">
@@ -116,7 +124,7 @@
         </el-dialog>
 
         <!--新建施工进度弹窗 -->
-        <el-dialog title="添加施工进度" :visible.sync="show_xzjd" width="40%">
+        <el-dialog title="添加施工进度" :visible.sync="show_xzjd" width="550px">
             <h2 style="text-align: center"> {{projectName}}</h2>
             <el-form style="margin-top: 20px" label-width="70px" label-position='left'>
                 <el-form-item label="节点：">
@@ -152,6 +160,7 @@
         name: 'sggl',
         data() {
             return {
+                userId:localStorage.getItem('userId'),
                 pickerOptions1: {
                     shortcuts: [{
                         text: '今天',
@@ -211,13 +220,26 @@
                 //完工时间
                 wgsj:'',
                 iswg:false,
+                count:0
             }
         },
         created() {
             this.getXms()
-            this.getAllProject()
+            this.getAllProject(1,this.userId)
+            this.getcounts()
         },
         methods: {
+            //分页请求
+            currentChange(pageNum){
+                this.getAllProject(pageNum,this.userId)
+            },
+            //项目数量
+            getcounts(){
+                axios.get(this.ip+'/projectApplication/AllCounts')
+                    .then(res=>{
+                        this.count=res.data
+                    })
+            },
             //删除
             handleDelete(row){
                 this.$confirm('此操作将永久删除该节点, 是否继续?', '提示', {
@@ -263,7 +285,6 @@
             bj(row){
                 this.show_bj=true
                 this.jindu=row
-                console.log(row)
             },
             //点击完工
             wg(){
@@ -325,7 +346,6 @@
                         pid:this.projectId
                     }
                 }).then(res=>{
-                    console.log(res.data)
                     this.jindus=res.data
                 })
             },
@@ -370,7 +390,6 @@
             },
             //搜索
             ss() {
-                console.log(this.projectId)
                 axios.get(this.ip + '/projectApplication/selectXmById', {
                     params: {
                         projectId: this.projectId
@@ -385,8 +404,13 @@
                 })
             },
             //拿到所有项目
-            getAllProject() {
-                axios.get(this.ip + '/projectApplication/getAllProject')
+            getAllProject(pageNum,userId) {
+                axios.get(this.ip + '/projectApplication/getAllProject',{
+                    params:{
+                        pageNum:pageNum,
+                        userId:userId
+                    }
+                })
                     .then(res => {
                         this.projects = res.data
                     })
@@ -395,7 +419,6 @@
             getXms() {
                 axios.get(this.ip + '/projectApplication/getAllXmIdAndXmname')
                     .then(res => {
-                        console.log(res.data)
                         this.xms = res.data
                     })
             },

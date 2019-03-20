@@ -87,7 +87,7 @@
 
 
         <!-- 项目详情框 -->
-        <el-dialog title="项目详情" :visible.sync="show_xq" width="50%" center>
+        <el-dialog title="项目详情" :visible.sync="show_xq" width="608px" center>
             <el-form label-width="100px">
                 <el-form-item label="项目名称">
                     <el-input :disabled="user.groupId!='doman'" v-model="xm.projectNam"></el-input>

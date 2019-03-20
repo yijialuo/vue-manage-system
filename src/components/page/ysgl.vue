@@ -27,9 +27,9 @@
                 </el-select>
                 <el-button style="margin-left: 10px" type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
 
-                <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllys">全部</el-button>
+                <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllys(1)">全部</el-button>
             </div>
-            <el-table height="500" :data="yanshous" style="width: 100%">
+            <el-table height="550" :data="yanshous" style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
@@ -45,47 +45,56 @@
                             <el-form-item label="计划文号:">
                                 <span>{{ props.row.sgdw }}</span>
                             </el-form-item>
-                            <el-form-item label="施工单位自我评定:">
-                                <span>{{ props.row.sgdwzwpd }}</span>
-                            </el-form-item>
-                            <el-form-item label="使用部门验收意见:">
-                                <span>{{ props.row.sybmysyj }}</span>
-                            </el-form-item>
-                            <el-form-item label="项目主管部门质量评定:">
-                                <span>{{ props.row.zgbmpd }}</span>
-                            </el-form-item>
-                            <el-form-item label="参加验收人员验收结论:">
-                                <span>{{ props.row.ysjl }}</span>
-                            </el-form-item>
+                            <!--<el-form-item label="施工单位自我评定:">-->
+                                <!--<span>{{ props.row.sgdwzwpd }}</span>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item label="使用部门验收意见:">-->
+                                <!--<span>{{ props.row.sybmysyj }}</span>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item label="项目主管部门质量评定:">-->
+                                <!--<span>{{ props.row.zgbmpd }}</span>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item label="参加验收人员验收结论:">-->
+                                <!--<span>{{ props.row.ysjl }}</span>-->
+                            <!--</el-form-item>-->
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column prop="ysno" sortable label="编号" width="100">
+                <el-table-column prop="ysno" sortable label="验收单编号" >
                 </el-table-column>
-                <el-table-column prop="projectName" label="工程名称" width="120">
+                <el-table-column prop="projectName" label="工程名称" >
                 </el-table-column>
-                <el-table-column prop="kgrq" sortable width="120" label="开工日期">
+                <el-table-column prop="kgrq" sortable  label="开工日期">
                 </el-table-column>
-                <el-table-column prop="sjjgrq" sortable width="130" label="实际竣工日期">
+                <el-table-column prop="sjjgrq" sortable  label="实际竣工日期">
                 </el-table-column>
-                <el-table-column prop="jhje" sortable width="120" label="计划金额">
+                <el-table-column prop="jhje" sortable  label="计划金额(元)">
                 </el-table-column>
-                <el-table-column prop="cbje"  label="承包金额">
+                <el-table-column prop="cbje"    label="承包金额(元)">
                 </el-table-column>
-                <el-table-column prop="ysrq" width="120" sortable label="验收日期">
+                <el-table-column prop="ysrq"  sortable label="验收日期">
                 </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作"  align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="djfj(scope.row.id)" icon="el-icon-upload">附件</el-button>
-                        <el-button type="text" icon="el-icon-edit" @click="bjys(scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" @click="scys(scope.row.id)" class="red">删除</el-button>
+                        <el-button type="text"  @click="djfj(scope.row.id),isgd=scope.row.gd" >附件</el-button>
+                        <el-button type="text" :disabled="scope.row.gd=='1'" @click="bjys(scope.row)">编辑</el-button>
+                        <el-button type="text" :disabled="scope.row.gd=='1'"  @click="gd(scope.row.id)">归档</el-button>
+                        <el-button type="text" :disabled="scope.row.gd=='1'"  @click="scys(scope.row.id)"  v-bind:class="{red:scope.row.gd!='1'}">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
+            <div style="text-align: center">
+                <el-pagination
+                        background
+                        @current-change="currentChange"
+                        layout="prev, pager, next"
+                        :total="counts">
+                </el-pagination>
+            </div>
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :visible.sync="show_scfj" width="30%">
+        <el-dialog title="上传附件" :visible.sync="show_scfj" width="408px">
             <el-upload
                     class="upload-demo"
                     drag
@@ -101,14 +110,16 @@
             </el-upload>
         </el-dialog>
         <!--新建验收弹窗 -->
-        <el-dialog title="验收单" :visible.sync="show_xjys" width="48%">
-            <el-input
-                    placeholder="编号"
-                    v-model="yanshou.ysno"
-                    style="margin-left: 30px;width: 150px"
-                    clearable>
-            </el-input>
+        <el-dialog title="验收单" :visible.sync="show_xjys" width="653px">
+
             <el-form style="margin-top: 20px" ref="form"  label-width="100px">
+                <el-form-item label="验收单编号">
+                    <el-input
+                            placeholder="验收单编号"
+                            v-model="yanshou.ysno"
+                            clearable>
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="工程名称">
                     <el-select
                             placeholder="选择项目"
@@ -117,7 +128,7 @@
                             v-model="yanshou.projectid"
                           >
                         <el-option
-                                v-for="item in xms"
+                                v-for="item in ysxms"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -143,24 +154,24 @@
                 <el-date-picker type="date" placeholder="选择日期" v-model="yanshou.sjjgrq" value-format="yyyy-MM-dd"
                                 style="width: 200px" ></el-date-picker>
             </el-form-item>
-            <el-form-item label="承包金额">
+            <el-form-item label="承包金额(元)">
                 <el-input type="number" v-model="yanshou.cbje" style="width: 200px" ></el-input>
                 &nbsp&nbsp&nbsp&nbsp验收日期&nbsp&nbsp&nbsp&nbsp
                 <el-date-picker type="date" placeholder="选择日期" v-model="yanshou.ysrq" value-format="yyyy-MM-dd"
                                 style="width: 200px" ></el-date-picker>
             </el-form-item>
-            <el-form-item label="施工单位自我评定">
-                <el-input type="textarea" v-model="yanshou.sgdwzwpd" rows="3"></el-input>
-            </el-form-item>
-            <el-form-item label="使用部门验收意见">
-                <el-input type="textarea" v-model="yanshou.sybmysyj" rows="3"></el-input>
-            </el-form-item>
-            <el-form-item label="项目主管部门质量评定">
-                <el-input type="textarea" v-model="yanshou.zgbmpd" rows="3"></el-input>
-            </el-form-item>
-            <el-form-item label="参加验收人员验收结论">
-                <el-input type="textarea" v-model="yanshou.ysjl" rows="3"></el-input>
-            </el-form-item>
+            <!--<el-form-item label="施工单位自我评定">-->
+                <!--<el-input type="textarea" v-model="yanshou.sgdwzwpd" rows="3"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="使用部门验收意见">-->
+                <!--<el-input type="textarea" v-model="yanshou.sybmysyj" rows="3"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="项目主管部门质量评定">-->
+                <!--<el-input type="textarea" v-model="yanshou.zgbmpd" rows="3"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="参加验收人员验收结论">-->
+                <!--<el-input type="textarea" v-model="yanshou.ysjl" rows="3"></el-input>-->
+            <!--</el-form-item>-->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="show_xjys = false,yanshou={}">取 消</el-button>
@@ -169,7 +180,7 @@
         </el-dialog>
 
         <!--编辑验收弹窗 -->
-        <el-dialog title="验收单" :visible.sync="show_bjys" width="48%">
+        <el-dialog title="验收单" :visible.sync="show_bjys" width="653px">
             <el-input
                     placeholder="编号"
                     v-model="yanshou.ysno"
@@ -215,24 +226,24 @@
                     <el-date-picker type="date" placeholder="选择日期" v-model="yanshou.sjjgrq" value-format="yyyy-MM-dd"
                                     style="width: 200px" ></el-date-picker>
                 </el-form-item>
-                <el-form-item label="承包金额">
+                <el-form-item label="承包金额(元)">
                     <el-input type="number" v-model="yanshou.cbje" style="width: 200px" ></el-input>
                     &nbsp&nbsp&nbsp&nbsp验收日期&nbsp&nbsp&nbsp&nbsp
                     <el-date-picker type="date" placeholder="选择日期" v-model="yanshou.ysrq" value-format="yyyy-MM-dd"
                                     style="width: 200px" ></el-date-picker>
                 </el-form-item>
-                <el-form-item label="施工单位自我评定">
-                    <el-input type="textarea" v-model="yanshou.sgdwzwpd" rows="3"></el-input>
-                </el-form-item>
-                <el-form-item label="使用部门验收意见">
-                    <el-input type="textarea" v-model="yanshou.sybmysyj" rows="3"></el-input>
-                </el-form-item>
-                <el-form-item label="项目主管部门质量评定">
-                    <el-input type="textarea" v-model="yanshou.zgbmpd" rows="3"></el-input>
-                </el-form-item>
-                <el-form-item label="参加验收人员验收结论">
-                    <el-input type="textarea" v-model="yanshou.ysjl" rows="3"></el-input>
-                </el-form-item>
+                <!--<el-form-item label="施工单位自我评定">-->
+                    <!--<el-input type="textarea" v-model="yanshou.sgdwzwpd" rows="3"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="使用部门验收意见">-->
+                    <!--<el-input type="textarea" v-model="yanshou.sybmysyj" rows="3"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="项目主管部门质量评定">-->
+                    <!--<el-input type="textarea" v-model="yanshou.zgbmpd" rows="3"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="参加验收人员验收结论">-->
+                    <!--<el-input type="textarea" v-model="yanshou.ysjl" rows="3"></el-input>-->
+                <!--</el-form-item>-->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="qxbj">取 消</el-button>
@@ -298,35 +309,89 @@
                 list: [],
                 url: '',
                 cid:'',
-                ysNo:''
-
+                ysNo:'',
+                //验收条数
+                counts:0,
+                //可以验收的项目
+                ysxms:[],
             }
         },
         created() {
-            this.getAllys()
+            this.getAllys(1)
             this.getXms()
+            this.getCount()
         },
         methods: {
+            currentChange(pageNum){
+                this.getAllys(pageNum)
+            },
+            //拿到数据条数
+            getCount(){
+                axios.get(this.ip+'/yanshou/AllCounts')
+                    .then(res=>{
+                        this.counts=res.data;
+                    })
+            },
+            //归档
+            gd(id){
+                //请求附件名
+                axios.get(this.ip+'/contract/getFjs',{
+                    params:{
+                        cid:id
+                    }
+                })
+                    .then(res=>{
+                        if(res.data.length==0){
+                            this.$message.error("改记录还未上传附件！禁止归档！")
+                            return;
+                        }else {
+                            this.$confirm("归档后，将不能操作此记录，是否继续","提示",{
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(()=> {
+                                axios.get(this.ip + '/yanshou/guidang', {
+                                    params: {
+                                        id: id
+                                    }
+                                }).then(res => {
+                                    if (res.data){
+                                        this.$message.success("归档完成！")
+                                        this.getAllys(1)
+                                    }
+                                })
+                            })
+                        }
+                    })
+
+            },
             //取消编辑
             qxbj(){
                 this.show_bjys = false
                 this.yanshou={}
-                this.getAllys()
+                this.getAllys(1)
             },
             //确定新建验收
             qdxj(){
                 axios.post(this.ip+'/yanshou/addYanshou',this.yanshou)
                     .then(res=>{
-                        this.getAllys()
                         this.$message.success("新建验收成功！")
+                        this.reload()
                         this.show_xjys=false
                     })
             },
             //新建验收
             xjys(){
                 this.show_xjys=true
-                this.getXms()
+                this.getYsxms()
                 this.yanshou={}
+            },
+            //拿到可以验收的项目
+            getYsxms(){
+                axios.get(this.ip+'/projectApplication/selectYsXm')
+                    .then(res=>{
+                        this.ysxms=res.data
+                    })
             },
             //项目名称搜索（projectId）
             ss(){
@@ -370,7 +435,7 @@
                         .then(res=>{
                             if(res.data){
                                 this.$message.success("删除成功")
-                                this.getAllys()
+                                this.reload()
                             }
                             else
                                 this.$message.error("删除失败！")
@@ -395,11 +460,11 @@
                             }else{
                                 this.$message.error("删除失败！")
                             }
-                            this.getFileList(this.cid)
+                            this.getFileList()
                         })
                 })
                     .catch(()=>{
-                        this.getFileList(this.cid)
+                        this.getFileList()
                     })
             },
             //编辑合同
@@ -418,7 +483,7 @@
                         }else {
                             this.$message.error("修改失败！")
                         }
-                        this.getAllys()
+                        this.getAllys(1)
                     })
                 this.show_bjys=false
             },
@@ -499,9 +564,13 @@
                         this.xms=res.data
                     })
             },
-            //拿到所有合同
-            getAllys() {
-                axios.get(this.ip+'/yanshou/getAllYanshou')
+            //拿到所有验收
+            getAllys(pageNum) {
+                axios.get(this.ip+'/yanshou/getAllYanshou',{
+                    params:{
+                        pageNum:pageNum
+                    }
+                })
                     .then(res=>{
                        this.changesj(res.data)
                     })

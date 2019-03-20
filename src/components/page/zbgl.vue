@@ -13,15 +13,19 @@
                         新建招标流程
                     </el-button>
                 </div>
-                <el-table stripe :data="clzhaobiaos" border class="table" ref="multipleTable">
+                <el-table height="500px" stripe :data="clzhaobiaos" border class="table" ref="multipleTable">
                     <el-table-column prop="xmName" label="项目名称" width="150">
                     </el-table-column>
                     <el-table-column prop="userName" label="申请人" width="120">
                     </el-table-column>
                     <el-table-column prop="jsyq" label="技术要求">
                     </el-table-column>
+                    <el-table-column prop="cjsj" sortable label="创建时间">
+                    </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-upload"  @click="fj(scope.row)">附件
+                            </el-button>
                             <el-button type="text" icon="el-icon-star-on" @click="zt(scope.row)">状态
                             </el-button>
                             <el-button type="text" icon="el-icon-tickets" @click="xq(scope.row)">详情
@@ -29,55 +33,46 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div style="text-align: center">
+                    <el-pagination
+                            background
+                            layout="prev, pager, next"
+                            :total="clzhaobiaos.length">
+                    </el-pagination>
+                </div>
             </div>
         </div>
 
-        <div class="">
-            <div class="crumbs">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item><i class="el-icon-lx-copy"></i>招标消息</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
-            <div class="container">
-                <el-tabs v-model="message">
-                    <!--招标的项目-->
-                    <el-tab-pane :label="`招标审批(${zhaobiaos.length})`" name="first">
-                        <el-table :data="zhaobiaos" :show-header="true" style="width: 100%">
-                            <el-table-column label="项目名称">
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.xmName}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="申请人">
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.userName}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="技术要求">
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.jsyq}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="操作">
-                                <template slot-scope="scope">
-                                    <el-button type="primary"  @click="zbcl(scope.row)">处理</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-tab-pane>
-                </el-tabs>
-            </div>
-        </div>
 
-        <el-dialog title="状态" :visible.sync="show_zt" width="80%">
+        <!--上传附件弹窗 -->
+        <el-dialog title="上传附件" :visible.sync="showfj" width="408px">
+                <el-upload
+                        class="upload-demo"
+                        drag
+                        :action="url"
+                        :on-preview="handlePreview"
+                        :before-remove="handleBeforeRemove"
+                        :on-success="handleSuccess"
+                        multiple
+                        :file-list="fileList"
+                >
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>
+                </el-upload>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="showfj=false">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog title="状态" :visible.sync="show_zt"width="1000px">
             <img :src='src'/>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="show_zt=false">确 定</el-button>
             </span>
         </el-dialog>
 
-        <!--添加供应商弹窗 -->
-        <el-dialog title="新建招标流程" :visible.sync="show_xjzblc" width="50%">
+        <!--新建招标流程弹窗 -->
+        <el-dialog title="新建招标流程" :visible.sync="show_xjzblc" width="680px">
             <el-form ref="form" label-width="100px">
                 <el-form-item label="项目">
                     <el-select
@@ -93,10 +88,13 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="技术要求">
-                    <el-input v-model="zhaobiao.jsyq" rows="6" type="textarea"></el-input>
+
+                <el-form-item label="技术要求备注">
+                    <el-input v-model="zhaobiao.jsyq" rows="4" type="textarea"></el-input>
                 </el-form-item>
+
             </el-form>
+
             <span slot="footer" class="dialog-footer">
                 <el-button @click="show_xjzblc = false">取 消</el-button>
                 <el-button type="primary" @click="ks">开 始</el-button>
@@ -106,50 +104,20 @@
 
 
         <!--点击详情弹窗 -->
-        <el-dialog title="招标流程审批" :visible.sync="show_xq" width="50%">
+        <el-dialog title="招标流程审批" :visible.sync="show_xq" width="680px">
             <el-form ref="form" label-width="100px">
                 <el-form-item label="项目">
                     <el-input :disabled="true" v-model="zhaobiao.xmName" rows="6"></el-input>
                 </el-form-item>
-                <el-form-item label="技术要求">
+                <el-form-item label="技术要求备注">
                     <el-input :disabled="true" v-model="zhaobiao.jsyq" rows="6" type="textarea"></el-input>
                 </el-form-item>
                 <el-form-item label="发标时间">
                     <el-date-picker :disabled="true" v-model="zhaobiao.fbsj" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
                                     style="width: 205px"></el-date-picker>
-                    &nbsp&nbsp&nbsp&nbsp评标时间&nbsp&nbsp&nbsp&nbsp
-                    <el-date-picker :disabled="true" v-model="zhaobiao.pbsj" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
+                    &nbsp&nbsp&nbsp&nbsp定标时间&nbsp&nbsp&nbsp&nbsp
+                    <el-date-picker :disabled="true" v-model="zhaobiao.dbsj" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
                                     style="width: 205px"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="投标截止时间">
-                    <el-date-picker :disabled="true" v-model="zhaobiao.tbjzsj" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
-                                    style="width: 205px"></el-date-picker>
-                </el-form-item>
-                <el-form-item>
-                    <el-upload
-                            class="upload-demo"
-                            drag
-                            :action="url"
-                            :on-preview="handlePreview"
-                            :before-remove="handleBeforeRemove"
-                            :on-success="handleSuccess"
-                            multiple
-                            :file-list="fileList"
-                    >
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item >
-                    <el-table
-                            :data="tbdws"
-                    >
-                        <el-table-column
-                                prop="dw"
-                                label="投标单位"
-                                width="180">
-                        </el-table-column>
-                    </el-table>
                 </el-form-item>
                 <el-form-item >
                     <el-table
@@ -158,7 +126,7 @@
                         <el-table-column
                                 prop="zhongbiaodw"
                                 label="中标单位"
-                                width="180">
+                                width="120">
                         </el-table-column>
                         <el-table-column
                                 prop="zhongbiaojg"
@@ -167,18 +135,43 @@
                         </el-table-column>
                     </el-table>
                 </el-form-item>
+                <el-form-item label="工期">
+                    <el-input :disabled="true" v-model="zhaobiao.tbjzsj" ></el-input>
+                </el-form-item>
+                <el-form-item >
+                    <el-table
+                            :data="bzs"
+                    >
+                        <el-table-column
+                                prop="usernam"
+                                label="姓名"
+                                width="120">
+                        </el-table-column>
+                        <el-table-column
+                                prop="time"
+                                label="时间"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="comment"
+                                label="备注"
+                                width="180">
+                        </el-table-column>
+                    </el-table>
+                </el-form-item>
+
             </el-form>
         </el-dialog>
 
 
         <!--点击处理弹窗 -->
-        <el-dialog title="招标流程审批" :visible.sync="show_zbxq" width="50%">
+        <el-dialog title="招标流程审批" :visible.sync="show_zbxq" width="680px">
             <el-form ref="form" label-width="100px">
                 <el-form-item label="项目">
                     <el-input :disabled="true" v-model="zhaobiao.xmName" rows="6"></el-input>
                 </el-form-item>
                 <el-form-item label="技术要求">
-                    <el-input :disabled="true" v-model="zhaobiao.jsyq" rows="6" type="textarea"></el-input>
+                    <el-input :disabled="groupId!='doman'" v-model="zhaobiao.jsyq" rows="6" type="textarea"></el-input>
                 </el-form-item>
                 <el-form-item label="发标时间">
                     <el-date-picker :disabled="groupId!='jsb_doman'" v-model="zhaobiao.fbsj" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
@@ -190,21 +183,6 @@
                 <el-form-item label="投标截止时间">
                     <el-date-picker  :disabled="groupId!='jsb_doman'" v-model="zhaobiao.tbjzsj" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
                                     style="width: 205px"></el-date-picker>
-                </el-form-item>
-                <el-form-item>
-                    <el-upload
-                            class="upload-demo"
-                            drag
-                            :action="url"
-                            :on-preview="handlePreview"
-                            :before-remove="handleBeforeRemove"
-                            :on-success="handleSuccess"
-                            multiple
-                            :file-list="fileList"
-                    >
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">将文件拖到此处，或<em>上传招标文件</em></div>
-                    </el-upload>
                 </el-form-item>
                 <el-form-item v-if="groupId==='jsb_doman'">
                     <el-input placeholder="单位" v-model="dw" style="width: 205px"></el-input>
@@ -258,6 +236,21 @@
                         </el-table-column>
                     </el-table>
                 </el-form-item>
+                <el-form-item>
+                    <el-upload
+                            class="upload-demo"
+                            drag
+                            :action="url"
+                            :on-preview="handlePreview"
+                            :before-remove="handleBeforeRemove"
+                            :on-success="handleSuccess"
+                            multiple
+                            :file-list="fileList"
+                    >
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>
+                    </el-upload>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="show_zbxq = false">取 消</el-button>
@@ -270,6 +263,20 @@
             </span>
         </el-dialog>
 
+        <!--备注弹窗-->
+        <el-dialog title="备注" :visible.sync="show_bz">
+            <el-form>
+                <el-form-item label="备注：">
+                    <el-input style="margin-top: 5px" v-model="comment" type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 4}"
+                    ></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="show_bz=false">取 消</el-button>
+            <el-button type="primary" @click="ks">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -286,6 +293,9 @@
         },
         data() {
             return {
+                bzs:[],
+                //备注
+                comment:'',
                 groupId:localStorage.getItem('groupId'),
                 //投标单位
                 dw: '',
@@ -301,6 +311,8 @@
                 show_zbxq: false,
                 //详情弹窗
                 show_xq:false,
+                //备注弹窗
+                show_bz:false,
                 xms: [],
                 loading: false,
                 ip: 'http://localhost:8080',
@@ -330,6 +342,7 @@
                 },
                 //中标单位
                 zhongbiaos:[],
+                showfj:false
                 // //发标时间
                 // fbsj:'',
                 // //评标时间
@@ -341,7 +354,6 @@
         created() {
             this.lqzhaobiao()
             this.getAllzhaobiao()
-
         },
         methods: {
             //完工招标
@@ -387,13 +399,31 @@
                     this.zhongbiaos=res.data
                 })
             },
+            //附件
+            fj(row){
+                console.log(row)
+                this.zhaobiao=row
+                this.showfj=true
+                this.url = 'http://localhost:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.lqfj(row.zbpid)
+            },
             //详情
             xq(row){
                 this.zhaobiao=row
                 this.getAlltbdw()
                 this.getZhongbiaodw()
-                this.lqfj(row.zbpid)
+                this.getbzs()
                 this.show_xq=true
+            },
+            //拿备注
+            getbzs(){
+              axios.get(this.ip+'/zhaobiao/getComment',{
+                  params:{
+                      zbpid:this.zhaobiao.zbpid
+                  }
+              }).then(res=>{
+                  this.bzs=res.data
+              })
             },
             //作废招标审批
             zf(){
@@ -454,7 +484,7 @@
                         }
                         this.lqfj(this.zhaobiao.zbpid)
                     })
-                })
+                }).catch(()=>{this.lqfj(this.zhaobiao.zbpid)})
             },
             //删除单位
             scdw(row) {
@@ -465,7 +495,6 @@
                 }).then(res => {
                     this.getAlltbdw()
                 })
-                console.log(row)
             },
             //添加投标单位
             tjtbdw() {
@@ -588,7 +617,8 @@
                         zbpid: this.zhaobiao.zbpid,
                         userId: localStorage.getItem('userId'),
                         varName: varName,
-                        value: value
+                        value: value,
+                        comment:this.comment
                     }
                 })
                     .then(res => {
@@ -603,7 +633,6 @@
                     }
                 }).then(res => {
                     if (res.data.length != 0) {
-                        console.log(res.data)
                         this.zhaobiaos = res.data
                         //填充项目名称和用户名
                         for (let i = 0; i < this.zhaobiaos.length; i++) {
@@ -629,6 +658,12 @@
             },
             //开始
             ks() {
+                console.log(this.zhaobiao)
+                if(this.zhaobiao.xmid==null||this.zhaobiao.xmid==''||this.zhaobiao.jsyq==null||this.zhaobiao.jsyq==''){
+                    this.$message.error("请填写信息！")
+                    console.log("请填写信息！")
+                    return
+                }
                 axios.post(this.ip + '/zhaobiao/startZhaobiao', this.zhaobiao)
                     .then(res => {
                         if (res.data) {
@@ -639,6 +674,7 @@
             },
             //点击文件下载
             handlePreview(file) {
+
                 window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
             },
 
@@ -673,6 +709,7 @@
             },
             //新建招标流程
             xjzblc() {
+                this.zhaobiao={}
                 this.getXms()
                 this.zhaobiao.sqr = localStorage.getItem('userId')
                 this.show_xjzblc = true

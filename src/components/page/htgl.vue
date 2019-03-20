@@ -12,11 +12,26 @@
                 </el-button>
                 <el-input placeholder="合同编号" v-model="contractNo" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search"  @click="htSearch">搜索</el-button>
+                <el-select
+                        style="margin-left: 20px"
+                        filterable
+                        v-model="xmId"
+                        placeholder="输入或选择项目"
+                >
+                    <el-option
+                            v-for="item in xms"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-button type="primary" icon="el-icon-search" style="margin-left: 10px" @click="xmIdSS">搜索</el-button>
+                <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllht(1)">全部</el-button>
             </div>
-            <el-table height="500"  :data="contracts" style="width: 100%">
-                <el-table-column type="expand">
+            <el-table height="550"  :data="contracts" style="width: 100%">
+                <el-table-column  type="expand">
                     <template slot-scope="props">
-                        <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
                             <el-form-item label="合同经办人:">
                                 <span>{{ props.row.jbr }}</span>
                             </el-form-item>
@@ -26,22 +41,22 @@
                             <el-form-item label="对方资质审查:">
                                 <span>{{ props.row.zzsc }}</span>
                             </el-form-item>
-                            <el-form-item label="单位意见:">
-                                <span>{{ props.row.dwyj }}</span>
-                            </el-form-item>
-                            <el-form-item label="财务部门意见:">
-                                <span>{{ props.row.cwbmyj }}</span>
-                            </el-form-item>
-                            <el-form-item label="分管领导意见:">
-                                <span>{{ props.row.fgldyj }}</span>
-                            </el-form-item>
-                            <el-form-item label="总经理意见:">
-                                <span>{{ props.row.zjlyj }}</span>
-                            </el-form-item>
+                            <!--<el-form-item label="单位意见:">-->
+                                <!--<span>{{ props.row.dwyj }}</span>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item label="财务部门意见:">-->
+                                <!--<span>{{ props.row.cwbmyj }}</span>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item label="分管领导意见:">-->
+                                <!--<span>{{ props.row.fgldyj }}</span>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item label="总经理意见:">-->
+                                <!--<span>{{ props.row.zjlyj }}</span>-->
+                            <!--</el-form-item>-->
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column prop="contractNo" label="合同编号" width="150">
+                <el-table-column prop="contractNo" sortable label="合同编号" width="150">
                 </el-table-column>
                 <el-table-column prop="projectName" label="合同项目" width="120">
                 </el-table-column>
@@ -51,23 +66,33 @@
                 </el-table-column>
                 <el-table-column prop="tzwh" label="投资文号">
                 </el-table-column>
-                <el-table-column prop="price" label="合同价款">
+                <el-table-column prop="price" label="合同价款(元)">
                 </el-table-column>
                 <el-table-column prop="psjl" label="评审结论">
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="djfj(scope.row.id)" icon="el-icon-upload">附件</el-button>
-                        <el-button type="text" icon="el-icon-edit" @click="bjht(scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" @click="scht(scope.row.id)" class="red">删除</el-button>
+                        <el-button type="text" @click="djfj(scope.row.id),isgd=scope.row.gd">附件</el-button>
+                        <el-button type="text" :disabled="scope.row.gd=='1'"  @click="bjht(scope.row)">编辑</el-button>
+                        <el-button type="text" :disabled="scope.row.gd=='1'"  @click="gd(scope.row.id)">归档</el-button>
+                        <el-button type="text" :disabled="scope.row.gd=='1'"  @click="scht(scope.row.id)"  v-bind:class="{red:scope.row.gd!='1'}">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
+            <div style="text-align: center">
+                <el-pagination
+                        background
+                        @current-change="currentChange"
+                        layout="prev, pager, next"
+                        :total="hts">
+                </el-pagination>
+            </div>
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :visible.sync="show_scfj" width="30%">
+        <el-dialog title="上传附件" :visible.sync="show_scfj" width="408px">
             <el-upload
+                    :disabled="isgd=='1'"
                     class="upload-demo"
                     drag
                     :action="url"
@@ -77,13 +102,13 @@
                     multiple
                     :file-list="fileList"
             >
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <i class="el-icon-upload" ></i>
+                <div class="el-upload__text" >将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
         </el-dialog>
 
         <!--添加合同弹窗 -->
-        <el-dialog title="新建合同" :visible.sync="show_xjht" width="50%">
+        <el-dialog title="新建合同" :visible.sync="show_xjht" width="688px">
             <el-form  ref="form"  label-width="100px">
                 <el-form-item label="合同编号">
                     <el-input v-model="contract.contractNo"></el-input>
@@ -108,7 +133,7 @@
                     &nbsp&nbsp&nbsp&nbsp&nbsp投资文号&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                     <el-input v-model="contract.tzwh" style="width: 210px"></el-input>
                 </el-form-item>
-                <el-form-item label="合同价款">
+                <el-form-item label="合同价款(元)">
                     <el-input v-model="contract.price" type="number" style="width: 210px" ></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp合同经办人&nbsp&nbsp&nbsp&nbsp
                     <el-input v-model="contract.jbr" style="width: 210px"></el-input>
@@ -132,18 +157,18 @@
                         <el-radio style="margin-top: 10px" label="评审不合格，不能签订此合同"></el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="单位意见">
-                    <el-input type="textarea" v-model="contract.dwyj"></el-input>
-                </el-form-item>
-                <el-form-item label="财务部门意见">
-                    <el-input type="textarea" v-model="contract.cwbmyj"></el-input>
-                </el-form-item>
-                <el-form-item label="分管领导意见">
-                    <el-input type="textarea" v-model="contract.fgldyj"></el-input>
-                </el-form-item>
-                <el-form-item label="总经理意见">
-                    <el-input type="textarea" v-model="contract.zjlyj"></el-input>
-                </el-form-item>
+                <!--<el-form-item label="单位意见">-->
+                    <!--<el-input type="textarea" v-model="contract.dwyj"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="财务部门意见">-->
+                    <!--<el-input type="textarea" v-model="contract.cwbmyj"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="分管领导意见">-->
+                    <!--<el-input type="textarea" v-model="contract.fgldyj"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="总经理意见">-->
+                    <!--<el-input type="textarea" v-model="contract.zjlyj"></el-input>-->
+                <!--</el-form-item>-->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="show_xjht = false">取 消</el-button>
@@ -152,8 +177,8 @@
         </el-dialog>
 
         <!--编辑合同弹窗 -->
-        <el-dialog title="编辑合同" :visible.sync="show_bjht" width="50%">
-            <el-form  ref="form"  label-width="100px">
+        <el-dialog title="编辑合同" :visible.sync="show_bjht" width="685px">
+            <el-form   ref="form"  label-width="100px">
                 <el-form-item label="合同编号">
                     <el-input v-model="contract.contractNo"></el-input>
                 </el-form-item>
@@ -183,7 +208,7 @@
                     &nbsp&nbsp&nbsp&nbsp&nbsp投资文号&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                     <el-input v-model="contract.tzwh" style="width: 210px"></el-input>
                 </el-form-item>
-                <el-form-item label="合同价款">
+                <el-form-item label="合同价款(元)">
                     <el-input v-model="contract.price" type="number" style="width: 210px" ></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp合同经办人&nbsp&nbsp&nbsp&nbsp
                     <el-input v-model="contract.jbr" style="width: 210px"></el-input>
@@ -207,18 +232,18 @@
                         <el-radio style="margin-top: 10px" label="评审不合格，不能签订此合同"></el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="单位意见">
-                    <el-input type="textarea" v-model="contract.dwyj"></el-input>
-                </el-form-item>
-                <el-form-item label="财务部门意见">
-                    <el-input type="textarea" v-model="contract.cwbmyj"></el-input>
-                </el-form-item>
-                <el-form-item label="分管领导意见">
-                    <el-input type="textarea" v-model="contract.fgldyj"></el-input>
-                </el-form-item>
-                <el-form-item label="总经理意见">
-                    <el-input type="textarea" v-model="contract.zjlyj"></el-input>
-                </el-form-item>
+                <!--<el-form-item label="单位意见">-->
+                    <!--<el-input type="textarea" v-model="contract.dwyj"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="财务部门意见">-->
+                    <!--<el-input type="textarea" v-model="contract.cwbmyj"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="分管领导意见">-->
+                    <!--<el-input type="textarea" v-model="contract.fgldyj"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="总经理意见">-->
+                    <!--<el-input type="textarea" v-model="contract.zjlyj"></el-input>-->
+                <!--</el-form-item>-->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="qxbj">取 消</el-button>
@@ -260,7 +285,8 @@
                     cwbmyj:'',
                     fgldyj:'',
                     zjlyj:'',
-                    rq:''
+                    rq:'',
+                    gd:''
                 },
                 //对方资质审查,数组
                 zzsc:[],
@@ -270,12 +296,19 @@
                 list: [],
                 url: '',
                 cid:'',
-                contractNo:''
+                contractNo:'',
+                //是否归档
+                isgd:'',
+                //合同数
+                hts:0,
+                xmId:''
             }
         },
         created() {
-            this.getAllht()
+            this.getAllht(1)
             this.getXms()
+            //合同总条数
+            this.AllCounts()
         },
         computed:{
           projectId(){
@@ -300,11 +333,68 @@
             }
         },
         methods: {
+            currentChange(pageNum){
+                this.getAllht(pageNum)
+            },
+            //根据项目id搜索
+            xmIdSS(){
+                axios.get(this.ip+'/contract/xmIdSS',{
+                    params:{
+                        xmId:this.xmId
+                    }
+                }).then(res=>{
+                    if(res.data!=""&&res.data!=null){
+                        this.contracts=[]
+                        this.contracts.push(res.data)
+                    }else {
+                        this.$message.error("没找到数据！")
+                    }
+                })
+            },
+            //拿总条数
+            AllCounts(){
+                axios.get(this.ip+'/contract/AllCounts')
+                    .then(res=>{
+                        this.hts=res.data
+                    })
+            },
+            //归档，不能操作此记录
+            gd(id){
+                //请求附件名
+                axios.get(this.ip+'/contract/getFjs',{
+                    params:{
+                        cid:id
+                    }
+                })
+                    .then(res=>{
+                        if(res.data.length==0){
+                            this.$message.error("该记录还未上传附件！禁止归档！")
+                            return;
+                        }else {
+                            this.$confirm("归档后，将不能操作此记录，是否继续","提示",{
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(()=>{
+                                axios.get(this.ip+'/contract/guidang',{
+                                    params:{
+                                        id:id
+                                    }
+                                }).then(res=>{
+                                    if(res.data)
+                                        this.$message.success("归档成功！")
+                                    this.reload()
+                                })
+                            })
+                        }
+                    })
+
+            },
             //取消编辑
             qxbj(){
                     this.show_bjht = false,
-                    this.contract={},
-                    this.getAllht()
+                    this.contract={}
+                    this.reload()
             },
             //合同搜索
             htSearch(){
@@ -335,7 +425,7 @@
                         .then(res=>{
                             if(res.data){
                                 this.$message.success("删除成功")
-                                this.getAllht()
+                                this.getAllht(1)
                             }
                             else
                                 this.$message.error("删除失败！")
@@ -344,34 +434,34 @@
             },
             //删除附件
             handleBeforeRemove(file, fileList){
-                this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(()=>{
-                    axios.get(this.ip+'/contract/deletFj',{
-                        params:{
-                            fid:file.id
-                        }
-                    })
-                        .then(res=>{
-                            if(res.data){
-                                this.$message.success("删除成功！")
-                            }else{
-                                this.$message.error("删除失败！")
+                    this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(()=>{
+                        axios.get(this.ip+'/contract/deletFj',{
+                            params:{
+                                fid:file.id
                             }
+                        })
+                            .then(res=>{
+                                if(res.data){
+                                    this.$message.success("删除成功！")
+                                }else{
+                                    this.$message.error("删除失败！")
+                                }
+                                this.getFileList(this.cid)
+                            })
+                    })
+                        .catch(()=>{
                             this.getFileList(this.cid)
                         })
-                })
-                    .catch(()=>{
-                        this.getFileList(this.cid)
-                    })
             },
             //编辑合同
             bjht(row){
                 this.remoteMethod(row.projectName)
                 this.contract=row
-                this.zzsc=row.zzsc.split('/')
+                this.zzsc=row.zzsc.split('、')
                 this.show_bjht=true
             },
             //确定编辑
@@ -379,7 +469,7 @@
                 this.contract.zzsc=''
                 for(let i=0;i<this.zzsc.length;i++){
                     if(i<this.zzsc.length-1)
-                        this.contract.zzsc=this.contract.zzsc+this.zzsc[i]+'/'
+                        this.contract.zzsc=this.contract.zzsc+this.zzsc[i]+'、'
                     else
                         this.contract.zzsc=this.contract.zzsc+this.zzsc[i]
                 }
@@ -390,7 +480,7 @@
                         }else {
                             this.$message.error("修改失败！")
                         }
-                        this.getAllht()
+                        this.getAllht(1)
                     })
                 this.show_bjht=false
             },
@@ -446,10 +536,15 @@
             },
             //确定新建合同
             qdxjht(){
+                if(this.contract.projectId==''||this.contract.projectId==null||this.contract.price<=0||this.contract.price==null||this.contract.contractNo==''||this.contract.contractNo==null)
+                {
+                    this.$message.error("输入合同编号、项目名称、合同价款等重要信息！")
+                    return
+                }
                 this.contract.zzsc=''
                 for(let i=0;i<this.zzsc.length;i++){
                     if(i<this.zzsc.length-1)
-                        this.contract.zzsc=this.contract.zzsc+this.zzsc[i]+'/'
+                        this.contract.zzsc=this.contract.zzsc+this.zzsc[i]+'、'
                     else
                         this.contract.zzsc=this.contract.zzsc+this.zzsc[i]
                 }
@@ -459,7 +554,7 @@
                             this.$message.success("添加成功！")
                         else
                             this.$message.success("添加失败！")
-                        this.getAllht()
+                        this.reload()
                     })
                 this.show_xjht = false
             },
@@ -478,10 +573,14 @@
                   })
             },
             //拿到所有合同
-            getAllht() {
+            getAllht(pageNum) {
                 this.zzsc=[]
                 this.contract={}
-                axios.get(this.ip+'/contract/getAllContracts')
+                axios.get(this.ip+'/contract/getAllContracts',{
+                    params:{
+                        pageNum:pageNum
+                    }
+                })
                     .then(res=>{
                         console.log(res.data)
                         this.contracts=res.data

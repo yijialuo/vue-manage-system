@@ -8,12 +8,13 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button type="primary" icon="delete" class="handle-del mr10" @click="visible=true">新建用户</el-button>
+                    <el-button type="primary" icon="delete" class="handle-del mr10" @click="visible=true">新建用户
+                    </el-button>
                 </div>
                 <el-table :data="users" height="500px" border class="table">
-                    <el-table-column prop="userId" label="账号" >
+                    <el-table-column prop="userId" label="账号">
                     </el-table-column>
-                    <el-table-column prop="userName" label="姓名" >
+                    <el-table-column prop="userName" label="姓名">
                     </el-table-column>
                     <el-table-column prop="passWord" label="密码">
                     </el-table-column>
@@ -34,7 +35,7 @@
             </div>
 
             <!--新建用户弹窗-->
-            <el-dialog v-dialogDrag title="新建用户" center :visible.sync="visible" width="30%">
+            <el-dialog v-dialogDrag title="新建用户" center :visible.sync="visible" width="408px">
                 <div class="demo-input-suffix">
                     账号：
                     <el-input v-model="userOV.userId"></el-input>
@@ -76,7 +77,7 @@
             </el-dialog>
 
             <!-- 编辑弹出框 -->
-            <el-dialog title="编辑账号" :visible.sync="editVisible" width="30%">
+            <el-dialog title="编辑账号" :visible.sync="editVisible" width="408px">
                 <el-form ref="form" :model="form" label-width="50px">
                     <el-form-item label="账号">
                         <el-input v-model="form.userId"></el-input>
@@ -131,22 +132,26 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button type="primary" icon="delete" class="handle-del mr10" @click="show_addDepartment=true">添加部门
+                    <el-button type="primary" icon="delete" class="handle-del mr10" @click="show_addDepartment=true">
+                        添加部门
                     </el-button>
                     <el-button type="primary" icon="delete" class="handle-del mr10" @click="show_addGroup=true">添加职位
                     </el-button>
                 </div>
-                <el-table  :data="departments" border style="margin-top: 20px">
+                <el-table :data="departments" border style="margin-top: 20px">
                     <el-table-column prop="dCod" label="部门编号" width="150">
                     </el-table-column>
                     <el-table-column prop="dNam" label="部门名字" width="150">
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-edit" @click="edit_department(scope.$index, scope.row)">
+                            <el-button type="text" icon="el-icon-edit"
+                                       :disabled="scope.row.id=='20190125102616787'||scope.row.id=='20190123022801622'"
+                                       @click="edit_department(scope.$index, scope.row)">
                                 编辑
                             </el-button>
                             <el-button type="text" icon="el-icon-delete" class="red"
+                                       :disabled="scope.row.id=='20190125102616787'||scope.row.id=='20190123022801622'"
                                        @click="delete_department(scope.$index, scope.row)">删除
                             </el-button>
                         </template>
@@ -158,20 +163,10 @@
                     </el-table-column>
                     <el-table-column prop="name" label="职位名字" width="150">
                     </el-table-column>
-                    <el-table-column label="操作" width="180" align="center">
-                        <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-edit" @click="edit_group(scope.$index, scope.row)">
-                                编辑
-                            </el-button>
-                            <el-button type="text" icon="el-icon-delete" class="red"
-                                       @click="delete_group(scope.$index, scope.row)">删除
-                            </el-button>
-                        </template>
-                    </el-table-column>
                 </el-table>
 
                 <!-- 添加职位弹出框 -->
-                <el-dialog title="添加职位" :visible.sync="show_addGroup" width="30%">
+                <el-dialog title="添加职位" :visible.sync="show_addGroup" width="408px">
                     <el-form ref="form" :model="group" label-width="80px">
                         <el-form-item label="职位编号">
                             <el-input v-model="group.code"></el-input>
@@ -187,7 +182,7 @@
                 </el-dialog>
 
                 <!-- 添加部门弹出框 -->
-                <el-dialog title="添加部门" :visible.sync="show_addDepartment" width="30%">
+                <el-dialog title="添加部门" :visible.sync="show_addDepartment" width="408px">
                     <el-form ref="form" :model="department" label-width="80px">
                         <el-form-item label="部门编号">
                             <el-input v-model="department.dCod"></el-input>
@@ -203,7 +198,7 @@
                 </el-dialog>
 
                 <!-- 编辑部门弹出框 -->
-                <el-dialog title="编辑部门" :visible.sync="show_editDepartment" width="30%">
+                <el-dialog title="编辑部门" :visible.sync="show_editDepartment" width="408px">
                     <el-form ref="form" :model="department" label-width="80px">
                         <el-form-item label="部门编号">
                             <el-input v-model="department.dCod"></el-input>
@@ -219,7 +214,7 @@
                 </el-dialog>
 
                 <!-- 编辑职位弹出框 -->
-                <el-dialog title="编辑职位" :visible.sync="show_editGroup" width="30%">
+                <el-dialog title="编辑职位" :visible.sync="show_editGroup" width="408px">
                     <el-form ref="form" :model="group" label-width="80px">
                         <el-form-item label="职位编号">
                             <el-input v-model="group.code"></el-input>
@@ -229,12 +224,10 @@
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
-                <el-button @click="cancel_editgroup">取 消</el-button>
-                <el-button type="primary" @click="confirm_editgroup">确 定</el-button>
-            </span>
+                        <el-button @click="cancel_editgroup">取 消</el-button>
+                        <el-button type="primary" @click="confirm_editgroup">确 定</el-button>
+                    </span>
                 </el-dialog>
-
-
             </div>
         </div>
     </div>
@@ -245,8 +238,8 @@
     import axios from 'axios'
 
     export default {
-        inject:['reload'],
-        name:'account',
+        inject: ['reload'],
+        name: 'account',
         data: function () {
             return {
                 ip: 'http://localhost:8080',
@@ -256,29 +249,29 @@
                     userName: '',
                     passWord: '',
                     groupId: '',
-                    groupName:'',
-                    departmentId:'',
-                    departmentName:''
+                    groupName: '',
+                    departmentId: '',
+                    departmentName: ''
                 },
                 users: [],
                 //添加用户
                 visible: false,
                 //删除用户
-                delVisible:false,
+                delVisible: false,
                 group_options: [],
-                department_options:[],
+                department_options: [],
                 form: {
                     userId: '',
                     userName: '',
                     passWord: '',
                     groupId: '',
-                    departmentId:'',
+                    departmentId: '',
                 },
                 idx: -1,
                 show_addDepartment: false,
                 show_editDepartment: false,
                 show_addGroup: false,
-                show_editGroup:false,
+                show_editGroup: false,
                 department: {
                     dCod: '',
                     dNam: '',
@@ -301,40 +294,40 @@
             this.getAllgroup()
         },
         methods: {
-            getDepartment_optins(){
-                axios.get(this.ip+'/department/getAllDepartment')
-                    .then(res=>{
-                        if(res.data){
-                            for(let i=0;i<res.data.length;i++){
+            getDepartment_optins() {
+                axios.get(this.ip + '/department/getAllDepartment')
+                    .then(res => {
+                        if (res.data) {
+                            for (let i = 0; i < res.data.length; i++) {
                                 this.department_options.push({
-                                    value:res.data[i].id,
-                                    label:res.data[i].dNam
+                                    value: res.data[i].id,
+                                    label: res.data[i].dNam
                                 })
                             }
                         }
                     })
             },
-            getGroup_options(){
-                axios.get(this.ip+'/group/getallgroup')
-                    .then(res=>{
-                        if(res.data)
-                            for(let i=0;i<res.data.length;i++){
+            getGroup_options() {
+                axios.get(this.ip + '/group/getallgroup')
+                    .then(res => {
+                        if (res.data)
+                            for (let i = 0; i < res.data.length; i++) {
                                 this.group_options.push({
-                                    value:res.data[i].id,
-                                    label:res.data[i].name
+                                    value: res.data[i].id,
+                                    label: res.data[i].name
                                 })
                             }
                     })
             },
             //删除用户
-            deleteRow(){
-                axios.get(this.ip+'/user/deleteuser',{
-                    params:{
-                        userId:this.users[this.idx].userId
+            deleteRow() {
+                axios.get(this.ip + '/user/deleteuser', {
+                    params: {
+                        userId: this.users[this.idx].userId
                     }
-                } )
-                    .then(res=>{
-                        if(res.data){
+                })
+                    .then(res => {
+                        if (res.data) {
                             //this.users.splice(this.idx, 1);
                             this.$message.success('删除成功');
                             this.getAllusers();
@@ -350,7 +343,7 @@
                     userName: item.userName,
                     passWord: item.passWord,
                     groupId: item.groupId,
-                    departmentId:item.departmentId
+                    departmentId: item.departmentId
                 }
                 this.editVisible = true;
             },
@@ -359,23 +352,23 @@
                 this.delVisible = true;
             },
             getAllusers() {
-                axios.get(this.ip + '/user/getallusers',{
-                    params:{
-                        userId:localStorage.getItem('userId'),
-                        passWord:localStorage.getItem('passWord')
+                axios.get(this.ip + '/user/getallusers', {
+                    params: {
+                        userId: localStorage.getItem('userId'),
+                        passWord: localStorage.getItem('passWord')
                     }
                 })
                     .then(res => {
-                        this.users=res.data
+                        this.users = res.data
                     })
             },
             confirm_user() {
                 this.visible = false;
                 axios.post(this.ip + '/user/adduser', this.userOV)
                     .then(res => {
-                        if(res.data){
+                        if (res.data) {
                             this.$message.info("添加成功！")
-                        }else {
+                        } else {
                             this.$message.error("添加失败！")
                         }
                         this.getAllusers();
@@ -386,20 +379,20 @@
                     .then(res => {
                         if (res.data)
                             this.getAllusers()
-                        this.editVisible=false
+                        this.editVisible = false
                     })
             },
 
-            edit_group(index){
+            edit_group(index) {
                 this.group = this.groups[index];
                 this.show_editGroup = true;
             },
-            confirm_editgroup(){
+            confirm_editgroup() {
                 axios.get(this.ip + '/group/updatagroup', {
-                    params:{
-                        id:this.group.id,
-                        name:this.group.name,
-                        code:this.group.code
+                    params: {
+                        id: this.group.id,
+                        name: this.group.name,
+                        code: this.group.code
                     }
                 })
                     .then(res => {
@@ -412,8 +405,8 @@
                         this.show_editGroup = false;
                     })
             },
-            cancel_editgroup(){
-                this.show_editGroup=false
+            cancel_editgroup() {
+                this.show_editGroup = false
                 this.getAllgroup();
             },
             confirm_addGroup() {
@@ -441,7 +434,7 @@
             getAllgroup() {
                 axios.get(this.ip + '/group/getallgroup')
                     .then(res => {
-                        this.groups=[]
+                        this.groups = []
                         for (let i = 0; i < res.data.length; i++) {
                             this.groups.push({
                                 id: res.data[i].id,
@@ -500,16 +493,16 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.get(this.ip+'/department/deleteDepartment',{
-                        params:{
-                            departmentId:this.departments[index].id,
-                            userId:localStorage.getItem("userId"),
-                            passWord:localStorage.getItem("passWord")
+                    axios.get(this.ip + '/department/deleteDepartment', {
+                        params: {
+                            departmentId: this.departments[index].id,
+                            userId: localStorage.getItem("userId"),
+                            passWord: localStorage.getItem("passWord")
                         }
-                    }).then(res=>{
-                        if(res.data){
+                    }).then(res => {
+                        if (res.data) {
                             this.$message.info("删除成功!")
-                        }else {
+                        } else {
                             this.$message.error("删除失败！")
                         }
                         this.getAlldepartment();

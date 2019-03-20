@@ -8,38 +8,48 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="xjxmlxd">
+                    <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="xjxmlxd">
                         新建项目立项单
                     </el-button>
-                    <el-input v-model="select_xmmc" placeholder="项目名称" class="handle-input mr10"></el-input>
+                    <el-input  required v-model="select_xmmc" placeholder="项目名称" class="handle-input mr10"></el-input>
                     <el-button type="primary" icon="el-icon-search" @click="xmmcSearch">搜索</el-button>
                     <el-input v-model="select_code" placeholder="项目编号" style="margin-left: 20px"
                               class="handle-input mr10"></el-input>
                     <el-button type="primary" icon="el-icon-search" @click="xmbhSearch">搜索</el-button>
-                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getProjects">全部</el-button>
+                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getProjects(1)">全部</el-button>
                 </div>
-                <el-table height="500" stripe :data="projects" border class="table" ref="multipleTable">
+                <el-table height="550" stripe :data="projects" border class="table" ref="multipleTable">
                     <el-table-column prop="projectNo" sortable label="项目编号" width="120">
                     </el-table-column>
-                    <el-table-column prop="projectNam" label="项目名称" width="120">
+                    <el-table-column prop="projectNam" label="项目名称" >
                     </el-table-column>
-                    <el-table-column prop="declarationDep" label="立项部门">
+                    <el-table-column prop="declarationDep"  sortable label="立项部门">
                     </el-table-column>
                     <el-table-column prop="personInCharge" label="负责人">
                     </el-table-column>
-                    <el-table-column prop="projectType" label="项目类别">
+                    <el-table-column prop="projectType" sortable label="项目类别">
                     </el-table-column>
-                    <el-table-column prop="applicationDte" label="申请日期" sortable width="150">
+                    <el-table-column prop="engTechAuditOpinion" sortable label="创建时间" >
+                    </el-table-column>
+                    <el-table-column prop="dqjd" label="当前节点"  >
                     </el-table-column>
                     <el-table-column label="操作" width="250" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-edit" @click="xmxq(scope.$index, scope.row)">详情</el-button>
-                            <el-button type="text" icon="el-icon-edit" @click="zt(scope.row)">状态</el-button>
-                            <el-button type="text" icon="el-icon-star-on" :disabled="!isSqs.get(scope.row.id)" @click="kssq(scope.$index, scope.row)">申请</el-button>
+                            <el-button type="text" icon="el-icon-tickets" @click="xmxq(scope.$index, scope.row)">详情</el-button>
+                            <el-button type="text" icon="el-icon-star-on" @click="zt(scope.row)">状态</el-button>
+                            <el-button type="text" icon="el-icon-star-on" v-if="isSqs.get(scope.row.id)" @click="kssq(scope.$index, scope.row)">申请</el-button>
                             <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
+                <div style="text-align: center">
+                    <el-pagination
+                            background
+                            @current-change="currentChange"
+                            layout="prev, pager, next"
+                            :total="count">
+                    </el-pagination>
+                </div>
             </div>
 
 
@@ -73,22 +83,24 @@
             </el-dialog>
 
             <!-- 新建项目项目立项单弹窗 -->
-            <el-dialog title="申请项目" :visible.sync="show_xjxmlxd" width="50%">
-                <el-input
-                        placeholder="项目编号"
-                        v-model="project.projectNo"
-                        style="margin-left: 30px;width: 150px"
-                        clearable>
-                </el-input>
-                <el-form ref="form" style="margin-top: 10px" :model="project" label-width="100px">
-                    <el-form-item label="项目名称">
+            <el-dialog title="申请项目" :visible.sync="show_xjxmlxd" width="680px">
+
+
+                <el-form  ref="form" style="margin-top: 10px" :model="project" label-width="100px">
+                    <el-form-item label="项目编号">
+                        <el-input
+                                v-model="project.projectNo"
+                                clearable>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item  label="项目名称">
                         <el-input v-model="project.projectNam"></el-input>
                     </el-form-item>
                     <el-form-item label="立项时间">
                         <el-date-picker
                                 v-model="project.applicationDte"
                                 type="date"
-                                value-format="yyyy-MM-dd HH:mm:ss"
+                                value-format="yyyy-MM-dd"
                                 placeholder="选择日期">
                         </el-date-picker>
                         &nbsp&nbsp&nbsp&nbsp立项部门&nbsp&nbsp&nbsp&nbsp
@@ -127,7 +139,16 @@
                         <el-input style="width: 215px" v-model="project.personInCharge"></el-input>
                     </el-form-item>
                     <el-form-item label="预计工期">
-                        <el-input v-model="project.techAuditOpinion"></el-input>
+                        <el-input v-model="project.techAuditOpinion" style="width: 215px;padding-right: 20px"></el-input>
+                        &nbsp项目分类&nbsp&nbsp&nbsp
+                        <el-select v-model="project.reviser" placeholder="请选择">
+                            <el-option
+                                    v-for="item in xmfl"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="立项背景理由">
                         <el-input v-model="project.establishReason" type="textarea"
@@ -152,7 +173,7 @@
             </el-dialog>
 
             <!-- 项目详情弹窗 -->
-            <el-dialog :show-close="false" title="项目详情" :visible.sync="show_xq" width="50%">
+            <el-dialog :show-close="false" title="项目详情" :visible.sync="show_xq"width="680px">
                 <el-form ref="form" :model="project" label-width="100px">
                     <el-form-item label="项目名称">
                         <el-input v-model="project.projectNam"></el-input>
@@ -200,7 +221,16 @@
                         <el-input style="width: 215px" v-model="project.personInCharge"></el-input>
                     </el-form-item>
                     <el-form-item label="预计工期">
-                        <el-input v-model="project.techAuditOpinion"></el-input>
+                        <el-input v-model="project.techAuditOpinion" style="width: 215px;padding-right: 20px"></el-input>
+                        &nbsp项目分类&nbsp&nbsp&nbsp
+                        <el-select v-model="project.reviser" placeholder="请选择">
+                            <el-option
+                                    v-for="item in xmfl"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="立项背景理由">
                         <el-input v-model="project.establishReason" type="textarea"
@@ -223,7 +253,7 @@
                 <el-button type="primary" @click="qdxg">确定修改</el-button>
             </span>
             </el-dialog>
-            <el-dialog title="状态" :visible.sync="show_zt" width="80%">
+            <el-dialog title="状态" :visible.sync="show_zt" width="920px">
                 <img :src='src'/>
                 <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="show_zt=false">确 定</el-button>
@@ -241,6 +271,7 @@
         name: 'basetable',
         data() {
             return {
+                groupId:localStorage.getItem("groupId"),
                 //新建项目立项单
                 show_xjxmlxd: false,
                 //是否可编辑
@@ -290,11 +321,25 @@
                     value: '物资采购',
                     label: '物资采购'
                 }],
+                //项目分类
+                xmfl: [{
+                    value: '土建',
+                    label: '土建'
+                }, {
+                    value: '设备',
+                    label: '设备'
+                }, {
+                    value: '信息',
+                    label: '信息'
+                }, {
+                    value: '物资',
+                    label: '物资'
+                }
+                ],
                 isSqs: new Map(),
                 department_options: [],
                 url: './vuetable.json',
                 tableData: [],
-                cur_page: 1,
                 multipleSelection: [],
                 select_cate: '',
                 select_xmmc: '',
@@ -311,12 +356,16 @@
                     date: '',
                     address: ''
                 },
-                idx: -1
+                idx: -1,
+                //项目数
+                count:0,
+
             }
         },
         created() {
             this.getDepartment_optins()
-            this.getProjects()
+            this.getProjects(1)
+            this.getcounts()
         },
         computed: {
             data() {
@@ -340,6 +389,16 @@
             }
         },
         methods: {
+            //分页请求
+            currentChange(pageNum){
+                this.getProjects(pageNum)
+            },
+            getcounts(){
+                axios.get(this.ip+'/projectApplication/AllCounts')
+                    .then(res=>{
+                        this.count=res.data
+                    })
+            },
             //状态
             zt(row) {
                 if(row.pid!=null&&row.pid!=''){
@@ -367,8 +426,27 @@
                     .then(res=>{
                         if(res.data.length==0)
                             this.$message.error("没搜索到相关项目！")
-                        else
+                        else{
                             this.projects=res.data
+                            //拿到当前项目的节点
+                            for(let i=0;i<this.projects.length;i++){
+                                if(this.projects[i].pid==''||this.projects[i].pid==null){
+                                    this.projects[i].dqjd="未申请！"
+                                    this.$set(this.projects, i, this.projects[i]);
+                                }else {
+                                    //请求
+                                    axios.get(this.ip+'/projectApplication/getPidNode',{
+                                        params:{
+                                            pid:this.projects[i].pid
+                                        }
+                                    })
+                                        .then(res=>{
+                                            this.projects[i].dqjd=res.data
+                                            this.$set(this.projects, i, this.projects[i]);
+                                        })
+                                }
+                            }
+                        }
                     })
             },
             //项目名称搜索
@@ -381,8 +459,27 @@
                     .then(res => {
                         if (res.data.length == 0)
                             this.$message.error("没找到相关项目")
-                        else
+                        else {
                             this.projects = res.data
+                            //拿到当前项目的节点
+                            for (let i = 0; i < this.projects.length; i++) {
+                                if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                                    this.projects[i].dqjd = "未申请！"
+                                    this.$set(this.projects, i, this.projects[i]);
+                                } else {
+                                    //请求
+                                    axios.get(this.ip + '/projectApplication/getPidNode', {
+                                        params: {
+                                            pid: this.projects[i].pid
+                                        }
+                                    })
+                                        .then(res => {
+                                            this.projects[i].dqjd = res.data
+                                            this.$set(this.projects, i, this.projects[i]);
+                                        })
+                                }
+                            }
+                        }
                     })
             },
             //判断是否可申请
@@ -472,30 +569,50 @@
                                         this.$message.success("修改成功!")
                                     } else {
                                         this.$message.error("修改失败!该项目正在申请中！")
-                                        this.getProjects()
+                                        this.getProjects(1)
                                     }
                                 })
                         } else {
                             this.$message.error("修改失败！该账号非申请人！")
-                            this.getProjects()
+                            this.getProjects(1)
                         }
                     })
                 this.show_xq = false
             },
             //拿到所有项目
-            getProjects() {
+            getProjects(pageNum) {
                 this.projects = []
                 this.isSqs = new Map()
-                axios.get(this.ip + '/projectApplication/getAllProject')
+                axios.get(this.ip + '/projectApplication/getAllProject',{
+                    params:{
+                        pageNum:pageNum,
+                        userId:localStorage.getItem('userId')
+                    }
+                })
                     .then(res => {
-                        for (let i = 0; i < res.data.length; i++) {
-                            res.data[i].applicationDte = res.data[i].applicationDte.substr(0, 10)
-                        }
-                        if (localStorage.getItem('groupId') != 'doman') {//如果不是办事员或者技术部办事员，不可申请
+                        if (localStorage.getItem('groupId') != 'doman'&&localStorage.getItem('groupId') != 'jsb_doman') {//如果不是办事员或者技术部办事员，不可申请
                             for (let i = 0; i < res.data.length; i++) {
                                 this.isSqs.set(res.data[i].id, false)
                             }
                             this.projects = res.data
+                            //拿到当前项目的节点
+                            for(let i=0;i<this.projects.length;i++){
+                                if(this.projects[i].pid==''||this.projects[i].pid==null){
+                                    this.projects[i].dqjd="未申请！"
+                                    this.$set(this.projects, i, this.projects[i]);
+                                }else {
+                                    //请求
+                                    axios.get(this.ip+'/projectApplication/getPidNode',{
+                                        params:{
+                                            pid:this.projects[i].pid
+                                        }
+                                    })
+                                        .then(res=>{
+                                            this.projects[i].dqjd=res.data
+                                            this.$set(this.projects, i, this.projects[i]);
+                                        })
+                                }
+                            }
                         } else {
                             let qq = []
                             for (let i = 0; i < res.data.length; i++) {
@@ -512,6 +629,24 @@
                             axios.all(qq)
                                 .then(axios.spread((acct, perms)=>{
                                     this.projects=res.data
+                                    //拿到当前项目的节点
+                                    for(let i=0;i<this.projects.length;i++){
+                                        if(this.projects[i].pid==''||this.projects[i].pid==null){
+                                            this.projects[i].dqjd="未申请！"
+                                            this.$set(this.projects, i, this.projects[i]);
+                                        }else {
+                                            //请求
+                                            axios.get(this.ip+'/projectApplication/getPidNode',{
+                                                params:{
+                                                    pid:this.projects[i].pid
+                                                }
+                                            })
+                                                .then(res=>{
+                                                    this.projects[i].dqjd=res.data
+                                                    this.$set(this.projects, i, this.projects[i]);
+                                                })
+                                        }
+                                    }
                                 }))
                         }
 
@@ -532,8 +667,19 @@
                         }
                     })
             },
+            //是否空
+            isnull(data){
+                if(data==''||data==null)
+                    return true;
+                return false;
+            },
             //确定新建
             qdxj() {
+                if(this.isnull(this.project.projectNam)||this.isnull(this.project.reviser)||this.isnull(this.project.projectType)||this.isnull(this.project.declarationDep)){
+                    this.$message.error("请填写详细信息！")
+                    return
+                }
+
                 axios.post(this.ip + '/projectApplication/insertXm', this.project)
                     .then(res => {
                         if (res.data) {
