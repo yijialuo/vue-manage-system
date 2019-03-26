@@ -48,7 +48,7 @@
                 //修改密码
                 show_xgmm:false,
                 ip:'http://localhost:8080',
-                collapse: true,
+                collapse: false,
                 fullscreen: false,
                 name: 'linxin',
                 message: 0
@@ -96,36 +96,9 @@
             },
             // 侧边栏折叠
             collapseChage(){
-                // this.collapse = !this.collapse;
-                // bus.$emit('collapse', this.collapse);
+                this.collapse = !this.collapse;
+                bus.$emit('collapse', this.collapse);
             },
-            // 全屏事件
-            handleFullScreen(){
-                let element = document.documentElement;
-                if (this.fullscreen) {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitCancelFullScreen) {
-                        document.webkitCancelFullScreen();
-                    } else if (document.mozCancelFullScreen) {
-                        document.mozCancelFullScreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    }
-                } else {
-                    if (element.requestFullscreen) {
-                        element.requestFullscreen();
-                    } else if (element.webkitRequestFullScreen) {
-                        element.webkitRequestFullScreen();
-                    } else if (element.mozRequestFullScreen) {
-                        element.mozRequestFullScreen();
-                    } else if (element.msRequestFullscreen) {
-                        // IE11
-                        element.msRequestFullscreen();
-                    }
-                }
-                this.fullscreen = !this.fullscreen;
-            }
         },
         mounted(){
             if(document.body.clientWidth < 1500){

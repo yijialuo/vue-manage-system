@@ -24,8 +24,8 @@
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllProject(1,userId)">全部
                     </el-button>
                 </div>
-                <el-table @row-dblclick="sjxm" height="550px" stripe :data="projects" border class="table" ref="multipleTable">
-                    <el-table-column prop="projectNam" label="项目名称" width="120">
+                <el-table @row-dblclick="sjxm" height="600px" stripe :data="projects" border class="table" ref="multipleTable">
+                    <el-table-column prop="projectNam" label="项目名称" >
                     </el-table-column>
                     <el-table-column prop="declarationDep" label="立项部门">
                     </el-table-column>
@@ -34,6 +34,8 @@
                     <el-table-column prop="projectType" label="项目类别">
                     </el-table-column>
                     <el-table-column prop="techAuditOpinion" label="预计工期">
+                    </el-table-column>
+                    <el-table-column prop="sgzt" sortable label="状态">
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
@@ -47,7 +49,7 @@
                     <el-pagination
                             background
                             @current-change="currentChange"
-                            layout="prev, pager, next"
+                            layout="total,prev, pager, next"
                             :total="count">
                     </el-pagination>
                 </div>
@@ -235,7 +237,11 @@
             },
             //项目数量
             getcounts(){
-                axios.get(this.ip+'/projectApplication/AllCounts')
+                axios.get(this.ip+'/projectApplication/AllCounts', {
+                    params:{
+                        dpt:localStorage.getItem("departmentName")
+                    }
+                })
                     .then(res=>{
                         this.count=res.data
                     })
@@ -413,14 +419,43 @@
                 })
                     .then(res => {
                         this.projects = res.data
+                        //请求项目施工状态
+                        for(let i=0;i<res.data.length;i++){
+                            if(res.data[i].finishDte!==''&&res.data[i].finishDte!=null){//有完成时间，表示完成
+                                this.projects[i].sgzt='已完工'
+                                this.$set(this.projects, i, this.projects[i]);
+                            }else {
+                                axios.get(this.ip+'/jindu/getSgzt',{
+                                    params:{
+                                        projectId:res.data[i].id
+                                    }
+                                }).then(xxx=>{
+                                    this.projects[i].sgzt=xxx.data
+                                    this.$set(this.projects, i, this.projects[i]);
+                                })
+                            }
+                        }
                     })
             },
             //拿到项目下拉框数据
             getXms() {
-                axios.get(this.ip + '/projectApplication/getAllXmIdAndXmname')
-                    .then(res => {
-                        this.xms = res.data
+                if(localStorage.getItem('departmentName')!=='工程技术部'){
+                    axios.get(this.ip + '/projectApplication/getSelfXmidAndXmname',{
+                        params:{
+                            dpt:localStorage.getItem('departmentName')
+                        }
                     })
+                        .then(res => {
+                            this.xms = res.data
+                        })
+                }else {
+                    axios.get(this.ip + '/projectApplication/getAllXmIdAndXmname'
+                    )
+                        .then(res => {
+                            this.xms = res.data
+                        })
+                }
+
             },
             remoteMethod(query) {
                 if (query !== '') {

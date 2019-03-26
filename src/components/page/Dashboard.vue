@@ -24,7 +24,7 @@
                         固定资产
                         <el-progress :percentage="zbs[2]" color="#42b983"></el-progress>
                     </el-card>
-                    <el-card shadow="hover" style="height:245px;margin-top: 10px">
+                    <el-card shadow="hover" style="height:300px;margin-top: 10px">
                         <div slot="header" class="clearfix">
                             <span>项目分类</span>
                         </div>
@@ -36,6 +36,8 @@
                         <el-progress :percentage="zbs[5]"></el-progress>
                         信息
                         <el-progress :percentage="zbs[6]" color="#a1eaaa"></el-progress>
+                        绿化
+                        <el-progress :percentage="zbs[7]" color="#11eaaa"></el-progress>
                     </el-card>
                 </el-col>
                 <el-col :span="18">
@@ -74,9 +76,9 @@
                             </el-card>
                         </el-col>
                     </el-row>
-                    <el-card shadow="hover" style="height:465px;">
+                    <el-card shadow="hover" style="height:515px;">
                         <div slot="header" class="clearfix">
-                            <span>我的消息</span>
+                            <span>待办</span>
                             <!--<el-button style="float: right; padding: 3px 0"-->
                             <!--v-show="user.groupName=='办事员'||user.groupName=='技术部办事员'" type="text"-->
                             <!--@click="show_xjsq=true">新建申请-->
@@ -84,102 +86,112 @@
                         </div>
                         <el-tabs v-model="message">
                             <!--待办项目-->
-                            <el-tab-pane v-if="user.groupId!='doman'" :label="`待办项目(${Xms.length})`" name="first">
-                                <el-table :data="Xms" height="250px" :show-header="true" style="width: 100%">
-                                    <el-table-column label="项目名称">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.projectNam}}</span>
-                                        </template>
+                            <el-tab-pane  v-if="user.groupId!='doman'" :label="`前期审批(${Xms.length})`" name="first">
+                                <el-table :data="Xms" height="400px" stripe :show-header="true" style="width: 100%">
+                                    <el-table-column label="项目名称" prop="projectNam">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.projectNam}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
-                                    <el-table-column label="申请人">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.proposer}}</span>
-                                        </template>
+                                    <el-table-column sortable label="项目分类" prop="reviser">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.reviser}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
-                                    <el-table-column label="申请时间">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.applicationDte}}</span>
-                                        </template>
+                                    <el-table-column label="申请人" sortable prop="proposer">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.proposer}}</span>-->
+                                        <!--</template>-->
+                                    </el-table-column>
+                                    <el-table-column label="申请时间" sortable prop="applicationDte">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.applicationDte}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
                                     <el-table-column label="操作">
                                         <template slot-scope="scope">
-                                            <el-button size="small" @click="xmxq(scope.row)">项目详情</el-button>
+                                            <el-button type="text" size="small" @click="xmxq(scope.row)">处理</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
                             </el-tab-pane>
                             <!--待备案项目-->
-                            <el-tab-pane v-if="user.groupId=='jsb_doman'" :label="`待备案项目(${baXms.length})`"
+                            <el-tab-pane stripe v-if="user.groupId=='jsb_doman'" :label="`待备案项目(${baXms.length})`"
                                          name="second">
-                                <el-table height="250px" :data="baXms" :show-header="true" style="width: 100%">
-                                    <el-table-column label="项目名称">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.projectNam}}</span>
-                                        </template>
+                                <el-table height="400px" :data="baXms" :show-header="true" style="width: 100%">
+                                    <el-table-column label="项目名称" prop="projectNam">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.projectNam}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
-                                    <el-table-column label="申请人">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.proposer}}</span>
-                                        </template>
+                                    <el-table-column label="申请人" sortable prop="proposer">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.proposer}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
-                                    <el-table-column label="申请时间">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.applicationDte}}</span>
-                                        </template>
+                                    <el-table-column label="申请时间" sortable prop="applicationDte">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.applicationDte}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
                                     <el-table-column label="操作">
                                         <template slot-scope="scope">
-                                            <el-button size="small" @click="xmxq(scope.row),ba=true">项目详情</el-button>
+                                            <el-button size="small" @click="xmxq(scope.row),ba=true">处理</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
                             </el-tab-pane>
                             <!--驳回的项目-->
-                            <el-tab-pane v-if="user.groupId=='doman'" :label="`审批项目(${bhXms.length})`" name="third">
-                                <el-table height="250px" :data="bhXms" :show-header="true" style="width: 100%">
-                                    <el-table-column label="项目名称">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.projectNam}}</span>
-                                        </template>
+                            <el-tab-pane v-if="user.groupId=='doman'" :label="`项目审批(${bhXms.length})`" name="third">
+                                <el-table stripe height="250px" :data="bhXms" :show-header="true" style="width: 100%">
+                                    <el-table-column label="项目名称" prop="projectNam">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.projectNam}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
-                                    <el-table-column label="申请人">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.proposer}}</span>
-                                        </template>
+                                    <el-table-column sortable prop="reviser" label="项目分类">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.reviser}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
-                                    <el-table-column label="申请时间">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.applicationDte}}</span>
-                                        </template>
+                                    <el-table-column label="申请人" prop="proposer">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.proposer}}</span>-->
+                                        <!--</template>-->
+                                    </el-table-column>
+                                    <el-table-column label="申请时间" sortable="" prop="applicationDte">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.applicationDte}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
                                     <el-table-column label="操作">
                                         <template slot-scope="scope">
-                                            <el-button size="small" @click="xmxq(scope.row)">项目详情</el-button>
+                                            <el-button type="text" size="small" @click="xmxq(scope.row)">处理</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
                             </el-tab-pane>
                             <!--招标的项目-->
-                            <el-tab-pane :label="`招标审批(${zhaobiaos.length})`" name="fourth">
-                                <el-table height="250px" :data="zhaobiaos" :show-header="true" style="width: 100%">
-                                    <el-table-column label="项目名称">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.xmName}}</span>
-                                        </template>
+                            <el-tab-pane stripe v-if="user.groupId!=='zgjl'&&user.groupId!=='jl'" :label="`招标审批(${zhaobiaos.length})`" name="fourth">
+                                <el-table height="400px" :data="zhaobiaos" :show-header="true" style="width: 100%">
+                                    <el-table-column label="项目名称" prop="xmName">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.xmName}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
-                                    <el-table-column label="申请人">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.userName}}</span>
-                                        </template>
+                                    <el-table-column sortable label="申请人" prop="userName">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.userName}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
-                                    <el-table-column label="申请时间">
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.cjsj}}</span>
-                                        </template>
+                                    <el-table-column sortable label="申请时间" prop="cjsj">
+                                        <!--<template slot-scope="scope">-->
+                                            <!--<span class="message-title">{{scope.row.cjsj}}</span>-->
+                                        <!--</template>-->
                                     </el-table-column>
                                     <el-table-column label="操作">
                                         <template slot-scope="scope">
-                                            <el-button type="primary" @click="zbcl(scope.row)">处理</el-button>
+                                            <el-button type="text" @click="zbcl(scope.row)">处理</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -225,17 +237,17 @@
                     </el-form-item>
                     <el-form-item label="立项背景理由">
                         <el-input v-model="sqb.establish_reason" type="textarea"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="立项内容规模">
                         <el-input v-model="sqb.scale" type="textarea"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算说明">
                         <el-input v-model="sqb.illustration" type="textarea"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                 </el-form>
@@ -265,19 +277,19 @@
                     <el-form-item label="立项背景理由">
                         <el-input :disabled="true" v-model="xm.establishReason" type="textarea"
                                   placeholder="立项背景理由"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="立项内容规模">
                         <el-input :disabled="true" v-model="xm.scale" type="textarea"
                                   placeholder="立项内容规模"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算说明">
                         <el-input :disabled="true" v-model="xm.illustration" type="textarea"
                                   placeholder="投资概算说明"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -328,31 +340,31 @@
                 </el-breadcrumb>
             </div>
             <div class="container">
-                <el-table :data="xmList" :show-header="true" height="300" style="width: 100%;font-size:14px;">
-                    <el-table-column label="项目编号">
-                        <template slot-scope="scope">
-                            <div class="todo-item">{{scope.row.projectNo}}</div>
-                        </template>
+                <el-table stripe :data="xmList" :show-header="true" height="300" style="width: 100%;font-size:14px;">
+                    <el-table-column label="项目编号" sortable prop="projectNo">
+                        <!--<template slot-scope="scope">-->
+                            <!--<div class="todo-item">{{scope.row.projectNo}}</div>-->
+                        <!--</template>-->
                     </el-table-column>
-                    <el-table-column label="项目名称">
-                        <template slot-scope="scope">
-                            <div class="todo-item">{{scope.row.projectNam}}</div>
-                        </template>
+                    <el-table-column label="项目名称" prop="projectNam">
+                        <!--<template slot-scope="scope">-->
+                            <!--<div class="todo-item">{{scope.row.projectNam}}</div>-->
+                        <!--</template>-->
                     </el-table-column>
-                    <el-table-column label="申请时间">
-                        <template slot-scope="scope">
-                            <div class="todo-item">{{scope.row.applicationDte}}</div>
-                        </template>
+                    <el-table-column label="申请时间" prop="applicationDte" sortable>
+                        <!--<template slot-scope="scope">-->
+                            <!--<div class="todo-item">{{scope.row.applicationDte}}</div>-->
+                        <!--</template>-->
                     </el-table-column>
-                    <el-table-column label="项目类型">
-                        <template slot-scope="scope">
-                            <div class="todo-item">{{scope.row.projectType}}</div>
-                        </template>
+                    <el-table-column label="项目类型" prop="projectType" sortable>
+                        <!--<template slot-scope="scope">-->
+                            <!--<div class="todo-item">{{scope.row.projectType}}</div>-->
+                        <!--</template>-->
                     </el-table-column>
-                    <el-table-column label="负责人">
-                        <template slot-scope="scope">
-                            <div class="todo-item">{{scope.row.personInCharge}}</div>
-                        </template>
+                    <el-table-column label="负责人" prop="personInCharge" sortable="">
+                        <!--<template slot-scope="scope">-->
+                            <!--<div class="todo-item">{{scope.row.personInCharge}}</div>-->
+                        <!--</template>-->
                     </el-table-column>
                     <el-table-column width="130">
                         <template slot-scope="scope">
@@ -361,11 +373,10 @@
                         </template>
                     </el-table-column>
                 </el-table>
-
             </div>
 
 
-            <!-- 项目详情框 -->
+            <!-- 项目详情框 技术部自己项目-->
             <el-dialog title="项目详情" :visible.sync="show_xqgcjsb" width="680px" center>
                 <el-input
                         v-if="groupId=='bgs'"
@@ -404,21 +415,21 @@
                         <el-input
                                   v-model="xm.establishReason" type="textarea"
                                   placeholder="立项背景理由"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="立项内容规模">
                         <el-input  v-model="xm.scale"
                                   type="textarea"
                                   placeholder="立项内容规模"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算说明">
                         <el-input  v-model="xm.illustration"
                                   type="textarea"
                                   placeholder="投资概算说明"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="审批列表">
@@ -458,7 +469,7 @@
                     </el-form-item>
                 </el-form>
                 <span  slot="footer" class="dialog-footer">
-                    <el-button @click="show_xqgcjsb = false">取 消</el-button>
+                    <el-button @click="show_xqgcjsb = false">取消</el-button>
                     <el-button type="warning" @click="xmzf" >作废</el-button>
                     <el-button type="primary" @click="cl('jbr',true)">申请</el-button>
                 </span>
@@ -505,21 +516,21 @@
                         <el-input :disabled="user.groupId!='doman'"
                                   v-model="xm.establishReason" type="textarea"
                                   placeholder="立项背景理由"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="立项内容规模">
                         <el-input :disabled="user.groupId!='doman'" v-model="xm.scale"
                                   type="textarea"
                                   placeholder="立项内容规模"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算说明">
                         <el-input :disabled="user.groupId!='doman'" v-model="xm.illustration"
                                   type="textarea"
                                   placeholder="投资概算说明"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="审批列表">
@@ -561,8 +572,8 @@
                 <span v-if="!isxq" slot="footer" class="dialog-footer">
                 <el-button @click="show_xq = false">取 消</el-button>
                 <el-button v-if="NodeId=='备案'" type="primary" @click="wcba">完成备案</el-button>
-                    <el-button type="warning" v-if="NodeId=='两会'" @click="bh">未通过两会</el-button>
-                    <el-button type="warning" v-else-if="NodeId=='总经理办公会'" @click="bh">未通过总经会</el-button>
+                    <el-button type="warning" v-if="NodeId=='两会'" @click="bh">驳回</el-button>
+                    <el-button type="warning" v-else-if="NodeId=='总经理办公会'" @click="bh">驳回</el-button>
                     <el-button type="warning" v-else-if="user.groupId!='doman'&&NodeId!='备案'"
                                @click="bh">驳 回</el-button>
                     <el-button type="primary" v-if="NodeId=='两会'" @click="ty">通过两会</el-button>
@@ -572,7 +583,7 @@
             </span>
             </el-dialog>
 
-            <!--驳回弹窗-->
+            <!--前期驳回弹窗-->
             <el-dialog title="审批意见" :visible.sync="show_bh">
                 <el-form>
                     <el-form-item label="审批意见：">
@@ -585,6 +596,22 @@
                 <span slot="footer" class="dialog-footer">
             <el-button @click="show_bh=false">取 消</el-button>
             <el-button type="primary" @click="qd_bh">确 定</el-button>
+            </span>
+            </el-dialog>
+
+            <!--招标驳回弹窗-->
+            <el-dialog title="审批意见" :visible.sync="show_zbbh">
+                <el-form>
+                    <el-form-item label="审批意见：">
+                        <el-input v-model="comment" type="textarea"
+                                  placeholder="审批意见："
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                        ></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+            <el-button @click="show_zbbh=false;comment='同意'">取 消</el-button>
+            <el-button type="primary" @click="qd_zbbh">确 定</el-button>
             </span>
             </el-dialog>
 
@@ -605,6 +632,115 @@
 
             <!--点击处理弹窗 -->
             <el-dialog title="招标流程审批" :visible.sync="show_zbxq" width="680px">
+                <el-form ref="form" label-width="100px">
+                    <el-form-item label="项目">
+                        <el-input :disabled="true" v-model="zhaobiao.xmName" rows="6"></el-input>
+                    </el-form-item>
+                    <el-form-item label="技术要求备注">
+                        <el-input :disabled="groupId!='doman'" v-model="zhaobiao.jsyq" rows="6"
+                                  type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="groupId==='bgs'" label="发标时间">
+                        <el-date-picker :disabled="groupId!='bgs'" v-model="zhaobiao.fbsj" type="date"
+                                        placeholder="选择日期" value-format="yyyy-MM-dd"
+                                        style="width: 205px"></el-date-picker>
+                        &nbsp&nbsp&nbsp&nbsp定标时间&nbsp&nbsp&nbsp&nbsp
+                        <el-date-picker v-if="groupId==='bgs'" :disabled="groupId!='bgs'" v-model="zhaobiao.dbsj"
+                                        type="date"
+                                        placeholder="选择日期" value-format="yyyy-MM-dd"
+                                        style="width: 205px"></el-date-picker>
+                    </el-form-item>
+
+                    <el-form-item label="中标" v-if="groupId==='bgs'">
+                        <el-input placeholder="单位" :disabled="isTjzbs" v-model="zhongbiao.zhongbiaodw"
+                                  style="width: 200px"></el-input>
+                        <el-input  placeholder="中标价格" :disabled="isTjzbs" v-model="zhongbiao.zhongbiaojg" type="number"
+                                  style="width: 200px;margin-left: 4px"></el-input>
+                        <el-button @click="tjzbdw" type="primary" :disabled="isTjzbs" style="margin-left: 10px"
+                                   icon="el-icon-circle-plus">
+                            添加中标单位
+                        </el-button>
+                    </el-form-item>
+                    <el-form-item v-if="groupId==='bgs'">
+                        <el-table
+                                :data="zhongbiaos"
+                        >
+                            <el-table-column
+                                    prop="zhongbiaodw"
+                                    label="中标单位"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="zhongbiaojg"
+                                    label="中标价格"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button type="text" @click="sczbdw(scope.row)" icon="el-icon-delete"
+                                               style="color: red">删除
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-form-item>
+                    <el-form-item v-if="groupId==='bgs'" label="工期">
+                        <el-input v-model="zhaobiao.tbjzsj"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-table
+                                :data="bzs"
+                        >
+                            <el-table-column
+                                    prop="usernam"
+                                    label="姓名"
+                                    width="120">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="time"
+                                    label="时间"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="comment"
+                                    label="备注"
+                                    width="180">
+                            </el-table-column>
+                        </el-table>
+                    </el-form-item>
+                    <el-form-item label="备注">
+                        <el-input v-model="comment" rows="3"
+                                  type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-upload
+                                class="upload-demo"
+                                drag
+                                :action="url"
+                                :on-preview="handlePreview"
+                                :before-remove="handleBeforeRemove"
+                                :on-success="handleSuccess2"
+                                multiple
+                                :file-list="fileList"
+                        >
+                            <i class="el-icon-upload"></i>
+                            <div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>
+                        </el-upload>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="show_zbxq = false">取 消</el-button>
+                <el-button v-if="groupId==='doman'" type="warning" @click="zf">作废</el-button>
+                <el-button v-else-if="groupId!='bgs'" type="warning" @click="bh2">驳 回</el-button>
+                <el-button v-if="groupId==='doman'" @click="cxsp" type="primary">重新审批</el-button>
+                <el-button v-else-if="groupId==='jsb_doman'" type="primary" @click="fqbs">发起标书</el-button>
+                <el-button v-else-if="groupId==='bgs'" type="primary" @click="wczb">完成招标</el-button>
+                <el-button v-else type="primary" @click="ty2">同意</el-button>
+            </span>
+            </el-dialog>
+
+            <!--技术部自己招标弹窗（办事员） -->
+            <el-dialog title="招标流程审批" :visible.sync="show_zbxqjsb" width="680px">
                 <el-form ref="form" label-width="100px">
                     <el-form-item label="项目">
                         <el-input :disabled="true" v-model="zhaobiao.xmName" rows="6"></el-input>
@@ -702,14 +838,10 @@
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="show_zbxq = false">取 消</el-button>
-                <el-button v-if="groupId==='doman'" type="warning" @click="zf">作废</el-button>
-                <el-button v-else-if="groupId!='bgs'" type="warning" @click="bh2">驳 回</el-button>
-                <el-button v-if="groupId==='doman'" @click="cxsp" type="primary">重新审批</el-button>
-                <el-button v-else-if="groupId==='jsb_doman'" type="primary" @click="fqbs">发起标书</el-button>
-                <el-button v-else-if="groupId==='bgs'" type="primary" @click="wczb">完成招标</el-button>
-                <el-button v-else type="primary" @click="ty2">同意</el-button>
-            </span>
+                    <el-button @click="show_zbxqjsb = false">取消</el-button>
+                    <el-button type="warning" @click="zf">作废</el-button>
+                    <el-button type="primary" @click="cl2('jbr',true)">发起标书</el-button>
+                </span>
             </el-dialog>
 
         </div>
@@ -740,8 +872,10 @@
                     value: '安计划进行',
                     label: '安计划进行'
                 }],
-                //驳回弹窗
+                //前期驳回弹窗
                 show_bh: false,
+                //招标驳回弹窗
+                show_zbbh:false,
                 //同意弹窗
                 show_ty: false,
                 url: '',
@@ -751,7 +885,7 @@
                 show_xq: false,
                 //工程技术部
                 show_xqgcjsb: false,
-                comment: '',
+                comment: '同意',
                 user: {},
                 xm: {},
                 ip: 'http://localhost:8080',
@@ -818,12 +952,25 @@
                 //是否详情
                 isxq: false,
                 zbs: [],
+                //招标详情技术部办事员弹窗
+                show_zbxqjsb:false
             }
         },
-        components: {
-            Schart
+        watch:{
+            zhongbiaojg(newValue,oldValue){
+                if(Number(newValue)<0){
+                    this.$alert('中标金额只能填写大于等于0!', '提示', {
+                        confirmButtonText: '确定',
+                        type:'error'
+                    })
+                    this.zhongbiao.zhongbiaojg=1
+                }
+            }
         },
         computed: {
+            zhongbiaojg(){
+                return this.zhongbiao.zhongbiaojg
+            },
             isTjzbs() {
                 return this.zhongbiaos.length === 1
             },
@@ -862,16 +1009,18 @@
             this.lqzhaobiao()
             //拿占比
             this.getzb()
+
+            this.handleListener();
         },
 
         activated() {
             this.handleListener();
         },
         deactivated() {
+            window.removeEventListener('resize', this.renderChart);
             bus.$off('collapse', this.handleBus);
         },
         methods: {
-
             //确定项目编号
             qdxmbh() {
                 axios.get(this.ip + '/projectApplication/xgxmbh', {
@@ -946,7 +1095,7 @@
             },
             //完工招标
             wczb() {
-                if (this.zhaobiao.fbsj != "" && this.zhaobiao.dbsj != "" && this.zhaobiao.tbjzsj != "" && this.zhongbiaos.length != 0) {
+                if (this.zhaobiao.fbsj != ""&&this.zhaobiao.fbsj != null && this.zhaobiao.dbsj != "" && this.zhaobiao.dbsj !=null&& this.zhongbiaos.length != 0) {
                     axios.get(this.ip + '/zhaobiao/wczb', {
                         params: {
                             userId: localStorage.getItem('userId'),
@@ -970,6 +1119,10 @@
             },
             //添加中标单位
             tjzbdw() {
+                if(this.zhongbiao.zhongbiaodw===''||this.zhongbiao.zhongbiaodw==null||this.zhongbiao.zhongbiaojg===''||this.zhongbiao.zhongbiaojg==null){
+                    this.$message.error("请添加中标信息！")
+                    return
+                }
                 this.zhongbiao.zbid = this.zhaobiao.id
                 this.zhongbiao.xmid = this.zhaobiao.xmid
                 axios.post(this.ip + '/zhongbiao/addZhongbiao', this.zhongbiao)
@@ -1027,6 +1180,12 @@
             },
             //发起标书
             fqbs() {
+                //判断有无文件
+                if(this.fileList.length==0){
+                    this.$message.error("请上传文件！")
+                    return
+                }
+
                 axios.get(this.ip + '/zhaobiao/bsfq', {
                     params: {
                         id: this.zhaobiao.id,
@@ -1052,8 +1211,19 @@
                 this.lqfj(row.zbpid)
                 this.getZhongbiaodw()
                 this.url = 'http://localhost:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
-                this.show_zbxq = true
+                axios.get(this.ip+'/user/userIdToDept',{
+                    params:{
+                        userId:this.zhaobiao.sqr
+                    }
+                }).then(res=>{
+                    if(res.data==='工程技术部'&&this.groupId==='jsb_doman')
+                        this.show_zbxqjsb = true
+                    else
+                        this.show_zbxq = true
+                })
             },
+            //根据招标表中的申请人拿到申请部门
+
             //拿到所有投标单位
             getAlltbdw() {
                 axios.get(this.ip + '/zhaobiao/getAllTbdw', {
@@ -1182,10 +1352,11 @@
                         this.NodeId = res.data
                     })
             },
-            //确定驳回
+
+            //确定前期驳回
             qd_bh() {
                 if (this.comment == '' || this.comment == null)
-                    this.$message.info("请填写驳回理由")
+                    this.$message.error("请填写驳回理由")
                 else {
                     if (this.user.groupId == 'zgjl') {//主管经理驳回
                         this.cl('zgjl', false)
@@ -1245,13 +1416,25 @@
                     }
                 }
             },
-            //驳回
+
+            //驳回（前期审批）
             bh() {
                 this.comment = ''
                 this.show_bh = true
             },
+
             //驳回（招标管理）
             bh2() {
+                this.comment=''
+                this.show_zbbh=true
+            },
+
+            //确定招标驳回
+            qd_zbbh(){
+                if (this.comment == '' || this.comment == null){
+                    this.$message.error("请填写驳回理由")
+                    return
+                }
                 if (localStorage.getItem('groupId') === 'jsb_doman')
                     this.cl2('jbr', false)
                 else if (localStorage.getItem('groupId') === 'jsb_zgjl')
@@ -1259,6 +1442,7 @@
                 else if (localStorage.getItem('groupId') === 'jsb_jl')
                     this.cl2('jl', false)
             },
+
             //同意
             ty() {
                 this.comment = '同意'
@@ -1434,7 +1618,6 @@
             //项目详情
             xmxq(row) {
                 this.isxq = false
-                console.log(row)
                 if (row.declarationDep === '工程技术部' && this.groupId === 'jsb_doman') {//如果是工程技术部的项目、另外弹窗
                     this.show_xqgcjsb = true
                 }else {
@@ -1616,9 +1799,6 @@
                 })
                     .then(res => {
                         if (res.data) {
-                            for (let i = 0; i < res.data.length; i++) {
-                                res.data[i].applicationDte = res.data[i].applicationDte.substr(0, 10)
-                            }
                             this.xmList = res.data;
                         }
                     })
@@ -1720,10 +1900,20 @@
             },
             handleListener() {
                 bus.$on('collapse', this.handleBus);
-
+                // 调用renderChart方法对图表进行重新渲染
+                window.addEventListener('resize', this.renderChart)
             },
 
+            handleBus(msg){
+                // setTimeout(() => {
+                //     this.renderChart()
+                // }, 300);
+            },
 
+            // renderChart(){
+            //    // this.$refs.bar.renderChart();
+            //     //this.$refs.line.renderChart();
+            // }
         }
     }
 

@@ -29,7 +29,7 @@
 
                 <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllys(1)">全部</el-button>
             </div>
-            <el-table height="550" :data="yanshous" style="width: 100%">
+            <el-table height="600" :data="yanshous" style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
@@ -373,6 +373,10 @@
             },
             //确定新建验收
             qdxj(){
+                if(this.yanshou.projectid==null||this.yanshou.projectid==''){
+                    this.$message.error("请选择项目！")
+                    return
+                }
                 axios.post(this.ip+'/yanshou/addYanshou',this.yanshou)
                     .then(res=>{
                         this.$message.success("新建验收成功！")

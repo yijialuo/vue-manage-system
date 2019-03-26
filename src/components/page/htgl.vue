@@ -28,7 +28,7 @@
                 <el-button type="primary" icon="el-icon-search" style="margin-left: 10px" @click="xmIdSS">搜索</el-button>
                 <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllht(1)">全部</el-button>
             </div>
-            <el-table height="550"  :data="contracts" style="width: 100%">
+            <el-table height="600"  :data="contracts" style="width: 100%">
                 <el-table-column  type="expand">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
@@ -56,11 +56,11 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column prop="contractNo" sortable label="合同编号" width="150">
+                <el-table-column prop="contractNo" sortable label="合同编号" >
                 </el-table-column>
-                <el-table-column prop="projectName" label="合同项目" width="120">
+                <el-table-column prop="projectName" label="合同项目" >
                 </el-table-column>
-                <el-table-column prop="rq" sortable  label="合同日期" width="120">
+                <el-table-column prop="rq" sortable  label="合同日期">
                 </el-table-column>
                 <el-table-column prop="dfdsr" label="对方当事人">
                 </el-table-column>
@@ -83,7 +83,7 @@
                 <el-pagination
                         background
                         @current-change="currentChange"
-                        layout="prev, pager, next"
+                        layout="total,prev, pager, next"
                         :total="hts">
                 </el-pagination>
             </div>
@@ -410,6 +410,7 @@
                             this.contracts=res.data
                     })
             },
+
             //删除合同
             scht(id){
                 this.$confirm('此操作将永久删除该合同, 是否继续?', '提示', {
@@ -432,6 +433,7 @@
                         })
                 }).catch(()=>{this.$message.info("已取消删除")})
             },
+
             //删除附件
             handleBeforeRemove(file, fileList){
                     this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
@@ -457,6 +459,7 @@
                             this.getFileList(this.cid)
                         })
             },
+
             //编辑合同
             bjht(row){
                 this.remoteMethod(row.projectName)
@@ -464,6 +467,7 @@
                 this.zzsc=row.zzsc.split('、')
                 this.show_bjht=true
             },
+
             //确定编辑
             qdbj(){
                 this.contract.zzsc=''
@@ -484,6 +488,7 @@
                     })
                 this.show_bjht=false
             },
+
             //删除请求
             handleRemove(file, fileList) {
                 this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {

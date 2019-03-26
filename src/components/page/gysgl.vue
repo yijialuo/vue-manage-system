@@ -14,10 +14,10 @@
                     <el-input v-model="gysmc" placeholder="供应商名称" class="handle-input mr10"></el-input>
                     <el-button type="primary" icon="el-icon-search" @click="gysmcSearch">搜索</el-button>
                 </div>
-                <el-table height="500" @row-dblclick="sjgys" stripe :data="suppliers" border class="table" ref="multipleTable">
-                    <el-table-column prop="name" label="供应商名称" sortable width="150">
+                <el-table height="600" @row-dblclick="sjgys" stripe :data="suppliers" border class="table" ref="multipleTable">
+                    <el-table-column prop="name" label="供应商名称" sortable >
                     </el-table-column>
-                    <el-table-column prop="code" label="供应商编号" width="120">
+                    <el-table-column prop="code" label="供应商编号" >
                     </el-table-column>
                     <el-table-column prop="phone" label="座机">
                     </el-table-column>

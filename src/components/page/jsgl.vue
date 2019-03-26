@@ -41,7 +41,7 @@
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getALLJsjl">全部
                     </el-button>
                 </div>
-                <el-table height="500" style="width: 100%" :data="jss">
+                <el-table height="600" style="width: 100%" :data="jss.slice((currentPage-1)*10,currentPage*10)">
                     <el-table-column type="expand">
                         <template slot-scope="props">
                             <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
@@ -88,17 +88,17 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="project_name" label="项目名" width="150">
+                    <el-table-column prop="project_name" label="项目名" >
                     </el-table-column>
-                    <el-table-column prop="contract_no" sortable label="合同号" width="120">
+                    <el-table-column prop="contract_no" sortable label="合同号" >
                     </el-table-column>
-                    <el-table-column prop="rq" sortable label="创建日期" width="150">
+                    <el-table-column prop="rq" sortable label="创建日期" >
                     </el-table-column>
-                    <el-table-column prop="jbbm" label="经办部门" width="150">
+                    <el-table-column prop="jbbm" label="经办部门" >
                     </el-table-column>
-                    <el-table-column prop="jbr" label="经办人" width="150">
+                    <el-table-column prop="jbr" label="经办人" >
                     </el-table-column>
-                    <el-table-column prop="yszmr" label="验收证明人" width="150">
+                    <el-table-column prop="yszmr" label="验收证明人">
                     </el-table-column>
                     <el-table-column prop="skdw" label="收款单位">
                     </el-table-column>
@@ -115,6 +115,7 @@
                 <div style="text-align: center">
                     <el-pagination
                             background
+                            @current-change="currentChange"
                             layout="prev, pager, next"
                             :total="jss.length">
                     </el-pagination>
@@ -227,6 +228,7 @@
         name: 'jsgl',
         data() {
             return {
+                currentPage:1,//默认开始页面
                 //合同id
                 contractId:'',
                 Payable: {
@@ -355,6 +357,10 @@
             this.getHts()
         },
         methods: {
+
+            currentChange(currentPage){
+                this.currentPage = currentPage;
+            },
             //合同搜索
             htss(){
                 axios.get(this.ip + '/payable/htidToPaybles', {
@@ -387,33 +393,6 @@
                     .then(res => {
                         this.xms = res.data
                     })
-            },
-
-            remoteMethod(query) {
-                if (query !== '') {
-                    this.loading = true;
-                    setTimeout(() => {
-                        this.loading = false;
-                        this.xms = this.list.filter(item => {
-                            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
-                        });
-                    }, 200);
-                } else {
-                    this.xms = [];
-                }
-            },
-            remoteMethod2(query) {
-                if (query !== '') {
-                    this.loading2 = true;
-                    setTimeout(() => {
-                        this.loading2 = false;
-                        this.hts = this.list2.filter(item => {
-                            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
-                        });
-                    }, 200);
-                } else {
-                    this.hts = [];
-                }
             },
             //点击文件下载
             handlePreview(file) {

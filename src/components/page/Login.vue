@@ -72,6 +72,8 @@
                                 .then(res=>{
                                     localStorage.setItem('groupId',res.data.groupId)
                                     localStorage.setItem('userName',res.data.userName)
+                                    localStorage.setItem('departmentId',res.data.departmentId)
+                                    localStorage.setItem('departmentName',res.data.departmentName)
                                     this.$router.push('/');
                                 })
                         } else {
