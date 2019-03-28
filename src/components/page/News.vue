@@ -87,7 +87,7 @@
 
 
         <!-- 项目详情框 -->
-        <el-dialog title="项目详情" :visible.sync="show_xq" width="608px" center>
+        <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="608px" center>
             <el-form label-width="100px">
                 <el-form-item label="项目名称">
                     <el-input :disabled="user.groupId!='doman'" v-model="xm.projectNam"></el-input>
@@ -174,7 +174,7 @@
         </el-dialog>
 
         <!--驳回弹窗-->
-        <el-dialog title="审批意见" :visible.sync="show_bh">
+        <el-dialog title="审批意见" :close-on-click-modal="false" :visible.sync="show_bh">
             <el-form>
                 <el-form-item label="审批意见：">
                     <el-input v-model="comment" type="textarea"
@@ -190,7 +190,7 @@
         </el-dialog>
 
         <!--同意弹窗-->
-        <el-dialog title="审批意见" :visible.sync="show_ty">
+        <el-dialog title="审批意见" :close-on-click-modal="false" :visible.sync="show_ty">
             <el-form>
                 <el-form-item label="审批意见：">
                     <!--<el-select v-model="comment" clearable placeholder="常用词汇">-->

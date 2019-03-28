@@ -56,7 +56,7 @@
         </div>
 
          <!--添加供应商弹窗 -->
-        <el-dialog title="添加供应商" :visible.sync="show_tjgys" width="700px">
+        <el-dialog title="添加供应商" :close-on-click-modal="false" :visible.sync="show_tjgys" width="700px">
             <el-form ref="form" :model="supplier" label-width="100px">
                 <el-form-item label="供应商名称">
                     <el-input v-model="supplier.name"></el-input>
@@ -88,7 +88,7 @@
         </el-dialog>
 
         <!--编辑供应商弹窗 -->
-        <el-dialog title="编辑供应商" :visible.sync="show_bjgys" width="680px">
+        <el-dialog title="编辑供应商" :close-on-click-modal="false" :visible.sync="show_bjgys" width="680px">
             <el-form ref="form" :model="supplier" label-width="100px">
                 <el-form-item label="供应商名称">
                     <el-input v-model="supplier.name"></el-input>
@@ -119,7 +119,7 @@
         </el-dialog>
 
         <!--评价报告弹窗 -->
-        <el-dialog title="评价报告" :visible.sync="show_pjbg" width="912px">
+        <el-dialog title="评价报告" :close-on-click-modal="false" :visible.sync="show_pjbg" width="912px">
             <h3>{{this.gysmc}}</h3>
             <el-table
                     :data="pjbgData"
@@ -155,7 +155,7 @@
         </el-dialog>
 
         <!--添加评价弹窗 -->
-        <el-dialog title="添加评价" :visible.sync="show_tjpj" width="925px">
+        <el-dialog title="添加评价" :close-on-click-modal="false" :visible.sync="show_tjpj" width="925px">
             <h2 style="text-align: center">{{this.gysmc}}</h2>
             <el-form  style="margin-top: 20px" label-width="140px" label-position='left'>
                 <el-form-item label="时间">
@@ -238,7 +238,7 @@
         </el-dialog>
 
         <!--总评价弹窗 -->
-        <el-dialog title="总评价" :visible.sync="show_zpj" width="952px">
+        <el-dialog title="总评价" :close-on-click-modal="false" :visible.sync="show_zpj" width="952px">
             <el-button type="primary" @click="show_tjpj=true">新增评价</el-button>
             <el-table
                     @row-dblclick="xxpj"

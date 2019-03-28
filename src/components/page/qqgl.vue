@@ -8,14 +8,16 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="xjxmlxd">
+                    <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="primary" icon="el-icon-circle-plus"
+                               class="handle-del mr10" @click="xjxmlxd">
                         新建项目立项单
                     </el-button>
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="qb">全部</el-button>
 
                     <br/>
                     <br/>
-                    <el-input  style="margin-top: 10px" required v-model="select_xmmc" placeholder="项目名称" class="handle-input mr10"></el-input>
+                    <el-input style="margin-top: 10px" required v-model="select_xmmc" placeholder="项目名称"
+                              class="handle-input mr10"></el-input>
                     <!--<el-button type="primary" icon="el-icon-search" @click="xmmcSearch">搜索</el-button>-->
 
                     <el-input v-model="select_code" placeholder="项目编号" style="margin-left: 10px"
@@ -25,7 +27,7 @@
                     <el-select
                             clearable
                             style="margin-left: 50px;width: 130px"
-                            v-if="groupId!='doman'&&groupId!='gzjl'&&groupId!='jl'"
+                            v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
                             v-model="select_dptnm"
                             placeholder="立项部门搜索"
                     >
@@ -79,32 +81,40 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
-                    <el-button style="margin-left: 10px" type="primary" icon="el-icon-search" @click="zhSearch">搜索</el-button>
+                    <el-button style="margin-left: 10px" type="primary" icon="el-icon-search" @click="zhSearch">搜索
+                    </el-button>
                 </div>
 
-                <el-table height="600" stripe :data="projects" border class="table" ref="multipleTable">
+                <el-table v-loading="loading" height="600" stripe :data="projects" border class="table"
+                          ref="multipleTable">
                     <el-table-column prop="projectNo" sortable label="项目编号" width="120">
                     </el-table-column>
-                    <el-table-column prop="projectNam" label="项目名称" >
+                    <el-table-column prop="projectNam" label="项目名称">
                     </el-table-column>
-                    <el-table-column prop="declarationDep"  sortable label="立项部门">
+                    <el-table-column prop="declarationDep" sortable label="立项部门">
                     </el-table-column>
                     <el-table-column prop="proposer" label="发起人">
                     </el-table-column>
-                    <el-table-column prop="bider"  label="经办人">
+                    <el-table-column prop="bider" label="经办人">
                     </el-table-column>
                     <el-table-column prop="projectType" sortable label="项目类别">
                     </el-table-column>
-                    <el-table-column prop="engTechAuditOpinion" sortable label="创建时间" >
+                    <el-table-column prop="engTechAuditOpinion" sortable label="创建时间">
                     </el-table-column>
-                    <el-table-column prop="dqjd" label="当前节点"  >
+                    <el-table-column prop="dqjd" label="当前节点">
                     </el-table-column>
                     <el-table-column label="操作" width="250" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-tickets" @click="xmxq(scope.$index, scope.row)">详情</el-button>
+                            <el-button type="text" icon="el-icon-tickets" @click="xmxq(scope.$index, scope.row)">详情
+                            </el-button>
+                            <el-button type="text" icon="el-icon-tickets" @click="fj(scope.row)">附件</el-button>
                             <el-button type="text" icon="el-icon-star-on" @click="zt(scope.row)">状态</el-button>
-                            <el-button type="text" icon="el-icon-star-on" v-if="isSqs.get(scope.row.id)" @click="kssq(scope.$index, scope.row)">申请</el-button>
-                            <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            <el-button type="text" icon="el-icon-star-on" v-if="isSqs.get(scope.row.id)"
+                                       @click="kssq(scope.$index, scope.row)">申请
+                            </el-button>
+                            <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="text" icon="el-icon-delete"
+                                       class="red" @click="handleDelete(scope.$index, scope.row)">删除
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -122,7 +132,7 @@
 
 
             <!-- 删除提示框 -->
-            <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
+            <el-dialog title="提示" :close-on-click-modal="false" :visible.sync="delVisible" width="300px" center>
                 <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="delVisible = false">取 消</el-button>
@@ -131,17 +141,17 @@
             </el-dialog>
 
             <!-- 新建项目项目立项单弹窗 -->
-            <el-dialog title="申请项目" :visible.sync="show_xjxmlxd" width="680px">
+            <el-dialog title="申请项目" :close-on-click-modal="false" :visible.sync="show_xjxmlxd" width="680px">
 
 
-                <el-form  ref="form" style="margin-top: 10px" :model="project" label-width="100px">
+                <el-form ref="form" style="margin-top: 10px" :model="project" label-width="100px">
                     <el-form-item label="项目编号">
                         <el-input
                                 v-model="project.projectNo"
                                 clearable>
                         </el-input>
                     </el-form-item>
-                    <el-form-item  label="项目名称">
+                    <el-form-item label="项目名称">
                         <el-input v-model="project.projectNam"></el-input>
                     </el-form-item>
                     <el-form-item label="立项时间">
@@ -152,20 +162,21 @@
                                 value-format="yyyy-MM-dd"
                                 placeholder="选择日期">
                         </el-date-picker>
-                        <span >立项部门</span>
+                        <span>立项部门</span>
                         <el-input :disabled="true" style="width: 215px;margin-left: 15px"
                                   v-model="project.declarationDep"></el-input>
                         <!--<el-select style="width: 215px;margin-left: 15px"  v-model="project.declarationDep" placeholder="请选择">-->
-                            <!--<el-option-->
-                                    <!--v-for="item in department_options"-->
-                                    <!--:key="item.label"-->
-                                    <!--:label="item.label"-->
-                                    <!--:value="item.label">-->
-                            <!--</el-option>-->
+                        <!--<el-option-->
+                        <!--v-for="item in department_options"-->
+                        <!--:key="item.label"-->
+                        <!--:label="item.label"-->
+                        <!--:value="item.label">-->
+                        <!--</el-option>-->
                         <!--</el-select>-->
                     </el-form-item>
                     <el-form-item label="项目大类">
-                        <el-select style="width: 215px;padding-right: 20px"  v-model="project.depAuditOpinion" placeholder="请选择">
+                        <el-select style="width: 215px;padding-right: 20px" v-model="project.depAuditOpinion"
+                                   placeholder="请选择">
                             <el-option
                                     v-for="item in xmdl"
                                     :key="item.id"
@@ -173,8 +184,9 @@
                                     :value="item.id">
                             </el-option>
                         </el-select>
-                        <span >项目类别</span>
-                        <el-select style="width: 215px;margin-left: 15px" v-model="project.projectType" placeholder="请选择">
+                        <span>项目类别</span>
+                        <el-select style="width: 215px;margin-left: 15px" v-model="project.projectType"
+                                   placeholder="请选择">
                             <el-option
                                     v-for="item in xmlb"
                                     :key="item.value"
@@ -190,7 +202,8 @@
                         <el-input style="width: 215px" v-model="project.personInCharge"></el-input>
                     </el-form-item>
                     <el-form-item label="预计工期">
-                        <el-input v-model="project.techAuditOpinion" style="width: 215px;padding-right: 15px"></el-input>
+                        <el-input v-model="project.techAuditOpinion"
+                                  style="width: 215px;padding-right: 15px"></el-input>
                         项目分类
                         <el-select style="width: 215px;margin-left: 15px" v-model="project.reviser" placeholder="请选择">
                             <el-option
@@ -224,31 +237,34 @@
             </el-dialog>
 
             <!-- 项目详情弹窗 -->
-            <el-dialog title="申请项目" :visible.sync="show_xq" width="680px">
-                <el-form  ref="form" style="margin-top: 10px" :model="project" label-width="100px">
+            <el-dialog title="申请项目" :close-on-click-modal="false" :visible.sync="show_xq" width="680px">
+                <el-form ref="form" style="margin-top: 10px" :model="project" label-width="100px">
                     <el-form-item label="项目编号">
                         <el-input
+                                :readonly="!issqr"
                                 v-model="project.projectNo"
                                 clearable>
                         </el-input>
                     </el-form-item>
-                    <el-form-item  label="项目名称">
-                        <el-input v-model="project.projectNam"></el-input>
+                    <el-form-item label="项目名称">
+                        <el-input :readonly="!issqr"  v-model="project.projectNam"></el-input>
                     </el-form-item>
                     <el-form-item label="立项时间">
                         <el-date-picker
+                                :readonly="!issqr"
                                 style="width: 215px;padding-right: 20px"
                                 v-model="project.applicationDte"
                                 type="date"
                                 value-format="yyyy-MM-dd"
                                 placeholder="选择日期">
                         </el-date-picker>
-                        <span >立项部门</span>
-                        <el-input :disabled="true" style="width: 215px;margin-left: 15px"
+                        <span>立项部门</span>
+                        <el-input readonly style="width: 215px;margin-left: 15px"
                                   v-model="project.declarationDep"></el-input>
                     </el-form-item>
                     <el-form-item label="项目大类">
-                        <el-select style="width: 215px;padding-right: 20px"  v-model="project.depAuditOpinion" placeholder="请选择">
+                        <el-select  style="width: 215px;padding-right: 20px" v-model="project.depAuditOpinion"
+                                   placeholder="请选择">
                             <el-option
                                     v-for="item in xmdl"
                                     :key="item.id"
@@ -256,8 +272,9 @@
                                     :value="item.id">
                             </el-option>
                         </el-select>
-                        <span >项目类别</span>
-                        <el-select style="width: 215px;margin-left: 15px" v-model="project.projectType" placeholder="请选择">
+                        <span>项目类别</span>
+                        <el-select  style="width: 215px;margin-left: 15px" v-model="project.projectType"
+                                   placeholder="请选择">
                             <el-option
                                     v-for="item in xmlb"
                                     :key="item.value"
@@ -267,15 +284,16 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="投资概算(万)">
-                        <el-input type="number" style="width: 215px;padding-right: 15px"
+                        <el-input :readonly="!issqr" type="number" style="width: 215px;padding-right: 15px"
                                   v-model="project.investmentEstimate"></el-input>
                         项目负责人
                         <el-input style="width: 215px" v-model="project.personInCharge"></el-input>
                     </el-form-item>
                     <el-form-item label="预计工期">
-                        <el-input v-model="project.techAuditOpinion" style="width: 215px;padding-right: 15px"></el-input>
+                        <el-input :readonly="!issqr" v-model="project.techAuditOpinion"
+                                  style="width: 215px;padding-right: 15px"></el-input>
                         项目分类
-                        <el-select style="width: 215px;margin-left: 15px" v-model="project.reviser" placeholder="请选择">
+                        <el-select  style="width: 215px;margin-left: 15px" v-model="project.reviser" placeholder="请选择">
                             <el-option
                                     v-for="item in xmfl"
                                     :key="item.value"
@@ -285,17 +303,17 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="立项背景理由">
-                        <el-input v-model="project.establishReason" type="textarea"
+                        <el-input :readonly="!issqr" v-model="project.establishReason" type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="立项内容规模">
-                        <el-input v-model="project.scale" type="textarea"
+                        <el-input :readonly="!issqr" v-model="project.scale" type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算说明">
-                        <el-input v-model="project.illustration" type="textarea"
+                        <el-input :readonly="!issqr" v-model="project.illustration" type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
@@ -326,10 +344,30 @@
             </span>
             </el-dialog>
 
-            <el-dialog title="状态" :visible.sync="show_zt" width="920px">
+            <el-dialog title="状态" :close-on-click-modal="false" :visible.sync="show_zt" width="920px">
                 <img :src='src'/>
                 <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="show_zt=false">确 定</el-button>
+            </span>
+            </el-dialog>
+
+            <!--上传附件弹窗 -->
+            <el-dialog title="附件" :close-on-click-modal="false" :visible.sync="showfj" width="408px">
+                <el-upload
+                        class="upload-demo"
+                        drag
+                        :action="url"
+                        :on-preview="handlePreview"
+                        :before-remove="handleBeforeRemove"
+                        :on-success="handleSuccess"
+                        multiple
+                        :file-list="fileList"
+                >
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>
+                </el-upload>
+                <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="showfj=false">确 定</el-button>
             </span>
             </el-dialog>
         </div>
@@ -338,59 +376,63 @@
 
 <script>
     import axios from 'axios'
-
+    import { Loading } from 'element-ui';
     export default {
-        inject:['reload'],
+        inject: ['reload'],
         name: 'qqgl',
         data() {
             return {
-                commentList:[],
+                loading: false,
+                showfj: false,
+                url: '',
+                fileList: [],
+                commentList: [],
                 //当前项目是否搜索出来的
-                ss:false,
+                ss: false,
                 //搜索部门
-                select_dptnm:'',
+                select_dptnm: '',
                 //搜索节点
-                select_jd:'',
+                select_jd: '',
                 //搜索项目分类
-                select_xmfl:'',
+                select_xmfl: '',
                 //项目类别搜索
-                select_xmlb:'',
-                jds:[{
-                    value:'未申请',
-                    label:'未申请',
-                },{
-                    value:'填写申请表',
-                    label:'填写申请表'
-                },{
-                    value:'主管经理审批',
-                    label:'主管经理审批'
-                },{
-                    value:'经理审批',
-                    label:'经理审批',
-                },{
-                    value:'经办人',
-                    label:'经办人'
-                },{
-                    value:'技术部主管经理',
-                    label:'技术部主管经理'
-                },{
-                    value:'技术部经理',
-                    label:'技术部经理'
-                },{
-                    value:'两会',
-                    label:'两会'
-                },{
-                    value:'总经理办公会',
-                    label:'总经理办公会'
-                },{
-                    value:'备案',
-                    label:'备案',
-                },{
-                    value:'申请结束',
-                    label:'申请结束'
+                select_xmlb: '',
+                jds: [{
+                    value: '未申请',
+                    label: '未申请',
+                }, {
+                    value: '填写申请表',
+                    label: '填写申请表'
+                }, {
+                    value: '主管经理审批',
+                    label: '主管经理审批'
+                }, {
+                    value: '经理审批',
+                    label: '经理审批',
+                }, {
+                    value: '经办人',
+                    label: '经办人'
+                }, {
+                    value: '技术部主管经理',
+                    label: '技术部主管经理'
+                }, {
+                    value: '技术部经理',
+                    label: '技术部经理'
+                }, {
+                    value: '两会',
+                    label: '两会'
+                }, {
+                    value: '总经理办公会',
+                    label: '总经理办公会'
+                }, {
+                    value: '备案',
+                    label: '备案',
+                }, {
+                    value: '申请结束',
+                    label: '申请结束'
                 }],
-                bms:[],
-                groupId:localStorage.getItem("groupId"),
+                bms: [],
+                groupId: localStorage.getItem("groupId"),
                 //新建项目立项单
                 show_xjxmlxd: false,
                 projects: [],
@@ -450,7 +492,7 @@
                 }, {
                     value: '物资',
                     label: '物资'
-                },{
+                }, {
                     value: '绿化',
                     label: '绿化'
                 }
@@ -460,28 +502,28 @@
                 multipleSelection: [],
                 select_xmmc: '',
                 select_code: '',
-                src:'',
-                show_zt:false,
+                src: '',
+                show_zt: false,
                 user: {},
                 idx: -1,
                 //项目数
-                count:0,
-                delVisible:false,
+                count: 0,
+                delVisible: false,
                 //是否申请人、决定修改按钮的显示与否
-                issqr:false
+                issqr: false
             }
         },
-        watch:{
-            select_code(){
-                if(this.select_code!=''){
-                    if(this.select_xmmc!='')
-                        this.select_xmmc=''
+        watch: {
+            select_code() {
+                if (this.select_code != '') {
+                    if (this.select_xmmc != '')
+                        this.select_xmmc = ''
                 }
             },
-            select_xmmc(){
-                if(this.select_xmmc!=''){
-                    if(this.select_code!='')
-                        this.select_code=''
+            select_xmmc() {
+                if (this.select_xmmc != '') {
+                    if (this.select_code != '')
+                        this.select_code = ''
                 }
             },
 
@@ -641,13 +683,13 @@
             //     })
             // },
 
-            investmentEstimate(newValue,oldValue){
-                if(Number(newValue)<0){
+            investmentEstimate(newValue, oldValue) {
+                if (Number(newValue) < 0) {
                     this.$alert('中标金额只能填写大于等于0!', '提示', {
                         confirmButtonText: '确定',
-                        type:'error'
+                        type: 'error'
                     })
-                    this.project.investmentEstimate=1
+                    this.project.investmentEstimate = 1
                 }
             }
         },
@@ -663,6 +705,123 @@
             this.getAllDptName()
         },
         methods: {
+
+            //上传成功，重新请求
+            handleSuccess() {
+                this.fj(this.project)
+            },
+
+            //删除请求
+            handleBeforeRemove(file, fileList) {
+                if (this.project.pid != '' && this.project.pid != null) {
+                    this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.get(this.ip + '/Attachment/deletAttachment', {
+                            params: {
+                                userId: localStorage.getItem('userId'),
+                                attachment_id: file.id
+                            }
+                        })
+                            .then(res => {
+                                if (res.data) {
+                                    this.$message.info("删除成功！")
+                                } else {
+                                    this.$message.info("删除失败！您可能没有权限！")
+                                    //重新请求
+                                    this.fj(this.project)
+                                }
+                            })
+                    })
+                        .catch(() => {
+                            //重新请求
+                            this.fj(this.project)
+                        })
+                } else {
+                    this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.get(this.ip + '/contract/deletFj', {
+                            params: {
+                                Fjid: file.id
+                            }
+                        })
+                            .then(res => {
+                                this.$message.info("删除成功！")
+                            })
+                    }).catch(() => {
+                        this.fj(this.project)
+                    })
+                }
+            },
+
+            //点击文件下载
+            handlePreview(file) {
+                if (this.project.pid == '' || this.project.pid == null) {//未申请
+                    window.open(this.ip + '/contract/getFj?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
+                } else {
+                    window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
+
+                    // axios.get(this.ip + '/Attachment/getrank', {
+                    //     params: {
+                    //         userId: localStorage.getItem('userId'),
+                    //         attachment_id: file.id
+                    //     }
+                    // })
+                    //     .then(res => {
+                    //         if (res.data)
+                    //             window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
+                    //         else
+                    //             this.$message.info("没有下载权限")
+                    //     })
+                }
+            },
+
+            //点击附件事件
+            fj(row) {
+                this.project = row
+                this.showfj = true
+                if (row.pid == '' || row.pid == null) {//未申请
+                    this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + row.id
+                    //拿附件信息
+                    axios.get(this.ip + '/contract/getFjs', {
+                        params: {
+                            cid: row.id
+                        }
+                    }).then(res => {
+                        this.fileList = []
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.fileList.push({
+                                name: res.data[i].fname,
+                                id: res.data[i].fid
+                            })
+                        }
+                    })
+                } else {//已经申请、拿附件信息
+                    this.url = 'http://localhost:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    axios.get(this.ip + '/Attachment/getattachment', {
+                        params: {
+                            pid: row.pid
+                        }
+                    })
+                        .then(res => {
+                            if (res.data) {
+                                this.fileList = []
+                                for (let i = 0; i < res.data.length; i++) {
+                                    this.fileList.push({
+                                        name: res.data[i].attachment_nam,
+                                        id: res.data[i].attachment_id
+                                    })
+                                }
+                            }
+                        })
+                }
+            },
+
             //领取评论
             lqpl(pid) {
                 axios.get(this.ip + '/projectApplication/projecttocomment', {
@@ -677,21 +836,28 @@
                     })
             },
             //综合搜索
-            zhSearch(){
-                if((this.select_dptnm==''||this.select_dptnm==null)&&(this.select_jd==''||this.select_jd==null)&&(this.select_xmfl==''||this.select_xmfl==null)&&(this.select_xmlb==''||this.select_xmlb==null)){
+            zhSearch() {
+
+                if ((this.select_dptnm == '' || this.select_dptnm == null) && (this.select_jd == '' || this.select_jd == null) && (this.select_xmfl == '' || this.select_xmfl == null) && (this.select_xmlb == '' || this.select_xmlb == null)) {
                     this.qb()
                     return
                 }
-                if(this.groupId==='doman'||this.groupId==='gzjl'&&this.groupId==='jl')
-                    this.select_dptnm=localStorage.getItem('departmentName')
-                axios.get(this.ip+'/projectApplication/zhSearch',{
-                                params:{
-                                    select_dptnm:this.select_dptnm,
-                                    select_jd:this.select_jd,
-                                    select_xmfl:this.select_xmfl,
-                                    select_xmlb:this.select_xmlb,
-                                }
-                }).then(res=> {
+                //如果是办事员、主管经理、经理查询自己部门的
+                if (this.groupId === 'doman' || this.groupId === 'zgjl' || this.groupId === 'jl'){
+                    if((this.select_jd == '' || this.select_jd == null) && (this.select_xmfl == '' || this.select_xmfl == null) && (this.select_xmlb == '' || this.select_xmlb == null)){
+                        this.qb()
+                        return
+                    }
+                    this.select_dptnm = localStorage.getItem('departmentName')
+                }
+                axios.get(this.ip + '/projectApplication/zhSearch', {
+                    params: {
+                        select_dptnm: this.select_dptnm,
+                        select_jd: this.select_jd,
+                        select_xmfl: this.select_xmfl,
+                        select_xmlb: this.select_xmlb,
+                    }
+                }).then(res => {
                     if (res.data.length == 0) {
                         this.$message.error("没搜索到相关项目！")
                     } else {
@@ -719,25 +885,25 @@
                 })
             },
             //全部按钮事件
-            qb(){
+            qb() {
                 this.getProjects(1)
-                this.ss=false
-                this.select_xmmc=''
-                this.select_code=''
-                this.select_dptnm=''
-                this.select_jd=''
-                this.select_xmfl=''
-                this.select_xmlb=''
+                this.ss = false
+                this.select_xmmc = ''
+                this.select_code = ''
+                this.select_dptnm = ''
+                this.select_jd = ''
+                this.select_xmfl = ''
+                this.select_xmlb = ''
             },
             //拿到搜索部门的名称
-            getAllDptName(){
-                axios.get(this.ip+'/department/getAllDptName')
-                    .then(res=>{
-                        if(res.data!=null){
-                            for(let i=0;i<res.data.length;i++){
+            getAllDptName() {
+                axios.get(this.ip + '/department/getAllDptName')
+                    .then(res => {
+                        if (res.data != null) {
+                            for (let i = 0; i < res.data.length; i++) {
                                 this.bms.push({
-                                    value:res.data[i],
-                                    label:res.data[i],
+                                    value: res.data[i],
+                                    label: res.data[i],
                                 })
                             }
                         }
@@ -745,48 +911,50 @@
             },
 
             //分页请求
-            currentChange(pageNum){
+            currentChange(pageNum) {
                 this.getProjects(pageNum)
             },
             //拿项目总数
-            getcounts(){
-                axios.get(this.ip+'/projectApplication/AllCounts',{
-                    params:{
-                        dpt:localStorage.getItem("departmentName")
+            getcounts() {
+                axios.get(this.ip + '/projectApplication/AllCounts', {
+                    params: {
+                        dpt: localStorage.getItem("departmentName")
                     }
                 })
-                    .then(res=>{
-                        this.count=res.data
+                    .then(res => {
+                        this.count = res.data
                     })
             },
             //状态
             zt(row) {
-                if(row.pid!=null&&row.pid!=''){
+                if (row.pid != null && row.pid != '') {
+                    let loadingInstance = Loading.service({fullscreen:true});
                     axios.get(this.ip + '/projectApplication/zt', {
                         params: {
                             pi: row.pid
                         }
                     })
                         .then(res => {
+                            loadingInstance.close();
                             //得到图片流
                             this.src = 'data:image/png;base64,' + res.data
                             this.show_zt = true
                         })
-                }else {
+                } else {
                     this.$message.info("该项目还未开始申请！")
                 }
             },
 
             //搜索按钮点击事件
-            Search(){
+            Search() {
                 //其他搜索框制空
-                this.select_jd=''
-                this.select_dptnm=''
-                this.select_xmfl=''
-                this.select_xmlb=''
-                if(this.select_xmmc!='')
+                this.select_jd = ''
+                this.select_dptnm = ''
+                this.select_xmfl = ''
+                this.select_xmlb = ''
+                if (this.select_xmmc != '')
                     this.xmmcSearch()
-                else if(this.select_code!='')
+                else if (this.select_code != '')
                     this.xmbhSearch()
                 else
                     return
@@ -794,33 +962,33 @@
 
             //项目编号
             xmbhSearch() {
-                axios.get(this.ip+'/projectApplication/xmbhss',{
-                    params:{
-                        projectNo:this.select_code,
-                        declarationDep:localStorage.getItem("departmentName")
+                axios.get(this.ip + '/projectApplication/xmbhss', {
+                    params: {
+                        projectNo: this.select_code,
+                        declarationDep: localStorage.getItem("departmentName")
                     }
                 })
-                    .then(res=>{
-                        if(res.data.length==0)
+                    .then(res => {
+                        if (res.data.length == 0)
                             this.$message.error("没搜索到相关项目！")
-                        else{
+                        else {
                             //当前项目列表为搜索结果、取消分页显示
-                            this.ss=true
-                            this.projects=res.data
+                            this.ss = true
+                            this.projects = res.data
                             //拿到当前项目的节点
-                            for(let i=0;i<this.projects.length;i++){
-                                if(this.projects[i].pid==''||this.projects[i].pid==null){
-                                    this.projects[i].dqjd="未申请！"
+                            for (let i = 0; i < this.projects.length; i++) {
+                                if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                                    this.projects[i].dqjd = "未申请！"
                                     this.$set(this.projects, i, this.projects[i]);
-                                }else {
+                                } else {
                                     //请求
-                                    axios.get(this.ip+'/projectApplication/getPidNode',{
-                                        params:{
-                                            pid:this.projects[i].pid
+                                    axios.get(this.ip + '/projectApplication/getPidNode', {
+                                        params: {
+                                            pid: this.projects[i].pid
                                         }
                                     })
-                                        .then(res=>{
-                                            this.projects[i].dqjd=res.data
+                                        .then(res => {
+                                            this.projects[i].dqjd = res.data
                                             this.$set(this.projects, i, this.projects[i]);
                                         })
                                 }
@@ -834,7 +1002,7 @@
                 axios.get(this.ip + '/projectApplication/xmmcss', {
                     params: {
                         projectName: this.select_xmmc,
-                        declarationDep:localStorage.getItem("departmentName")
+                        declarationDep: localStorage.getItem("departmentName")
                     }
                 })
                     .then(res => {
@@ -842,7 +1010,7 @@
                             this.$message.error("没找到相关项目")
                         else {
                             //当前项目列表为搜索结果、取消分页显示
-                            this.ss=true
+                            this.ss = true
                             this.projects = res.data
                             //拿到当前项目的节点
                             for (let i = 0; i < this.projects.length; i++) {
@@ -886,20 +1054,22 @@
             xjxmlxd() {
                 this.project = {
                     proposer: localStorage.getItem('userName'),
-                    declarationDep:localStorage.getItem('departmentName')
+                    declarationDep: localStorage.getItem('departmentName')
                 }
                 this.show_xjxmlxd = true
             },
 
             //开始申请
             kssq(index, row) {
+                let loadingInstance=Loading.service({ fullscreen: true });
                 axios.post(this.ip + '/projectApplication/qqglStartSq', row)
                     .then(res => {
-                        if(res.data){
+                        loadingInstance.close();
+                        if (res.data) {
                             this.$message.success("申请成功！")
-                            //申请成功，重新请求
+                            //申请成功，刷新
                             this.reload()
-                        }else {
+                        } else {
                             this.$message.error("申请失败！")
                         }
                     })
@@ -907,7 +1077,7 @@
 
             //确认修改
             qdxg() {
-                if(this.isnull(this.project.projectNam)||this.isnull(this.project.reviser)||this.isnull(this.project.projectType)||this.isnull(this.project.declarationDep)){
+                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep)) {
                     this.$message.error("请填写详细信息！")
                     return
                 }
@@ -941,35 +1111,38 @@
 
             //拿到所有项目
             getProjects(pageNum) {
+                this.loading = true
                 this.projects = []
                 this.isSqs = new Map()
-                axios.get(this.ip + '/projectApplication/getAllProject',{
-                    params:{
-                        pageNum:pageNum,
-                        userId:localStorage.getItem('userId')
+                axios.get(this.ip + '/projectApplication/getAllProject', {
+                    params: {
+                        pageNum: pageNum,
+                        userId: localStorage.getItem('userId')
                     }
                 })
                     .then(res => {
-                        if (localStorage.getItem('groupId') != 'doman'&&localStorage.getItem('groupId') != 'jsb_doman') {//如果不是办事员或者技术部办事员，不可申请
+                        if (localStorage.getItem('groupId') != 'doman' && localStorage.getItem('groupId') != 'jsb_doman') {//如果不是办事员或者技术部办事员，不可申请
                             for (let i = 0; i < res.data.length; i++) {
                                 this.isSqs.set(res.data[i].id, false)
                             }
                             this.projects = res.data
                             //拿到当前项目的节点
-                            for(let i=0;i<this.projects.length;i++){
-                                if(this.projects[i].pid==''||this.projects[i].pid==null){
-                                    this.projects[i].dqjd="未申请！"
+                            for (let i = 0; i < this.projects.length; i++) {
+                                if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                                    this.projects[i].dqjd = "未申请！"
                                     this.$set(this.projects, i, this.projects[i]);
-                                }else {
+                                    this.loading = false
+                                } else {
                                     //请求
-                                    axios.get(this.ip+'/projectApplication/getPidNode',{
-                                        params:{
-                                            pid:this.projects[i].pid
+                                    axios.get(this.ip + '/projectApplication/getPidNode', {
+                                        params: {
+                                            pid: this.projects[i].pid
                                         }
                                     })
-                                        .then(res=>{
-                                            this.projects[i].dqjd=res.data
+                                        .then(res => {
+                                            this.projects[i].dqjd = res.data
                                             this.$set(this.projects, i, this.projects[i]);
+                                            this.loading = false
                                         })
                                 }
                             }
@@ -987,29 +1160,29 @@
 
                             }
                             axios.all(qq)
-                                .then(axios.spread((acct, perms)=>{
-                                    this.projects=res.data
+                                .then(axios.spread((acct, perms) => {
+                                    this.projects = res.data
                                     //拿到当前项目的节点
-                                    for(let i=0;i<this.projects.length;i++){
-                                        if(this.projects[i].pid==''||this.projects[i].pid==null){
-                                            this.projects[i].dqjd="未申请！"
+                                    for (let i = 0; i < this.projects.length; i++) {
+                                        if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                                            this.projects[i].dqjd = "未申请！"
                                             this.$set(this.projects, i, this.projects[i]);
-                                        }else {
+                                        } else {
                                             //请求
-                                            axios.get(this.ip+'/projectApplication/getPidNode',{
-                                                params:{
-                                                    pid:this.projects[i].pid
+                                            axios.get(this.ip + '/projectApplication/getPidNode', {
+                                                params: {
+                                                    pid: this.projects[i].pid
                                                 }
                                             })
-                                                .then(res=>{
-                                                    this.projects[i].dqjd=res.data
+                                                .then(res => {
+                                                    this.projects[i].dqjd = res.data
                                                     this.$set(this.projects, i, this.projects[i]);
+                                                    this.loading = false
                                                 })
                                         }
                                     }
                                 }))
                         }
-
                     })
             },
 
@@ -1029,20 +1202,20 @@
             },
 
             //是否空
-            isnull(data){
-                if(data==''||data==null)
+            isnull(data) {
+                if (data == '' || data == null)
                     return true;
                 return false;
             },
 
             //确定新建
             qdxj() {
-                if(this.isnull(this.project.projectNam)||this.isnull(this.project.reviser)||this.isnull(this.project.projectType)||this.isnull(this.project.declarationDep)){
+                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep)) {
                     this.$message.error("请填写详细信息！")
                     return
                 }
-                if(this.groupId==='jsb_doman')//技术部经办人新建的项目，直接设置经办人为当前用户
-                    this.project.bider=localStorage.getItem('userName')
+                if (this.groupId === 'jsb_doman')//技术部经办人新建的项目，直接设置经办人为当前用户
+                    this.project.bider = localStorage.getItem('userName')
                 axios.post(this.ip + '/projectApplication/insertXm', this.project)
                     .then(res => {
                         if (res.data) {
@@ -1063,8 +1236,8 @@
             xmxq(index, row) {
                 this.project = row
                 //拿审批列表
-                if(this.project.pid==null||this.project.pid==='')
-                    this.commentList=[]
+                if (this.project.pid == null || this.project.pid === '')
+                    this.commentList = []
                 else {
                     this.lqpl(this.project.pid)
                 }
@@ -1077,7 +1250,7 @@
                     }
                 })
                     .then(res => {
-                        this.issqr=res.data
+                        this.issqr = res.data
                     })
             },
 

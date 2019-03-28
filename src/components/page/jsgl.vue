@@ -124,7 +124,7 @@
         </div>
 
         <!--添加结算弹窗 -->
-        <el-dialog title="新增结算" :visible.sync="show_xzjs" width="680px">
+        <el-dialog title="新增结算" :close-on-click-modal="false" :visible.sync="show_xzjs" width="680px">
             <el-form label-width="100px" label-position='left'>
                 <el-form-item style="margin-top:15px" label="合同号">
                     <el-select
@@ -202,7 +202,7 @@
         </el-dialog>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :visible.sync="show_scfj" width="408px">
+        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="408px">
             <el-upload
                     class="upload-demo"
                     drag

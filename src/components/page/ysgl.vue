@@ -94,7 +94,7 @@
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :visible.sync="show_scfj" width="408px">
+        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="408px">
             <el-upload
                     class="upload-demo"
                     drag
@@ -110,7 +110,7 @@
             </el-upload>
         </el-dialog>
         <!--新建验收弹窗 -->
-        <el-dialog title="验收单" :visible.sync="show_xjys" width="653px">
+        <el-dialog title="验收单" :close-on-click-modal="false" :visible.sync="show_xjys" width="653px">
 
             <el-form style="margin-top: 20px" ref="form"  label-width="100px">
                 <el-form-item label="验收单编号">
@@ -180,7 +180,7 @@
         </el-dialog>
 
         <!--编辑验收弹窗 -->
-        <el-dialog title="验收单" :visible.sync="show_bjys" width="653px">
+        <el-dialog title="验收单" :close-on-click-modal="false" :visible.sync="show_bjys" width="653px">
             <el-input
                     placeholder="编号"
                     v-model="yanshou.ysno"

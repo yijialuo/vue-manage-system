@@ -53,6 +53,12 @@
         },
         methods: {
             submitForm() {
+                const loading = this.$loading({
+                    lock: true,
+                    text: '登录中……',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 axios.get(this.ip + '/user/login', {
                     params: {
                         username: this.ruleForm.username,
@@ -60,6 +66,7 @@
                     }
                 })
                     .then(res => {
+                        loading.close();
                         if (res.data) {
                             localStorage.setItem('userId', this.ruleForm.username);
                             localStorage.setItem('passWord',this.ruleForm.password);
@@ -72,8 +79,8 @@
                                 .then(res=>{
                                     localStorage.setItem('groupId',res.data.groupId)
                                     localStorage.setItem('userName',res.data.userName)
-                                    localStorage.setItem('departmentId',res.data.departmentId)
                                     localStorage.setItem('departmentName',res.data.departmentName)
+                                    localStorage.setItem('departmentId',res.data.departmentId)
                                     this.$router.push('/');
                                 })
                         } else {

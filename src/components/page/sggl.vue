@@ -56,7 +56,7 @@
             </div>
         </div>
         <!--进度弹窗 -->
-        <el-dialog title="施工进度" :visible.sync="show_sgjd" width="680px" @close="close">
+        <el-dialog :close-on-click-modal="false" title="施工进度" :visible.sync="show_sgjd" width="680px" @close="close">
             <h2 style="text-align: center"> {{projectName}}</h2>
             <el-form style="margin-top: 20px" label-width="70px" label-position='left'>
                 <el-form-item label="开工时间">
@@ -99,7 +99,7 @@
 
 
         <!--编辑节点弹窗 -->
-        <el-dialog title="添加施工进度" :visible.sync="show_bj" width="550px">
+        <el-dialog title="添加施工进度" :close-on-click-modal="false" :visible.sync="show_bj" width="550px">
             <h2 style="text-align: center"> {{projectName}}</h2>
             <el-form style="margin-top: 20px" label-width="70px" label-position='left'>
                 <el-form-item label="节点：">
@@ -126,7 +126,7 @@
         </el-dialog>
 
         <!--新建施工进度弹窗 -->
-        <el-dialog title="添加施工进度" :visible.sync="show_xzjd" width="550px">
+        <el-dialog title="添加施工进度" :close-on-click-modal="false" :visible.sync="show_xzjd" width="550px">
             <h2 style="text-align: center"> {{projectName}}</h2>
             <el-form style="margin-top: 20px" label-width="70px" label-position='left'>
                 <el-form-item label="节点：">

@@ -35,7 +35,7 @@
             </div>
 
             <!--新建用户弹窗-->
-            <el-dialog v-dialogDrag title="新建用户" center :visible.sync="visible" width="408px">
+            <el-dialog v-dialogDrag title="新建用户" :close-on-click-modal="false" center :visible.sync="visible" width="408px">
                 <div class="demo-input-suffix">
                     账号：
                     <el-input v-model="userOV.userId"></el-input>
@@ -77,7 +77,7 @@
             </el-dialog>
 
             <!-- 编辑弹出框 -->
-            <el-dialog title="编辑账号" :visible.sync="editVisible" width="408px">
+            <el-dialog title="编辑账号" :close-on-click-modal="false" :visible.sync="editVisible" width="408px">
                 <el-form ref="form" :model="form" label-width="50px">
                     <el-form-item label="账号">
                         <el-input v-model="form.userId"></el-input>
@@ -116,7 +116,7 @@
             </el-dialog>
 
             <!-- 删除提示框 -->
-            <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
+            <el-dialog title="提示" :close-on-click-modal="false" :visible.sync="delVisible" width="300px" center>
                 <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="delVisible = false">取 消</el-button>
@@ -166,7 +166,7 @@
                 </el-table>
 
                 <!-- 添加职位弹出框 -->
-                <el-dialog title="添加职位" :visible.sync="show_addGroup" width="408px">
+                <el-dialog title="添加职位" :close-on-click-modal="false" :visible.sync="show_addGroup" width="408px">
                     <el-form ref="form" :model="group" label-width="80px">
                         <el-form-item label="职位编号">
                             <el-input v-model="group.code"></el-input>
@@ -182,7 +182,7 @@
                 </el-dialog>
 
                 <!-- 添加部门弹出框 -->
-                <el-dialog title="添加部门" :visible.sync="show_addDepartment" width="408px">
+                <el-dialog title="添加部门" :close-on-click-modal="false" :visible.sync="show_addDepartment" width="408px">
                     <el-form ref="form" :model="department" label-width="80px">
                         <el-form-item label="部门编号">
                             <el-input v-model="department.dCod"></el-input>
@@ -198,7 +198,7 @@
                 </el-dialog>
 
                 <!-- 编辑部门弹出框 -->
-                <el-dialog title="编辑部门" :visible.sync="show_editDepartment" width="408px">
+                <el-dialog title="编辑部门" :close-on-click-modal="false" :visible.sync="show_editDepartment" width="408px">
                     <el-form ref="form" :model="department" label-width="80px">
                         <el-form-item label="部门编号">
                             <el-input v-model="department.dCod"></el-input>
@@ -214,7 +214,7 @@
                 </el-dialog>
 
                 <!-- 编辑职位弹出框 -->
-                <el-dialog title="编辑职位" :visible.sync="show_editGroup" width="408px">
+                <el-dialog title="编辑职位" :close-on-click-modal="false" :visible.sync="show_editGroup" width="408px">
                     <el-form ref="form" :model="group" label-width="80px">
                         <el-form-item label="职位编号">
                             <el-input v-model="group.code"></el-input>

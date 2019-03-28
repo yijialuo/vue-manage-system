@@ -90,7 +90,7 @@
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :visible.sync="show_scfj" width="408px">
+        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="408px">
             <el-upload
                     :disabled="isgd=='1'"
                     class="upload-demo"
@@ -108,7 +108,7 @@
         </el-dialog>
 
         <!--添加合同弹窗 -->
-        <el-dialog title="新建合同" :visible.sync="show_xjht" width="688px">
+        <el-dialog title="新建合同" :close-on-click-modal="false" :visible.sync="show_xjht" width="688px">
             <el-form  ref="form"  label-width="100px">
                 <el-form-item label="合同编号">
                     <el-input v-model="contract.contractNo"></el-input>
@@ -177,7 +177,7 @@
         </el-dialog>
 
         <!--编辑合同弹窗 -->
-        <el-dialog title="编辑合同" :visible.sync="show_bjht" width="685px">
+        <el-dialog title="编辑合同" :close-on-click-modal="false" :visible.sync="show_bjht" width="685px">
             <el-form   ref="form"  label-width="100px">
                 <el-form-item label="合同编号">
                     <el-input v-model="contract.contractNo"></el-input>
