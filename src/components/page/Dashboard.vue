@@ -151,11 +151,31 @@
                                     </el-table-column>
                                 </el-table>
                             </el-tab-pane>
+                            <!--合同-->
+                            <el-tab-pane stripe
+                                         v-if="user.groupId=='jsb_doman'||user.groupId=='jsb_jl'||user.groupId=='bgs'"
+                                         :label="`合同审批(${contracts.length})`" name="fifth">
+                                <el-table height="400px" :data="contracts" :show-header="true" style="width: 100%">
+                                    <el-table-column label="项目名称" prop="projectName">
+                                    </el-table-column>
+                                    <el-table-column sortable label="经办人" prop="jbr">
+                                    </el-table-column>
+                                    <el-table-column sortable label="投资文号" prop="tzwh">
+                                    </el-table-column>
+                                    <el-table-column sortable label="合同价款(元)" prop="price">
+                                    </el-table-column>
+                                    <el-table-column label="操作">
+                                        <template slot-scope="scope">
+                                            <el-button type="text" @click="htcl(scope.row)">处理</el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </el-tab-pane>
                         </el-tabs>
                     </el-card>
                 </el-col>
             </el-row>
-            <el-dialog title="状态" :visible.sync="show_zt" width="1088px">
+            <el-dialog title="状态" :visible.sync="show_zt" width="850px">
                 <img :src='src'/>
                 <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="show_zt=false">确 定</el-button>
@@ -210,14 +230,17 @@
                     </el-form-item>
                     <el-form-item label="申报部门">
                         <el-input
+                                readonly
                                 v-model="xm.declarationDep"></el-input>
                     </el-form-item>
                     <el-form-item label="项目类别">
                         <el-input
+                                readonly
                                 style="width: 215px;padding-right: 15px"
                                 v-model="xm.projectType"></el-input>
                         项目分类&nbsp&nbsp
                         <el-input style="width: 215px"
+                                  readonly
                                   v-model="xm.reviser"></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算">
@@ -292,156 +315,144 @@
             </el-dialog>
 
             <!--<el-dialog title="项目详情" :visible.sync="show_xq" width="680px" center>-->
-                <!--<el-form label-width="100px">-->
-                    <!--<el-form-item label="项目名称">-->
-                        <!--<el-input :disabled="true" v-model="xm.projectNam"></el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="申报部门">-->
-                        <!--<el-input :disabled="true" v-model="xm.declarationDep"></el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="项目类别">-->
-                        <!--<el-input :disabled="true" v-model="xm.projectType"></el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="投资概算">-->
-                        <!--<el-input style="width: 215px;padding-right: 15px" :disabled="true"-->
-                                  <!--v-model="xm.investmentEstimate"></el-input>-->
-                        <!--项目负责人-->
-                        <!--<el-input style="width: 215px" :disabled="true" v-model="xm.personInCharge"></el-input>-->
-                    <!--</el-form-item>-->
+            <!--<el-form label-width="100px">-->
+            <!--<el-form-item label="项目名称">-->
+            <!--<el-input :disabled="true" v-model="xm.projectNam"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="申报部门">-->
+            <!--<el-input :disabled="true" v-model="xm.declarationDep"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="项目类别">-->
+            <!--<el-input :disabled="true" v-model="xm.projectType"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="投资概算">-->
+            <!--<el-input style="width: 215px;padding-right: 15px" :disabled="true"-->
+            <!--v-model="xm.investmentEstimate"></el-input>-->
+            <!--项目负责人-->
+            <!--<el-input style="width: 215px" :disabled="true" v-model="xm.personInCharge"></el-input>-->
+            <!--</el-form-item>-->
 
-                    <!--<el-form-item label="立项背景理由">-->
-                        <!--<el-input :disabled="true" v-model="xm.establishReason" type="textarea"-->
-                                  <!--placeholder="立项背景理由"-->
-                                  <!--:autosize="{ minRows: 4, maxRows: 10}"-->
-                        <!--&gt;</el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="立项内容规模">-->
-                        <!--<el-input :disabled="true" v-model="xm.scale" type="textarea"-->
-                                  <!--placeholder="立项内容规模"-->
-                                  <!--:autosize="{ minRows: 4, maxRows: 10}"-->
-                        <!--&gt;</el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="投资概算说明">-->
-                        <!--<el-input :disabled="true" v-model="xm.illustration" type="textarea"-->
-                                  <!--placeholder="投资概算说明"-->
-                                  <!--:autosize="{ minRows: 4, maxRows: 10}"-->
-                        <!--&gt;</el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item>-->
-                        <!--<el-table-->
-                                <!--:data="commentList"-->
-                                <!--style="width: 100%">-->
-                            <!--<el-table-column-->
-                                    <!--prop="time"-->
-                                    <!--label="日期"-->
-                                    <!--width="180">-->
-                            <!--</el-table-column>-->
-                            <!--<el-table-column-->
-                                    <!--prop="usernam"-->
-                                    <!--label="姓名"-->
-                                    <!--width="180">-->
-                            <!--</el-table-column>-->
-                            <!--<el-table-column-->
-                                    <!--prop="comment"-->
-                                    <!--label="审批">-->
-                            <!--</el-table-column>-->
-                        <!--</el-table>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item>-->
-                        <!--<el-upload-->
-                                <!--class="upload-demo"-->
-                                <!--drag-->
-                                <!--:action="url"-->
-                                <!--:on-preview="handlePreview"-->
-                                <!--:before-remove="handleBeforeRemove"-->
-                                <!--:on-success="handleSuccess"-->
-                                <!--multiple-->
-                                <!--:file-list="fileList"-->
-                        <!--&gt;-->
-                            <!--<i class="el-icon-upload"></i>-->
-                            <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-                        <!--</el-upload>-->
-                    <!--</el-form-item>-->
-                <!--</el-form>-->
-                <!--<span slot="footer" class="dialog-footer">-->
-                <!--<el-button type="primary" @click="show_xq=false">确 定</el-button>-->
+            <!--<el-form-item label="立项背景理由">-->
+            <!--<el-input :disabled="true" v-model="xm.establishReason" type="textarea"-->
+            <!--placeholder="立项背景理由"-->
+            <!--:autosize="{ minRows: 4, maxRows: 10}"-->
+            <!--&gt;</el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="立项内容规模">-->
+            <!--<el-input :disabled="true" v-model="xm.scale" type="textarea"-->
+            <!--placeholder="立项内容规模"-->
+            <!--:autosize="{ minRows: 4, maxRows: 10}"-->
+            <!--&gt;</el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="投资概算说明">-->
+            <!--<el-input :disabled="true" v-model="xm.illustration" type="textarea"-->
+            <!--placeholder="投资概算说明"-->
+            <!--:autosize="{ minRows: 4, maxRows: 10}"-->
+            <!--&gt;</el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item>-->
+            <!--<el-table-->
+            <!--:data="commentList"-->
+            <!--style="width: 100%">-->
+            <!--<el-table-column-->
+            <!--prop="time"-->
+            <!--label="日期"-->
+            <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+            <!--prop="usernam"-->
+            <!--label="姓名"-->
+            <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+            <!--prop="comment"-->
+            <!--label="审批">-->
+            <!--</el-table-column>-->
+            <!--</el-table>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item>-->
+            <!--<el-upload-->
+            <!--class="upload-demo"-->
+            <!--drag-->
+            <!--:action="url"-->
+            <!--:on-preview="handlePreview"-->
+            <!--:before-remove="handleBeforeRemove"-->
+            <!--:on-success="handleSuccess"-->
+            <!--multiple-->
+            <!--:file-list="fileList"-->
+            <!--&gt;-->
+            <!--<i class="el-icon-upload"></i>-->
+            <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+            <!--</el-upload>-->
+            <!--</el-form-item>-->
+            <!--</el-form>-->
+            <!--<span slot="footer" class="dialog-footer">-->
+            <!--<el-button type="primary" @click="show_xq=false">确 定</el-button>-->
             <!--</span>-->
             <!--</el-dialog>-->
 
-            <!-- 项目详情框 -->
-            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="680px" center>
-                <el-input
-                        v-if="groupId=='bgs'"
-                        placeholder="项目编号"
-                        v-model="xm.projectNo"
-                        style="margin-left: 30px;width: 150px"
-                        clearable>
-                </el-input>
-                <el-button v-if="groupId=='bgs'" style="margin-left: 10px" type="primary" @click="qdxmbh">确定项目编号
-                </el-button>
-                <el-form style="margin-top: 20px" label-width="100px">
-                    <el-form-item label="项目名称">
-                        <el-input :readonly="user.groupId!='doman'"
-                                  v-model="xm.projectNam"></el-input>
+            <!--技术部办事员合同弹窗-->
+            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_jsbdoman_ht" width="685px">
+                <el-form ref="form" label-width="100px">
+                    <el-form-item label="合同项目">
+                        <el-input readonly v-model="contract.projectName" style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp合同日期&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        <el-date-picker type="date" placeholder="选择日期" v-model="contract.rq" value-format="yyyy-MM-dd"
+                                        style="width: 205px"></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="申报部门">
-                        <el-input :readonly="user.groupId!='doman'"
-                                  v-model="xm.declarationDep"></el-input>
+                    <el-form-item label="对方当事人">
+                        <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp投资文号&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        <el-input v-model="contract.tzwh" style="width: 210px"></el-input>
                     </el-form-item>
-                    <el-form-item label="项目类别">
-                        <el-input readonly
-                                  style="width: 215px;padding-right: 15px"
-                                  v-model="xm.projectType"></el-input>
-                        项目分类&nbsp&nbsp
-                        <el-input style="width: 215px" readonly
-                                  v-model="xm.reviser"></el-input>
+                    <el-form-item label="合同价款(元)">
+                        <el-input v-model="contract.price" type="number" style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp合同经办人&nbsp&nbsp&nbsp&nbsp
+                        <el-input v-model="contract.jbr" style="width: 210px"></el-input>
                     </el-form-item>
-                    <el-form-item label="投资概算">
-                        <el-input style="width: 215px;padding-right: 15px"
-                                  :readonly="user.groupId!='doman'"
-                                  v-model="xm.investmentEstimate"></el-input>
-                        项目负责人
-                        <el-input style="width: 215px" :readonly="user.groupId!='doman'"
-                                  v-model="xm.personInCharge"></el-input>
+                    <el-form-item label="主办单位意见">
+                        <el-input v-model="contract.zbdwyj" type="textarea"></el-input>
                     </el-form-item>
-                    <el-form-item label="立项背景理由">
-                        <el-input :readonly="user.groupId!='doman'"
-                                  v-model="xm.establishReason" type="textarea"
-                                  placeholder="立项背景理由"
-                                  :autosize="{ minRows: 4, maxRows: 10}"
-                        ></el-input>
+                    <el-form-item label="对方资质审查">
+                        <el-checkbox-group v-model="zzsc">
+                            <el-checkbox label="营业执照"></el-checkbox>
+                            <br/>
+                            <el-checkbox label="法定代表人身份证明或授权委托书"></el-checkbox>
+                            <br/>
+                            <el-checkbox label="企业登记证书"></el-checkbox>
+                            <br/>
+                            <el-checkbox label="安全生产许可证"></el-checkbox>
+                            <br/>
+                            <el-checkbox label="其他"></el-checkbox>
+                        </el-checkbox-group>
                     </el-form-item>
-                    <el-form-item label="立项内容规模">
-                        <el-input :readonly="user.groupId!='doman'" v-model="xm.scale"
-                                  type="textarea"
-                                  placeholder="立项内容规模"
-                                  :autosize="{ minRows: 4, maxRows: 10}"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="投资概算说明">
-                        <el-input :readonly="user.groupId!='doman'" v-model="xm.illustration"
-                                  type="textarea"
-                                  placeholder="投资概算说明"
-                                  :autosize="{ minRows: 4, maxRows: 10}"
-                        ></el-input>
+                    <el-form-item label="评审结论">
+                        <el-radio-group v-model="contract.psjl">
+                            <el-radio style="margin-top: 8px" label="评审合格，同意签订此合同"></el-radio>
+                            <br/>
+                            <el-radio style="margin-top: 10px" label="存在缺陷，完善后再次评审"></el-radio>
+                            <br/>
+                            <el-radio style="margin-top: 10px" label="评审不合格，不能签订此合同"></el-radio>
+                        </el-radio-group>
                     </el-form-item>
                     <el-form-item label="审批列表">
                         <el-table
-                                :data="commentList"
-                                style="width: 100%">
-                            <el-table-column
-                                    prop="time"
-                                    label="日期"
-                                    width="180">
-                            </el-table-column>
+                                :data="bzs"
+                        >
                             <el-table-column
                                     prop="usernam"
                                     label="姓名"
+                                    width="120">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="time"
+                                    label="时间"
                                     width="180">
                             </el-table-column>
                             <el-table-column
                                     prop="comment"
-                                    label="审批">
+                                    label="备注"
+                                    width="180">
                             </el-table-column>
                         </el-table>
                     </el-form-item>
@@ -452,7 +463,7 @@
                                 :action="url"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
-                                :on-success="handleSuccess"
+                                :on-success="handleSuccess4"
                                 multiple
                                 :file-list="fileList"
                         >
@@ -460,72 +471,217 @@
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                         </el-upload>
                     </el-form-item>
-                </el-form>
-                <span v-if="!isxq" slot="footer" class="dialog-footer">
-                <el-button @click="show_xq = false">取 消</el-button>
-                <el-button v-if="NodeId=='备案'" type="primary" @click="wcba">完成备案</el-button>
-                    <el-button type="warning" v-if="NodeId=='两会'" @click="bh">驳回</el-button>
-                    <el-button type="warning" v-else-if="NodeId=='总经理办公会'" @click="bh">驳回</el-button>
-                    <el-button type="warning" v-else-if="user.groupId!='doman'&&NodeId!='备案'"
-                               @click="bh">驳 回</el-button>
-                    <el-button type="primary" v-if="NodeId=='两会'" @click="ty">通过两会</el-button>
-                    <el-button type="primary" v-else-if="NodeId=='总经理办公会'" @click="ty">通过总经会</el-button>
-                    <el-button type="primary" v-else-if="user.groupId=='doman'" @click="cxsq">申请</el-button>
-                    <el-button type="primary" v-else-if="NodeId!='备案'" @click="ty">同 意</el-button>
-                </span>
-                <span v-else slot="footer" class="dialog-footer">
-                    <el-button @click="show_xq = false">取 消</el-button>
-                </span>
-            </el-dialog>
-
-            <!--前期驳回弹窗-->
-            <el-dialog title="审批意见" :close-on-click-modal="false" :visible.sync="show_bh">
-                <el-form>
-                    <el-form-item label="审批意见：">
-                        <el-input v-model="comment" type="textarea"
-                                  placeholder="审批意见："
-                                  :autosize="{ minRows: 2, maxRows: 4}"
-                        ></el-input>
-                    </el-form-item>
+                    <!--<el-form-item label="文件列表">-->
+                        <!--<el-upload-->
+                                <!--class="upload-demo"-->
+                                <!--drag-->
+                                <!--:action="url"-->
+                                <!--:on-preview="handlePreview"-->
+                                <!--:on-remove="handleRemove"-->
+                                <!--:on-success="handleSuccess"-->
+                                <!--multiple-->
+                                <!--:file-list="fileList"-->
+                        <!--&gt;-->
+                            <!--<i class="el-icon-upload"></i>-->
+                            <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+                        <!--</el-upload>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="单位意见">-->
+                    <!--<el-input type="textarea" v-model="contract.dwyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="财务部门意见">-->
+                    <!--<el-input type="textarea" v-model="contract.cwbmyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="分管领导意见">-->
+                    <!--<el-input type="textarea" v-model="contract.fgldyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="总经理意见">-->
+                    <!--<el-input type="textarea" v-model="contract.zjlyj"></el-input>-->
+                    <!--</el-form-item>-->
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-            <el-button @click="show_bh=false">取 消</el-button>
-            <el-button type="primary" @click="qd_bh">确 定</el-button>
+                <el-button @click="show_jsbdoman_ht=false">取消</el-button>
+                <el-button @click="zfht" type="warning">作废</el-button>
+                <el-button type="primary" @click="htzcsp">审批</el-button>
             </span>
             </el-dialog>
 
-            <!--招标驳回弹窗-->
-            <el-dialog title="审批意见" :close-on-click-modal="false" :visible.sync="show_zbbh">
-                <el-form>
-                    <el-form-item label="审批意见：">
-                        <el-input v-model="comment" type="textarea"
-                                  placeholder="审批意见："
-                                  :autosize="{ minRows: 2, maxRows: 4}"
-                        ></el-input>
+            <!--技术部经理合同处理弹窗-->
+            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_jsbjl_ht" width="685px">
+                <el-form ref="form" label-width="100px">
+                    <el-form-item label="合同项目">
+                        <el-input :readonly="true" v-model="contract.projectName" style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp合同日期&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        <el-date-picker :readonly="true" type="date" placeholder="选择日期" v-model="contract.rq"
+                                        value-format="yyyy-MM-dd"
+                                        style="width: 205px"></el-date-picker>
                     </el-form-item>
+                    <el-form-item label="对方当事人">
+                        <el-input :readonly="true" v-model="contract.dfdsr" style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp投资文号&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        <el-input :readonly="true" v-model="contract.tzwh" style="width: 210px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="合同价款(元)">
+                        <el-input :readonly="true" v-model="contract.price" type="number"
+                                  style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp合同经办人&nbsp&nbsp&nbsp&nbsp
+                        <el-input :readonly="true" v-model="contract.jbr" style="width: 210px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="主办单位意见">
+                        <el-input :readonly="true" v-model="contract.zbdwyj" type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item label="对方资质审查">
+                        <el-input :readonly="true" v-model="contract.zzsc" type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item label="评审结论">
+                        <el-input :readonly="true" v-model="contract.psjl" type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item label="审批列表">
+                        <el-table
+                                :data="bzs"
+                        >
+                            <el-table-column
+                                    prop="usernam"
+                                    label="姓名"
+                                    width="120">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="time"
+                                    label="时间"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="comment"
+                                    label="备注"
+                                    width="180">
+                            </el-table-column>
+                        </el-table>
+                    </el-form-item>
+                    <el-form-item label="文件列表">
+                        <el-upload
+                                class="upload-demo"
+                                drag
+                                :action="url"
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :on-success="handleSuccess4"
+                                multiple
+                                :file-list="fileList"
+                        >
+                            <i class="el-icon-upload"></i>
+                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                        </el-upload>
+                    </el-form-item>
+                    <!--<el-form-item label="单位意见">-->
+                    <!--<el-input type="textarea" v-model="contract.dwyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="财务部门意见">-->
+                    <!--<el-input type="textarea" v-model="contract.cwbmyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="分管领导意见">-->
+                    <!--<el-input type="textarea" v-model="contract.fgldyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="总经理意见">-->
+                    <!--<el-input type="textarea" v-model="contract.zjlyj"></el-input>-->
+                    <!--</el-form-item>-->
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-            <el-button @click="show_zbbh=false;comment='同意'">取 消</el-button>
-            <el-button type="primary" @click="qd_zbbh">确 定</el-button>
+                <el-button @click="show_jsbjl_ht=false">取 消</el-button>
+                <el-button type="warning" @click="show_htbh=true,comment=''">驳回</el-button>
+                <el-button type="primary" @click="show_htty=true,comment='同意'">同意</el-button>
             </span>
             </el-dialog>
 
-            <!--同意弹窗-->
-            <el-dialog title="审批意见" :close-on-click-modal="false" :visible.sync="show_ty">
-                <el-form>
-                    <el-form-item label="审批意见：">
-                        <el-input style="margin-top: 5px" v-model="comment" type="textarea"
-                                  :autosize="{ minRows: 2, maxRows: 4}"
-                        ></el-input>
+            <!--办公室合同处理弹窗-->
+            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_bgs_ht" width="685px">
+                <el-form ref="form" label-width="100px">
+                    <el-form-item label="合同编号">
+                    <el-input v-model="contract.contractNo"></el-input>
                     </el-form-item>
+                    <el-form-item label="合同项目">
+                        <el-input :readonly="true" v-model="contract.projectName" style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp合同日期&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        <el-date-picker :readonly="true" type="date" placeholder="选择日期" v-model="contract.rq"
+                                        value-format="yyyy-MM-dd"
+                                        style="width: 205px"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="对方当事人">
+                        <el-input :readonly="true" v-model="contract.dfdsr" style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp投资文号&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        <el-input :readonly="true" v-model="contract.tzwh" style="width: 210px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="合同价款(元)">
+                        <el-input :readonly="true" v-model="contract.price" type="number"
+                                  style="width: 210px"></el-input>
+                        &nbsp&nbsp&nbsp&nbsp&nbsp合同经办人&nbsp&nbsp&nbsp&nbsp
+                        <el-input :readonly="true" v-model="contract.jbr" style="width: 210px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="主办单位意见">
+                        <el-input :readonly="true" v-model="contract.zbdwyj" type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item label="对方资质审查">
+                        <el-input :readonly="true" v-model="contract.zzsc" type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item label="评审结论">
+                        <el-input :readonly="true" v-model="contract.psjl" type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item label="审批列表">
+                        <el-table
+                                :data="bzs"
+                        >
+                            <el-table-column
+                                    prop="usernam"
+                                    label="姓名"
+                                    width="120">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="time"
+                                    label="时间"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="comment"
+                                    label="备注"
+                                    width="180">
+                            </el-table-column>
+                        </el-table>
+                    </el-form-item>
+                    <el-form-item label="文件列表">
+                        <el-upload
+                                class="upload-demo"
+                                drag
+                                :action="url"
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :on-success="handleSuccess4"
+                                multiple
+                                :file-list="fileList"
+                        >
+                            <i class="el-icon-upload"></i>
+                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                        </el-upload>
+                    </el-form-item>
+                    <!--<el-form-item label="单位意见">-->
+                    <!--<el-input type="textarea" v-model="contract.dwyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="财务部门意见">-->
+                    <!--<el-input type="textarea" v-model="contract.cwbmyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="分管领导意见">-->
+                    <!--<el-input type="textarea" v-model="contract.fgldyj"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="总经理意见">-->
+                    <!--<el-input type="textarea" v-model="contract.zjlyj"></el-input>-->
+                    <!--</el-form-item>-->
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-            <el-button @click="show_ty=false">取 消</el-button>
-            <el-button type="primary" @click="qd_ty">确 定</el-button>
+                <el-button @click="show_bgs_ht=false">取 消</el-button>
+                <el-button type="primary" @click="qrhtjs">确认合同接收</el-button>
             </span>
             </el-dialog>
 
-            <!--点击处理弹窗 -->
+
+            <!--点击处理招标弹窗 -->
             <el-dialog title="招标流程审批" :close-on-click-modal="false" :visible.sync="show_zbxq" width="680px">
                 <el-form ref="form" label-width="100px">
                     <el-form-item label="项目">
@@ -739,6 +895,194 @@
                 </span>
             </el-dialog>
 
+            <!-- 项目详情框 -->
+            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="680px" center>
+                <el-input
+                        v-if="groupId=='bgs'"
+                        placeholder="项目编号"
+                        v-model="xm.projectNo"
+                        style="margin-left: 30px;width: 150px"
+                        clearable>
+                </el-input>
+                <el-button v-if="groupId=='bgs'" style="margin-left: 10px" type="primary" @click="qdxmbh">确定项目编号
+                </el-button>
+                <el-form style="margin-top: 20px" label-width="100px">
+                    <el-form-item label="项目名称">
+                        <el-input :readonly="user.groupId!='doman'"
+                                  v-model="xm.projectNam"></el-input>
+                    </el-form-item>
+                    <el-form-item label="申报部门">
+                        <el-input readonly
+                                  v-model="xm.declarationDep"></el-input>
+                    </el-form-item>
+                    <el-form-item label="项目类别">
+                        <el-input readonly
+                                  style="width: 215px;padding-right: 15px"
+                                  v-model="xm.projectType"></el-input>
+                        项目分类&nbsp&nbsp
+                        <el-input style="width: 215px" readonly
+                                  v-model="xm.reviser"></el-input>
+                    </el-form-item>
+                    <el-form-item label="投资概算">
+                        <el-input style="width: 215px;padding-right: 15px"
+                                  :readonly="user.groupId!='doman'"
+                                  v-model="xm.investmentEstimate"></el-input>
+                        项目负责人
+                        <el-input style="width: 215px" :readonly="user.groupId!='doman'"
+                                  v-model="xm.personInCharge"></el-input>
+                    </el-form-item>
+                    <el-form-item label="立项背景理由">
+                        <el-input :readonly="user.groupId!='doman'"
+                                  v-model="xm.establishReason" type="textarea"
+                                  placeholder="立项背景理由"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="立项内容规模">
+                        <el-input :readonly="user.groupId!='doman'" v-model="xm.scale"
+                                  type="textarea"
+                                  placeholder="立项内容规模"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="投资概算说明">
+                        <el-input :readonly="user.groupId!='doman'" v-model="xm.illustration"
+                                  type="textarea"
+                                  placeholder="投资概算说明"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="审批列表">
+                        <el-table
+                                :data="commentList"
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="time"
+                                    label="日期"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="usernam"
+                                    label="姓名"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="comment"
+                                    label="审批">
+                            </el-table-column>
+                        </el-table>
+                    </el-form-item>
+                    <el-form-item label="文件列表">
+                        <el-upload
+                                class="upload-demo"
+                                drag
+                                :action="url"
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :on-success="handleSuccess4"
+                                multiple
+                                :file-list="fileList"
+                        >
+                            <i class="el-icon-upload"></i>
+                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                        </el-upload>
+                    </el-form-item>
+                </el-form>
+                <span v-if="!isxq" slot="footer" class="dialog-footer">
+                <el-button @click="show_xq = false">取 消</el-button>
+                <el-button v-if="NodeId=='备案'" type="primary" @click="wcba">完成备案</el-button>
+                    <el-button type="warning" v-if="NodeId=='两会'" @click="bh">驳回</el-button>
+                    <el-button type="warning" v-else-if="NodeId=='总经理办公会'" @click="bh">驳回</el-button>
+                    <el-button type="warning" v-else-if="user.groupId!='doman'&&NodeId!='备案'"
+                               @click="bh">驳 回</el-button>
+                    <el-button type="primary" v-if="NodeId=='两会'" @click="ty">通过两会</el-button>
+                    <el-button type="primary" v-else-if="NodeId=='总经理办公会'" @click="ty">通过总经会</el-button>
+                    <el-button type="primary" v-else-if="user.groupId=='doman'" @click="cxsq">申请</el-button>
+                    <el-button type="primary" v-else-if="NodeId!='备案'" @click="ty">同 意</el-button>
+                </span>
+                <span v-else slot="footer" class="dialog-footer">
+                    <el-button @click="show_xq = false">取 消</el-button>
+                </span>
+            </el-dialog>
+
+            <!--前期驳回弹窗-->
+            <el-dialog title="审批意见" :close-on-click-modal="false" :visible.sync="show_bh">
+                <el-form>
+                    <el-form-item label="审批意见：">
+                        <el-input v-model="comment" type="textarea"
+                                  placeholder="审批意见："
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                        ></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+            <el-button @click="show_bh=false">取 消</el-button>
+            <el-button type="primary" @click="qd_bh">确 定</el-button>
+            </span>
+            </el-dialog>
+
+            <!--招标驳回弹窗-->
+            <el-dialog title="审批意见" :close-on-click-modal="false" :visible.sync="show_zbbh">
+                <el-form>
+                    <el-form-item label="审批意见：">
+                        <el-input v-model="comment" type="textarea"
+                                  placeholder="审批意见："
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                        ></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+            <el-button @click="show_zbbh=false;comment='同意'">取 消</el-button>
+            <el-button type="primary" @click="qd_zbbh">确 定</el-button>
+            </span>
+            </el-dialog>
+
+            <!--同意弹窗-->
+            <el-dialog title="审批意见" :close-on-click-modal="false" :visible.sync="show_ty">
+                <el-form>
+                    <el-form-item label="审批意见：">
+                        <el-input style="margin-top: 5px" v-model="comment" type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                        ></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+            <el-button @click="show_ty=false">取 消</el-button>
+            <el-button type="primary" @click="qd_ty">确 定</el-button>
+            </span>
+            </el-dialog>
+
+            <!--合同同意弹窗-->
+            <el-dialog title="合同审批意见" :close-on-click-modal="false" :visible.sync="show_htty">
+                <el-form>
+                    <el-form-item label="审批意见：">
+                        <el-input style="margin-top: 5px" v-model="comment" type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                        ></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+            <el-button @click="show_htty=false">取 消</el-button>
+            <el-button type="primary" @click="htjsbjlty">确 定</el-button>
+            </span>
+            </el-dialog>
+
+            <!--合同同意弹窗-->
+            <el-dialog title="合同审批意见" :close-on-click-modal="false" :visible.sync="show_htbh">
+                <el-form>
+                    <el-form-item label="审批意见：">
+                        <el-input style="margin-top: 5px" v-model="comment" type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                        ></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+            <el-button @click="show_htbh=false">取 消</el-button>
+            <el-button type="primary" @click="htjsbjlbh">确 定</el-button>
+            </span>
+            </el-dialog>
+
+
         </div>
     </div>
 </template>
@@ -767,12 +1111,22 @@
                     value: '安计划进行',
                     label: '安计划进行'
                 }],
+                //合同驳回弹窗
+                show_htbh: false,
+                //合同同意弹窗
+                show_htty: false,
                 //前期驳回弹窗
                 show_bh: false,
                 //招标驳回弹窗
                 show_zbbh: false,
                 //同意弹窗
                 show_ty: false,
+                //技术部经理合同处理弹窗
+                show_jsbjl_ht: false,
+                //技术部办事员合同处理弹窗
+                show_jsbdoman_ht: false,
+                //办公室合同处理
+                show_bgs_ht:false,
                 url: '',
                 fileList: [],
                 commentList: [],
@@ -783,7 +1137,7 @@
                 comment: '同意',
                 user: {},
                 xm: {},
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 message: 'first',
                 //项目
                 Xms: [],
@@ -801,7 +1155,7 @@
                 commentList: [],
                 xm: {},
                 fileList: [],
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 xmlb: [{
                     value: '固定资产',
                     label: '固定资产'
@@ -828,6 +1182,8 @@
                 xmList: [],
                 xmDetails: {},
                 zhaobiaos: [],
+                contracts: [],
+                contract: {},
                 zhaobiao: {},
                 show_zbxq: false,
                 tbdws: [],
@@ -843,12 +1199,12 @@
                     zhongbiaodw: '',
                     zhongbiaojg: ''
                 },
-
                 //是否详情
                 isxq: false,
                 zbs: [],
                 //招标详情技术部办事员弹窗
-                show_zbxqjsb: false
+                show_zbxqjsb: false,
+                zzsc:[]
             }
         },
         watch: {
@@ -902,6 +1258,8 @@
             }
             //领取招标
             this.lqzhaobiao()
+            //领取合同
+            this.getContracts()
             //拿占比
             this.getzb()
 
@@ -916,6 +1274,174 @@
             bus.$off('collapse', this.handleBus);
         },
         methods: {
+            //办公室确认合同已接受
+            qrhtjs(){
+                if(this.contract.contractNo===null||this.contract.contractNo===''){
+                    this.$message.error('请填写合同编号！')
+                    return
+                }
+                if(this.fileList.length==0){
+                    this.$message.error("请上传合同附件！")
+                    return
+                }
+                axios.get(this.ip+'/contract/qrhtyjs',{
+                    params:{
+                        dwyj:this.contract.dwyj,
+                        htno:this.contract.contractNo
+                    }
+                })
+                    .then(res=>{
+                        if(res.data)
+                            this.$message.success("处理完成！")
+                        else
+                            this.$message.error("处理失败！")
+                        this.reload()
+                    })
+            },
+
+            //合同再次审批
+            htzcsp(){
+                this.contract.zzsc=''
+                for(let i=0;i<this.zzsc.length;i++){
+                    if(i<this.zzsc.length-1)
+                        this.contract.zzsc=this.contract.zzsc+this.zzsc[i]+'、'
+                    else
+                        this.contract.zzsc=this.contract.zzsc+this.zzsc[i]
+                }
+                delete  this.contract.projectName
+                console.log(this.contract)
+                axios.post(this.ip+'/contract/htzcsp',this.contract).then(res=>{
+                    if(res.data){
+                        this.$message.success("已发往技术部经理审批")
+                    }else {
+                        this.$message.error("处理失败！")
+                    }
+                    this.reload()
+                })
+            },
+
+            //作废合同
+            zfht(){
+                this.$confirm('此操作将永久删除该合同,是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.get(this.ip+'/contract/htzf',{
+                        params:{
+                            htid:this.contract.id
+                        }
+                    }).then(res=>{
+                        if(res.data){
+                            this.$message.success("作废成功！")
+                        }else {
+                            this.$message.error("作废失败！")
+                        }
+                        this.reload()
+                    })
+                })
+            },
+
+            //合同技术部经理驳回
+            htjsbjlbh() {
+                const loading = this.$loading({
+                    lock: true,
+                    text: '处理中……',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                this.comment = '驳回:' + this.comment
+                axios.get(this.ip + '/contract/jsbjldoht', {
+                    params: {
+                        dwyj: this.contract.dwyj,
+                        userId: localStorage.getItem('userId'),
+                        value: false,
+                        comment: this.comment
+                    }
+                }).then(res => {
+                    loading.close()
+                    if (res.data) {
+                        this.$message.success("已处理！")
+                    } else {
+                        this.$message.error("处理失败！")
+                    }
+                    this.reload()
+                })
+            },
+            //合同技术部经理同意
+            htjsbjlty() {
+                const loading = this.$loading({
+                    lock: true,
+                    text: '处理中……',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                axios.get(this.ip + '/contract/jsbjldoht', {
+                    params: {
+                        dwyj: this.contract.dwyj,
+                        userId: localStorage.getItem('userId'),
+                        value: true,
+                        comment: this.comment
+                    }
+                }).then(res => {
+                    loading.close()
+                    if (res.data) {
+                        this.$message.success("已处理！")
+                    } else {
+                        this.$message.error("处理失败！")
+                    }
+                    this.reload()
+                })
+            },
+
+
+
+            //合同处理点击事件
+            htcl(row) {
+                this.contract = row
+                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                //拿合同评论
+                this.gethtbz()
+                //领取附件
+                this.lqfj(row.dwyj)
+                if (this.groupId === 'jsb_jl') {
+                    this.show_jsbjl_ht = true
+                }else if(this.groupId==='jsb_doman'){
+                    this.zzsc=row.zzsc.split('、')
+                    this.show_jsbdoman_ht=true
+                }else {
+                    this.show_bgs_ht=true
+                }
+            },
+
+            //拿合同备注
+            gethtbz() {
+                axios.get(this.ip + '/zhaobiao/getComment', {
+                    params: {
+                        zbpid: this.contract.dwyj
+                    }
+                }).then(res => {
+                    this.bzs = res.data
+                })
+            },
+
+            //拿需要处理的合同
+            getContracts() {
+                if (this.groupId === 'jsb_jl') {
+                    axios.get(this.ip + '/contract/getJsbjlHts').then(res => {
+                        this.contracts = res.data
+                    })
+                } else if (this.groupId === 'bgs') {
+                    axios.get(this.ip + '/contract/getBgsHts').then(res => {
+                        this.contracts = res.data
+                    })
+                } else {
+                    axios.get(this.ip + '/contract/getJsbdomanHts').then(res => {
+                        this.contracts = res.data
+                    })
+                }
+            },
+
             //确定项目编号
             qdxmbh() {
                 axios.get(this.ip + '/projectApplication/xgxmbh', {
@@ -1112,7 +1638,7 @@
                 this.getbzs()
                 this.lqfj(row.zbpid)
                 this.getZhongbiaodw()
-                this.url = 'http://localhost:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 axios.get(this.ip + '/user/userIdToDept', {
                     params: {
                         userId: this.zhaobiao.sqr
@@ -1188,6 +1714,13 @@
                     .catch(() => {
                     })
             },
+            //上传成功，重新新请求合同附件
+            handleSuccess4(){
+                //领取附件
+                this.lqfj(this.contract.dwyj)
+              //this.htcl(this.contract)
+            },
+
             //上传成功，重新请求
             handleSuccess2() {
                 this.lqfj(this.zhaobiao.zbpid)
@@ -1397,26 +1930,7 @@
                         this.reload()//刷新
                     })
             },
-            //上传成功，重新请求
-            handleSuccess() {
-                //重新请求
-                axios.get(this.ip + '/Attachment/getattachment', {
-                    params: {
-                        pid: this.xm.pid
-                    }
-                })
-                    .then(res => {
-                        if (res.data) {
-                            this.fileList = []
-                            for (let i = 0; i < res.data.length; i++) {
-                                this.fileList.push({
-                                    name: res.data[i].attachment_nam,
-                                    id: res.data[i].attachment_id
-                                })
-                            }
-                        }
-                    })
-            },
+
             //删除请求
             handleRemove(file, fileList) {
                 this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
@@ -1431,27 +1945,28 @@
                         }
                     })
                         .then(res => {
-                            this.$message.info("删除成功！")
+                            this.$message.success("删除成功！")
                         })
                 })
                     .catch(() => {
+                        this.reload()
                         //重新请求
-                        axios.get(this.ip + '/Attachment/getattachment', {
-                            params: {
-                                pid: this.xm.pid
-                            }
-                        })
-                            .then(res => {
-                                if (res.data) {
-                                    this.fileList = []
-                                    for (let i = 0; i < res.data.length; i++) {
-                                        this.fileList.push({
-                                            name: res.data[i].attachment_nam,
-                                            id: res.data[i].attachment_id
-                                        })
-                                    }
-                                }
-                            })
+                        // axios.get(this.ip + '/Attachment/getattachment', {
+                        //     params: {
+                        //         pid: this.xm.pid
+                        //     }
+                        // })
+                        //     .then(res => {
+                        //         if (res.data) {
+                        //             this.fileList = []
+                        //             for (let i = 0; i < res.data.length; i++) {
+                        //                 this.fileList.push({
+                        //                     name: res.data[i].attachment_nam,
+                        //                     id: res.data[i].attachment_id
+                        //                 })
+                        //             }
+                        //         }
+                        //     })
                     })
             },
             //点击文件下载
@@ -1541,7 +2056,7 @@
                 this.lqfj(row.pid)
                 //查询当前节点
                 this.getNodeId(row.pid)
-                this.url = 'http://localhost:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
             //领取附件
             lqfj(pid) {
@@ -1620,7 +2135,6 @@
                                 })
                             }
                         }
-                        //    return false
                     })
             },
 
@@ -1712,6 +2226,18 @@
                     .then(res => {
                         if (res.data) {
                             this.xmList = res.data;
+                            for(let i=0;i<this.xmList.length;i++){
+                                //请求当前节点
+                                axios.get(this.ip + '/projectApplication/getPidNode', {
+                                    params: {
+                                        pid: this.xmList[i].pid
+                                    }
+                                })
+                                    .then(res => {
+                                        this.xmList[i].dqjd = res.data
+                                        this.$set(this.xmList, i, this.xmList[i])
+                                    })
+                            }
                         }
                     })
             },
@@ -1733,28 +2259,70 @@
                     })
                 //领取附件
                 this.lqfj(row.pid)
-                this.url = 'http://localhost:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
 
             //状态
             zt(row) {
-                const loading = this.$loading({
-                    lock: true,
-                    text: '处理中……',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                })
-                axios.get(this.ip + '/projectApplication/zt', {
-                    params: {
-                        pi: row.pid
+                if(Number(row.investmentEstimate)>10){
+                    if(row.dqjd==='填写申请表'){
+                        this.src=require('@/assets/img/s_txsqb.png')
+                    }else if(row.dqjd==='主管经理审批'){
+                        this.src=require('@/assets/img/s_zgjlsp.png')
+                    }else if(row.dqjd==='经理审批'){
+                        this.src=require('@/assets/img/s_jlsp.png')
+                    }else if(row.dqjd==='经办人'){
+                        this.src=require('@/assets/img/s_jbr.png')
+                    }else if(row.dqjd==='技术部主管经理'){
+                        this.src=require('@/assets/img/s_jsbzgjl.png')
+                    }else if(row.dqjd==='技术部经理'){
+                        this.src=require('@/assets/img/s_jsbjl.png')
+                    }else if(row.dqjd==='两会'){
+                        this.src=require('@/assets/img/s_lh.png')
+                    }else if(row.dqjd==='总经理办公会'){
+                        this.src=require('@/assets/img/s_zjlbgh.png')
+                    }else if(row.dqjd==='备案'){
+                        this.src=require('@/assets/img/s_ba.png')
+                    }else if(row.dqjd==='申请结束'){
+                        this.src=require('@/assets/img/s_js.png')
                     }
-                })
-                    .then(res => {
-                        loading.close()
-                        //得到图片流
-                        this.src = 'data:image/png;base64,' + res.data
-                        this.show_zt = true
-                    })
+                }else {
+                    if(row.dqjd==='填写申请表'){
+                        this.src=require('@/assets/img/x_txsqb.png')
+                    }else if(row.dqjd==='主管经理审批'){
+                        this.src=require('@/assets/img/x_zgjlsp.png')
+                    }else if(row.dqjd==='经理审批'){
+                        this.src=require('@/assets/img/x_jlsp.png')
+                    }else if(row.dqjd==='经办人'){
+                        this.src=require('@/assets/img/x_jbr.png')
+                    }else if(row.dqjd==='技术部主管经理'){
+                        this.src=require('@/assets/img/x_jsbzgjl.png')
+                    }else if(row.dqjd==='技术部经理'){
+                        this.src=require('@/assets/img/x_jsbjl.png')
+                    }else if(row.dqjd==='两会'){
+                        this.src=require('@/assets/img/x_lh.png')
+                    }else if(row.dqjd==='申请结束'){
+                        this.src=require('@/assets/img/x_js.png')
+                    }
+                }
+                this.show_zt = true
+                // const loading = this.$loading({
+                //     lock: true,
+                //     text: '处理中……',
+                //     spinner: 'el-icon-loading',
+                //     background: 'rgba(0, 0, 0, 0.7)'
+                // })
+                // axios.get(this.ip + '/projectApplication/zt', {
+                //     params: {
+                //         pi: row.pid
+                //     }
+                // })
+                //     .then(res => {
+                //         loading.close()
+                //         //得到图片流
+                //         this.src = 'data:image/png;base64,' + res.data
+                //         this.show_zt = true
+                //     })
             },
 
             //点击文件下载

@@ -123,7 +123,7 @@
         name: 'setting',
         data() {
             return {
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 show_addDepartment: false,
                 show_editDepartment: false,
                 show_addGroup: false,

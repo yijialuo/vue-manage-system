@@ -333,7 +333,18 @@
                                     index: '/htgl',
                                     title: '合同管理'
                                 },
-
+                                {
+                                    index: '/sggl',
+                                    title: '施工管理'
+                                },
+                                {
+                                    index: '/ysgl',
+                                    title: '验收管理'
+                                },
+                                {
+                                    index: '/jsgl',
+                                    title: '结算管理'
+                                }
                             ]
                         },
                     ]

@@ -7,7 +7,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button @click="xjys" type="primary" icon="el-icon-circle-plus" class="handle-del mr10">
+                <el-button v-if="groupId!='bgs'" @click="xjys" type="primary" icon="el-icon-circle-plus" class="handle-del mr10">
                     新建验收
                 </el-button>
                 <el-input placeholder="编号" v-model="ysNo" class="handle-input mr10"></el-input>
@@ -261,6 +261,7 @@
         name: 'ysgl',
         data() {
             return {
+                groupId:localStorage.getItem('groupId'),
                 yanshou:{
                     id:'',
                     ysno:'',
@@ -304,7 +305,7 @@
                 yanshous: [],
 
                 xms:[],
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 list: [],
                 url: '',
@@ -520,7 +521,7 @@
             djfj(id){
                 this.cid=id
                 this.getFileList()
-                this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj=true
             },
             //填充附件列表

@@ -85,19 +85,19 @@
                     </el-button>
                 </div>
 
-                <el-table v-loading="loading" height="600" stripe :data="projects" border class="table"
+                <el-table  stripe :data="projects" border class="table"
                           ref="multipleTable">
-                    <el-table-column prop="projectNo" sortable label="项目编号" width="120">
+                    <el-table-column   prop="projectNo" sortable label="项目编号">
                     </el-table-column>
-                    <el-table-column prop="projectNam" label="项目名称">
+                    <el-table-column prop="projectNam" width="300px" label="项目名称">
                     </el-table-column>
                     <el-table-column prop="declarationDep" sortable label="立项部门">
                     </el-table-column>
-                    <el-table-column prop="proposer" label="发起人">
+                    <el-table-column prop="proposer"label="发起人">
                     </el-table-column>
-                    <el-table-column prop="bider" label="经办人">
+                    <el-table-column prop="bider"  label="经办人">
                     </el-table-column>
-                    <el-table-column prop="projectType" sortable label="项目类别">
+                    <el-table-column prop="projectType"  sortable label="项目类别">
                     </el-table-column>
                     <el-table-column prop="engTechAuditOpinion" sortable label="创建时间">
                     </el-table-column>
@@ -109,7 +109,8 @@
                             </el-button>
                             <el-button type="text" icon="el-icon-tickets" @click="fj(scope.row)">附件</el-button>
                             <el-button type="text" icon="el-icon-star-on" @click="zt(scope.row)">状态</el-button>
-                            <el-button type="text" icon="el-icon-star-on" v-if="isSqs.get(scope.row.id)"
+                            <!--v-if="isSqs.get(scope.row.id)"-->
+                            <el-button type="text" icon="el-icon-star-on"  v-if="scope.row.canSq"
                                        @click="kssq(scope.$index, scope.row)">申请
                             </el-button>
                             <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="text" icon="el-icon-delete"
@@ -142,8 +143,6 @@
 
             <!-- 新建项目项目立项单弹窗 -->
             <el-dialog title="申请项目" :close-on-click-modal="false" :visible.sync="show_xjxmlxd" width="680px">
-
-
                 <el-form ref="form" style="margin-top: 10px" :model="project" label-width="100px">
                     <el-form-item label="项目编号">
                         <el-input
@@ -163,7 +162,7 @@
                                 placeholder="选择日期">
                         </el-date-picker>
                         <span>立项部门</span>
-                        <el-input :disabled="true" style="width: 215px;margin-left: 15px"
+                        <el-input readonly style="width: 215px;margin-left: 15px"
                                   v-model="project.declarationDep"></el-input>
                         <!--<el-select style="width: 215px;margin-left: 15px"  v-model="project.declarationDep" placeholder="请选择">-->
                         <!--<el-option-->
@@ -263,7 +262,7 @@
                                   v-model="project.declarationDep"></el-input>
                     </el-form-item>
                     <el-form-item label="项目大类">
-                        <el-select  style="width: 215px;padding-right: 20px" v-model="project.depAuditOpinion"
+                        <el-select :disabled="!issqr"  style="width: 215px;padding-right: 20px" v-model="project.depAuditOpinion"
                                    placeholder="请选择">
                             <el-option
                                     v-for="item in xmdl"
@@ -273,7 +272,7 @@
                             </el-option>
                         </el-select>
                         <span>项目类别</span>
-                        <el-select  style="width: 215px;margin-left: 15px" v-model="project.projectType"
+                        <el-select  :disabled="!issqr" style="width: 215px;margin-left: 15px" v-model="project.projectType"
                                    placeholder="请选择">
                             <el-option
                                     v-for="item in xmlb"
@@ -287,13 +286,13 @@
                         <el-input :readonly="!issqr" type="number" style="width: 215px;padding-right: 15px"
                                   v-model="project.investmentEstimate"></el-input>
                         项目负责人
-                        <el-input style="width: 215px" v-model="project.personInCharge"></el-input>
+                        <el-input style="width: 215px" :readonly="!issqr" v-model="project.personInCharge"></el-input>
                     </el-form-item>
                     <el-form-item label="预计工期">
                         <el-input :readonly="!issqr" v-model="project.techAuditOpinion"
                                   style="width: 215px;padding-right: 15px"></el-input>
                         项目分类
-                        <el-select  style="width: 215px;margin-left: 15px" v-model="project.reviser" placeholder="请选择">
+                        <el-select :disabled="!issqr"  style="width: 215px;margin-left: 15px" v-model="project.reviser" placeholder="请选择">
                             <el-option
                                     v-for="item in xmfl"
                                     :key="item.value"
@@ -344,8 +343,8 @@
             </span>
             </el-dialog>
 
-            <el-dialog title="状态" :close-on-click-modal="false" :visible.sync="show_zt" width="920px">
-                <img :src='src'/>
+            <el-dialog title="状态" :close-on-click-modal="false" :visible.sync="show_zt" width="830px">
+                <img :src="src"/>
                 <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="show_zt=false">确 定</el-button>
             </span>
@@ -382,7 +381,6 @@
         name: 'qqgl',
         data() {
             return {
-                loading: false,
                 showfj: false,
                 url: '',
                 fileList: [],
@@ -437,7 +435,7 @@
                 show_xjxmlxd: false,
                 projects: [],
                 show_xq: false,
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 project: {
                     id: '',
                     projectNo: '',
@@ -786,7 +784,7 @@
                 this.project = row
                 this.showfj = true
                 if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -802,7 +800,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://localhost:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.pid
@@ -837,7 +835,6 @@
             },
             //综合搜索
             zhSearch() {
-
                 if ((this.select_dptnm == '' || this.select_dptnm == null) && (this.select_jd == '' || this.select_jd == null) && (this.select_xmfl == '' || this.select_xmfl == null) && (this.select_xmlb == '' || this.select_xmlb == null)) {
                     this.qb()
                     return
@@ -867,9 +864,22 @@
                         for (let i = 0; i < this.projects.length; i++) {
                             if (this.projects[i].pid == '' || this.projects[i].pid == null) {
                                 this.projects[i].dqjd = "未申请"
+                                this.projects[i].canSq = true
                                 this.$set(this.projects, i, this.projects[i]);
                             } else {
-                                //请求
+                                //请求是否可申请
+                                axios.get(this.ip + '/projectApplication/isSq', {
+                                    params: {
+                                        projectId: res.data[i].id
+                                    }
+                                })
+                                    .then(xxx => {
+                                        this.projects[i].canSq = xxx.data
+                                        this.$set(this.projects, i, this.projects[i])
+                                        //this.isSqs.set(res.data[i].id, xxx.data)
+                                    })
+
+                                //请求节点
                                 axios.get(this.ip + '/projectApplication/getPidNode', {
                                     params: {
                                         pid: this.projects[i].pid
@@ -928,21 +938,66 @@
             //状态
             zt(row) {
                 if (row.pid != null && row.pid != '') {
-                    let loadingInstance = Loading.service({fullscreen:true});
-                    axios.get(this.ip + '/projectApplication/zt', {
-                        params: {
-                            pi: row.pid
+                    if(Number(row.investmentEstimate)>10){
+                        if(row.dqjd==='填写申请表'){
+                            this.src=require('@/assets/img/s_txsqb.png')
+                        }else if(row.dqjd==='主管经理审批'){
+                            this.src=require('@/assets/img/s_zgjlsp.png')
+                        }else if(row.dqjd==='经理审批'){
+                            this.src=require('@/assets/img/s_jlsp.png')
+                        }else if(row.dqjd==='经办人'){
+                            this.src=require('@/assets/img/s_jbr.png')
+                        }else if(row.dqjd==='技术部主管经理'){
+                            this.src=require('@/assets/img/s_jsbzgjl.png')
+                        }else if(row.dqjd==='技术部经理'){
+                            this.src=require('@/assets/img/s_jsbjl.png')
+                        }else if(row.dqjd==='两会'){
+                            this.src=require('@/assets/img/s_lh.png')
+                        }else if(row.dqjd==='总经理办公会'){
+                            this.src=require('@/assets/img/s_zjlbgh.png')
+                        }else if(row.dqjd==='备案'){
+                            this.src=require('@/assets/img/s_ba.png')
+                        }else if(row.dqjd==='申请结束'){
+                            this.src=require('@/assets/img/s_js.png')
                         }
-                    })
-                        .then(res => {
-                            loadingInstance.close();
-                            //得到图片流
-                            this.src = 'data:image/png;base64,' + res.data
-                            this.show_zt = true
-                        })
+                    }else {
+                        if(row.dqjd==='填写申请表'){
+                            this.src=require('@/assets/img/x_txsqb.png')
+                        }else if(row.dqjd==='主管经理审批'){
+                            this.src=require('@/assets/img/x_zgjlsp.png')
+                        }else if(row.dqjd==='经理审批'){
+                            this.src=require('@/assets/img/x_jlsp.png')
+                        }else if(row.dqjd==='经办人'){
+                            this.src=require('@/assets/img/x_jbr.png')
+                        }else if(row.dqjd==='技术部主管经理'){
+                            this.src=require('@/assets/img/x_jsbzgjl.png')
+                        }else if(row.dqjd==='技术部经理'){
+                            this.src=require('@/assets/img/x_jsbjl.png')
+                        }else if(row.dqjd==='两会'){
+                            this.src=require('@/assets/img/x_lh.png')
+                        }else if(row.dqjd==='申请结束'){
+                            this.src=require('@/assets/img/x_js.png')
+                        }
+                    }
+
+                    this.show_zt = true
+                    // let loadingInstance = Loading.service({fullscreen:true});
+                    // axios.get(this.ip + '/projectApplication/zt', {
+                    //     params: {
+                    //         pi: row.pid
+                    //     }
+                    // })
+                    //     .then(res => {
+                    //         loadingInstance.close();
+                    //         //得到图片流
+                    //         this.src = 'data:image/png;base64,' + res.data
+                    //         this.show_zt = true
+                    //     })
                 } else {
-                    this.$message.info("该项目还未开始申请！")
+                    this.src=require('@/assets/img/wsq.png')
+                    // this.$message.info("该项目还未开始申请！")
                 }
+                this.show_zt = true
             },
 
             //搜索按钮点击事件
@@ -979,8 +1034,20 @@
                             for (let i = 0; i < this.projects.length; i++) {
                                 if (this.projects[i].pid == '' || this.projects[i].pid == null) {
                                     this.projects[i].dqjd = "未申请！"
+                                    this.projects[i].canSq=true
                                     this.$set(this.projects, i, this.projects[i]);
                                 } else {
+                                    //请求是否可申请
+                                    axios.get(this.ip + '/projectApplication/isSq', {
+                                        params: {
+                                            projectId: res.data[i].id
+                                        }
+                                    })
+                                        .then(xxx => {
+                                            this.projects[i].canSq = xxx.data
+                                            this.$set(this.projects, i, this.projects[i])
+                                            //this.isSqs.set(res.data[i].id, xxx.data)
+                                        })
                                     //请求
                                     axios.get(this.ip + '/projectApplication/getPidNode', {
                                         params: {
@@ -1016,8 +1083,20 @@
                             for (let i = 0; i < this.projects.length; i++) {
                                 if (this.projects[i].pid == '' || this.projects[i].pid == null) {
                                     this.projects[i].dqjd = "未申请！"
+                                    this.projects[i].canSq=true
                                     this.$set(this.projects, i, this.projects[i]);
                                 } else {
+                                    //请求是否可申请
+                                    axios.get(this.ip + '/projectApplication/isSq', {
+                                        params: {
+                                            projectId: res.data[i].id
+                                        }
+                                    })
+                                        .then(xxx => {
+                                            this.projects[i].canSq = xxx.data
+                                            this.$set(this.projects, i, this.projects[i])
+                                            //this.isSqs.set(res.data[i].id, xxx.data)
+                                        })
                                     //请求
                                     axios.get(this.ip + '/projectApplication/getPidNode', {
                                         params: {
@@ -1111,7 +1190,6 @@
 
             //拿到所有项目
             getProjects(pageNum) {
-                this.loading = true
                 this.projects = []
                 this.isSqs = new Map()
                 axios.get(this.ip + '/projectApplication/getAllProject', {
@@ -1121,19 +1199,64 @@
                     }
                 })
                     .then(res => {
+                        this.projects = res.data
                         if (localStorage.getItem('groupId') != 'doman' && localStorage.getItem('groupId') != 'jsb_doman') {//如果不是办事员或者技术部办事员，不可申请
                             for (let i = 0; i < res.data.length; i++) {
-                                this.isSqs.set(res.data[i].id, false)
+                                //this.isSqs.set(res.data[i].id, false)
+                                this.projects[i].canSq = false
+                                this.$set(this.projects, i, this.projects[i])
                             }
-                            this.projects = res.data
+                            // this.projects = res.data
                             //拿到当前项目的节点
                             for (let i = 0; i < this.projects.length; i++) {
                                 if (this.projects[i].pid == '' || this.projects[i].pid == null) {
                                     this.projects[i].dqjd = "未申请！"
                                     this.$set(this.projects, i, this.projects[i]);
-                                    this.loading = false
                                 } else {
-                                    //请求
+                                    //请求当前节点
+                                    axios.get(this.ip + '/projectApplication/getPidNode', {
+                                        params: {
+                                            pid: this.projects[i].pid
+                                        }
+                                    })
+                                        .then(res => {
+                                            this.projects[i].dqjd = res.data
+                                            this.$set(this.projects, i, this.projects[i])
+                                        })
+                                }
+                            }
+                        } else {
+                            //let qq = []
+                            for (let i = 0; i < res.data.length; i++) {
+                                // qq.push(axios.get(this.ip + '/projectApplication/isSq', {
+                                //     params: {
+                                //         projectId: res.data[i].id
+                                //     }
+                                // })
+                                //     .then(xxx => {
+                                //         this.projects[i].canSq = xxx.data
+                                //         this.$set(this.projects, i, this.projects[i])
+                                //         //this.isSqs.set(res.data[i].id, xxx.data)
+                                //     }))
+
+                                if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                                    //没有流程直接填充当前节点未申请，和填充申请按钮
+                                   this.projects[i].dqjd = "未申请！"
+                                    this.projects[i].canSq=true
+                                    this.$set(this.projects, i, this.projects[i]);
+                                } else {
+                                    //请求是否可申请
+                                    axios.get(this.ip + '/projectApplication/isSq', {
+                                        params: {
+                                            projectId: res.data[i].id
+                                        }
+                                    })
+                                        .then(xxx => {
+                                            this.projects[i].canSq = xxx.data
+                                            this.$set(this.projects, i, this.projects[i])
+                                            //this.isSqs.set(res.data[i].id, xxx.data)
+                                        })
+                                    //请求节点
                                     axios.get(this.ip + '/projectApplication/getPidNode', {
                                         params: {
                                             pid: this.projects[i].pid
@@ -1142,46 +1265,31 @@
                                         .then(res => {
                                             this.projects[i].dqjd = res.data
                                             this.$set(this.projects, i, this.projects[i]);
-                                            this.loading = false
                                         })
                                 }
                             }
-                        } else {
-                            let qq = []
-                            for (let i = 0; i < res.data.length; i++) {
-                                qq.push(axios.get(this.ip + '/projectApplication/isSq', {
-                                    params: {
-                                        projectId: res.data[i].id
-                                    }
-                                })
-                                    .then(xxx => {
-                                        this.isSqs.set(res.data[i].id, xxx.data)
-                                    }))
-
-                            }
-                            axios.all(qq)
-                                .then(axios.spread((acct, perms) => {
-                                    this.projects = res.data
-                                    //拿到当前项目的节点
-                                    for (let i = 0; i < this.projects.length; i++) {
-                                        if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                                            this.projects[i].dqjd = "未申请！"
-                                            this.$set(this.projects, i, this.projects[i]);
-                                        } else {
-                                            //请求
-                                            axios.get(this.ip + '/projectApplication/getPidNode', {
-                                                params: {
-                                                    pid: this.projects[i].pid
-                                                }
-                                            })
-                                                .then(res => {
-                                                    this.projects[i].dqjd = res.data
-                                                    this.$set(this.projects, i, this.projects[i]);
-                                                    this.loading = false
-                                                })
-                                        }
-                                    }
-                                }))
+                            // axios.all(qq)
+                            //     .then(axios.spread((acct, perms) => {
+                            //         // this.projects = res.data
+                            //         //拿到当前项目的节点
+                            //         for (let i = 0; i < this.projects.length; i++) {
+                            //             if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                            //                 this.projects[i].dqjd = "未申请！"
+                            //                 this.$set(this.projects, i, this.projects[i]);
+                            //             } else {
+                            //                 //请求
+                            //                 axios.get(this.ip + '/projectApplication/getPidNode', {
+                            //                     params: {
+                            //                         pid: this.projects[i].pid
+                            //                     }
+                            //                 })
+                            //                     .then(res => {
+                            //                         this.projects[i].dqjd = res.data
+                            //                         this.$set(this.projects, i, this.projects[i]);
+                            //                     })
+                            //             }
+                            //         }
+                            //     }))
                         }
                     })
             },
@@ -1262,6 +1370,12 @@
 
             // 确定删除
             deleteRow() {
+                const loading = this.$loading({
+                    lock: true,
+                    text: '处理中……',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 axios.get(this.ip + '/projectApplication/qdsqr', {//确定申请人
                     params: {
                         projectId: this.projects[this.idx].id,
@@ -1272,6 +1386,7 @@
                         if (res.data) {
                             axios.post(this.ip + '/projectApplication/deletXm', this.projects[this.idx])
                                 .then(res => {
+                                    loading.close()
                                     if (res.data) {
                                         this.$message.success('删除成功');
                                         this.reload()
@@ -1280,6 +1395,7 @@
                                     }
                                 })
                         } else {
+                            loading.close()
                             this.$message.error('该账号非申请人账号，删除失败！');
                         }
                     })

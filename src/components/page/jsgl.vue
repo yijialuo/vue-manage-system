@@ -8,7 +8,7 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button type="primary" @click="xzjs" icon="el-icon-circle-plus" class="handle-del mr10">
+                    <el-button v-if="groupId!='bgs'" type="primary" @click="xzjs" icon="el-icon-circle-plus" class="handle-del mr10">
                         新增结算
                     </el-button>
                     <el-select
@@ -116,7 +116,7 @@
                     <el-pagination
                             background
                             @current-change="currentChange"
-                            layout="prev, pager, next"
+                            layout="total,prev, pager, next"
                             :total="jss.length">
                     </el-pagination>
                 </div>
@@ -228,6 +228,7 @@
         name: 'jsgl',
         data() {
             return {
+                groupId:localStorage.getItem('groupId'),
                 currentPage:1,//默认开始页面
                 //合同id
                 contractId:'',
@@ -270,7 +271,7 @@
                 show_xzjs: false,
                 list: [],
                 list2: [],
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 loading2: false,
                 //结算数组
@@ -448,7 +449,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj = true
             },
             //拿所有的结算记录

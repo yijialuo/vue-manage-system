@@ -39,7 +39,7 @@
                 </div>
                 <el-table height="600px" stripe :data="clzhaobiaos.slice((currentPage-1)*10,currentPage*10)" border
                           class="table">
-                    <el-table-column prop="xmName" label="项目名称">
+                    <el-table-column prop="xmName" width="250px" label="项目名称">
                     </el-table-column>
                     <el-table-column prop="userName" label="申请人">
                     </el-table-column>
@@ -53,7 +53,9 @@
                     </el-table-column>
                     <!--<el-table-column prop="jsyq" label="技术要求">-->
                     <!--</el-table-column>-->
-                    <el-table-column prop="cjsj" sortable label="创建时间">
+                    <el-table-column prop="cjsj" width="104px" sortable label="创建时间">
+                    </el-table-column>
+                    <el-table-column prop="dqjd" label="当前节点">
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
@@ -97,7 +99,7 @@
             </span>
         </el-dialog>
 
-        <el-dialog :close-on-click-modal="false" title="状态" :visible.sync="show_zt" width="1000px">
+        <el-dialog :close-on-click-modal="false" title="状态" :visible.sync="show_zt" width="750px">
             <img :src='src'/>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="show_zt=false">确 定</el-button>
@@ -257,7 +259,7 @@
                 show_xq: false,
                 xms: [],
                 loading: false,
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 fileList: [],
                 list: [],
                 zhaobiao: {
@@ -435,7 +437,7 @@
                 console.log(row)
                 this.zhaobiao = row
                 this.showfj = true
-                this.url = 'http://localhost:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 this.lqfj(row.zbpid)
             },
             //详情
@@ -504,7 +506,8 @@
 
             //拿到自己经手的招标
             getAllzhaobiao() {
-                if (this.groupId === 'zgjl' || this.groupId === 'jl') {//如果是主管经理或者经理拿到自己部门所有的招标信息
+                if (this.groupId === 'zgjl' || this.groupId === 'jl') {
+                    //如果是主管经理或者经理拿到自己部门所有的招标信息
                     axios.get(this.ip + '/zhaobiao/getselfDptZb', {
                         params: {
                             userId: localStorage.getItem('userId')
@@ -514,6 +517,15 @@
                             this.clzhaobiaos = res.data
                             //填充项目名称、用户名、中标人、中标金额
                             for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                                //填充节点
+                                axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
+                                    params:{
+                                        zbpid:this.clzhaobiaos[i].zbpid
+                                    }
+                                }).then(res=>{
+                                    this.clzhaobiaos[i].dqjd = res.data
+                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
+                                })
                                 //填充中标人,中标金额
                                 axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
                                     params: {
@@ -536,24 +548,35 @@
                                     this.clzhaobiaos[i].xmName = res.data
                                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
                                 })
-                                axios.get(this.ip + '/user/userIdTouserName', {//填充申请人
+                                //填充申请人
+                                axios.get(this.ip + '/user/userIdTouserName', {
                                     params: {
                                         userId: this.clzhaobiaos[i].sqr
                                     }
                                 }).then(res => {
                                     this.clzhaobiaos[i].userName = res.data
-                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
+                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
                                 })
+
                             }
                         }
                     })
-                } else if (this.groupId === 'jsb_jl' || this.groupId === 'jsb_zgjl') {//技术部经理和技术部主管看所有招标信息
+                } else if (this.groupId === 'jsb_jl' || this.groupId === 'jsb_zgjl'||this.groupId==='jsb_doman'||this.groupId==='bgs') {//技术部经理和技术部主管看所有招标信息
                     axios.get(this.ip + '/zhaobiao/jsbjlGetAllZhaobiao')
                         .then(res => {
                             if (res.data.length != 0) {
                                 this.clzhaobiaos = res.data
                                 //填充项目名称、用户名、中标人、中标金额
                                 for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                                    //填充节点
+                                    axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
+                                        params:{
+                                            zbpid:this.clzhaobiaos[i].zbpid
+                                        }
+                                    }).then(res=>{
+                                        this.clzhaobiaos[i].dqjd = res.data
+                                        this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
+                                    })
                                     //填充中标人,中标金额
                                     axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
                                         params: {
@@ -598,6 +621,15 @@
                             this.clzhaobiaos = res.data
                             //填充项目名称、用户名、中标人、中标金额
                             for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                                //填充节点
+                                axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
+                                    params:{
+                                        zbpid:this.clzhaobiaos[i].zbpid
+                                    }
+                                }).then(res=>{
+                                    this.clzhaobiaos[i].dqjd = res.data
+                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
+                                })
                                 //填充中标人,中标金额
                                 axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
                                     params: {
@@ -635,23 +667,38 @@
             },
             //状态
             zt(row) {
-                const loading = this.$loading({
-                    lock: true,
-                    text: '处理中……',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                });
-                axios.get(this.ip + '/projectApplication/zt', {
-                    params: {
-                        pi: row.zbpid
-                    }
-                })
-                    .then(res => {
-                        loading.close()
-                        //得到图片流
-                        this.src = 'data:image/png;base64,' + res.data
-                        this.show_zt = true
-                    })
+                if(row.dqjd==='立项部门提出技术要求'){
+                    this.src=require('@/assets/img/lxbmtcjsyq.png')
+                }else if(row.dqjd==='技术部经办人'){
+                    this.src=require('@/assets/img/jsbjbr.png')
+                }else if(row.dqjd==='主管经理'){
+                    this.src=require('@/assets/img/zgjl.png')
+                }else if(row.dqjd==='经理'){
+                    this.src=require('@/assets/img/jl.png')
+                }else if(row.dqjd==='定标'){
+                    this.src=require('@/assets/img/db.png')
+                }else if(row.dqjd==='招标结束'){
+                    this.src=require('@/assets/img/zbjs.png')
+                }
+                this.show_zt = true
+
+                // const loading = this.$loading({
+                //     lock: true,
+                //     text: '处理中……',
+                //     spinner: 'el-icon-loading',
+                //     background: 'rgba(0, 0, 0, 0.7)'
+                // });
+                // axios.get(this.ip + '/projectApplication/zt', {
+                //     params: {
+                //         pi: row.zbpid
+                //     }
+                // })
+                //     .then(res => {
+                //         loading.close()
+                //         //得到图片流
+                //         this.src = 'data:image/png;base64,' + res.data
+                //         this.show_zt = true
+                //     })
             },
             //领取附件
             lqfj(zbpId) {

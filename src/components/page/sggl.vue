@@ -21,10 +21,23 @@
                         </el-option>
                     </el-select>
                     <el-button style="margin-left: 20px" type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
-                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllProject(1,userId)">全部
+                    <el-select
+                            style="margin-left: 20px"
+                            v-model="select_sgzt"
+                            placeholder="施工状态"
+                    >
+                        <el-option
+                                v-for="item in sgzts"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-button style="margin-left: 20px" type="primary" @click="sgztss" icon="el-icon-search">搜索</el-button>
+                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllProject(1,userId),ssss=false">全部
                     </el-button>
                 </div>
-                <el-table @row-dblclick="sjxm" height="600px" stripe :data="projects" border class="table" ref="multipleTable">
+                <el-table @row-dblclick="sjxm" stripe :data="projects" border class="table" ref="multipleTable">
                     <el-table-column prop="projectNam" label="项目名称" >
                     </el-table-column>
                     <el-table-column prop="declarationDep" label="立项部门">
@@ -45,7 +58,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div style="text-align: center">
+                <div v-if="!ssss" style="text-align: center">
                     <el-pagination
                             background
                             @current-change="currentChange"
@@ -64,10 +77,10 @@
                     &nbsp&nbsp完工时间&nbsp&nbsp
                     <el-input v-model="wgsj" :disabled="true" style="width: 215px" ></el-input>
                 </el-form-item>
-                <el-button  :disabled=iswg type="primary" @click="xzjd"  style="float:right" icon="el-icon-circle-plus" class="handle-del mr10" >
+                <el-button v-if="groupId!='bgs'" :disabled=iswg type="primary" @click="xzjd"  style="float:right" icon="el-icon-circle-plus" class="handle-del mr10" >
                     新增节点
                 </el-button>
-                <el-button type="success" icon="el-icon-success" :disabled=iswg @click="wg">完 工</el-button>
+                <el-button v-if="groupId!='bgs'" type="success" icon="el-icon-success" :disabled=iswg @click="wg">完 工</el-button>
                 <el-table
                         height="500"
                         :data="jindus"
@@ -89,8 +102,8 @@
                     </el-table-column>
                     <el-table-column label="操作" width="250" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-edit" :disabled=iswg   @click="bj(scope.row)">编辑</el-button>
-                            <el-button type="text" icon="el-icon-delete" :disabled=iswg  v-bind:class="{ red: !iswg,}"  @click="handleDelete(scope.row)">删除</el-button>
+                            <el-button type="text" v-if="groupId!='bgs'" icon="el-icon-edit" :disabled=iswg   @click="bj(scope.row)">编辑</el-button>
+                            <el-button type="text" v-if="groupId!='bgs'" icon="el-icon-delete" :disabled=iswg  v-bind:class="{ red: !iswg,}"  @click="handleDelete(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -162,7 +175,20 @@
         name: 'sggl',
         data() {
             return {
+                groupId:localStorage.getItem('groupId'),
+                ssss:false,
                 userId:localStorage.getItem('userId'),
+                select_sgzt:'',
+                sgzts:[{
+                    value: '已完工',
+                    label: '已完工'
+                },{
+                    value: '进行中',
+                    label: '进行中'
+                },{
+                    value: '未开工',
+                    label: '未开工'
+                },],
                 pickerOptions1: {
                     shortcuts: [{
                         text: '今天',
@@ -187,23 +213,7 @@
                 },
                 jindu:{},
                 jindus:[],
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 //新增节点弹窗
                 show_xzjd:false,
                 //施工进度
@@ -213,7 +223,7 @@
                 loading: false,
                 projectId: '',
                 projectName: '',
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 projects: [],
                 xms: [],
                 list: [],
@@ -394,6 +404,32 @@
                             this.wgsj=''
                     })
             },
+
+            //施工状态搜索
+            sgztss(){
+                if(this.select_sgzt===''||this.select_sgzt==null)
+                    return
+                axios.get(this.ip+'/projectApplication/sgztss',{
+                    params:{
+                        sgzt:this.select_sgzt,
+                        departmentName:localStorage.getItem('departmentName')
+                    }
+                }).then(res=>{
+                    if(res.data.length==0){
+                        this.$message.error("没查询到相关数据")
+                        return
+                    }else {
+                        this.ssss=true
+                        this.projects=res.data;
+                        //请求项目施工状态
+                        for(let i=0;i<res.data.length;i++){
+                            this.projects[i].sgzt=this.select_sgzt
+                            this.$set(this.projects, i, this.projects[i]);
+                        }
+                    }
+                })
+            },
+
             //搜索
             ss() {
                 axios.get(this.ip + '/projectApplication/selectXmById', {
@@ -402,8 +438,23 @@
                     }
                 }).then(res => {
                     if (res.data != null) {
+                        this.ssss=true
                         this.projects = []
                         this.projects.push(res.data)
+                        //填充状态
+                        if(this.projects[0].finishDte!==''&&this.projects[0].finishDte!=null){//有完成时间，表示完成
+                            this.projects[0].sgzt='已完工'
+                            this.$set(this.projects, 0, this.projects[0]);
+                        }else {
+                            axios.get(this.ip+'/jindu/getSgzt',{
+                                params:{
+                                    projectId:this.projects[0].id
+                                }
+                            }).then(xxx=>{
+                                this.projects[0].sgzt=xxx.data
+                                this.$set(this.projects, 0, this.projects[0]);
+                            })
+                        }
                     } else {
                         this.$message.error("没找到相关数据！")
                     }
@@ -439,7 +490,7 @@
             },
             //拿到项目下拉框数据
             getXms() {
-                if(localStorage.getItem('departmentName')!=='工程技术部'){
+                if(localStorage.getItem('departmentName')!='工程技术部'&&localStorage.getItem('departmentName')!='办公室'){
                     axios.get(this.ip + '/projectApplication/getSelfXmidAndXmname',{
                         params:{
                             dpt:localStorage.getItem('departmentName')
@@ -449,8 +500,7 @@
                             this.xms = res.data
                         })
                 }else {
-                    axios.get(this.ip + '/projectApplication/getAllXmIdAndXmname'
-                    )
+                    axios.get(this.ip + '/projectApplication/getAllXmIdAndXmname')
                         .then(res => {
                             this.xms = res.data
                         })
