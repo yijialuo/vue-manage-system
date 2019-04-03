@@ -109,6 +109,8 @@
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-upload" @click="fj(scope.row.id)">附件
                             </el-button>
+                            <el-button type="text" icon="el-icon-download" @click="xz(scope.row)">下载
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -271,7 +273,7 @@
                 show_xzjs: false,
                 list: [],
                 list2: [],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://localhost:8080',
                 loading: false,
                 loading2: false,
                 //结算数组
@@ -358,6 +360,10 @@
             this.getHts()
         },
         methods: {
+            //下载
+            xz(row){
+                window.open("http://localhost:8080/print/zfspd?id="+row.id)
+            },
 
             currentChange(currentPage){
                 this.currentPage = currentPage;
@@ -449,7 +455,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj = true
             },
             //拿所有的结算记录

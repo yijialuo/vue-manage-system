@@ -36,7 +36,7 @@
         inject:['reload'],
         data: function () {
             return {
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://localhost:8080',
                 ruleForm: {
                     username: '',
                     password: ''

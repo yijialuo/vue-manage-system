@@ -78,6 +78,7 @@
                         <el-button type="text" v-if="scope.row.canSp" @click="htsq(scope.row.id)">审批</el-button>
                         <el-button type="text" @click="zt(scope.row)">状态</el-button>
                         <el-button type="text" :disabled="scope.row.gd=='1'"  @click="bjht(scope.row)">编辑</el-button>
+                        <el-button type="text" @click="xz(scope.row)">下载</el-button>
                         <el-button type="text" :disabled="scope.row.gd=='1'"  @click="gd(scope.row)">归档</el-button>
                         <el-button type="text" :disabled="scope.row.gd=='1'"  @click="scht(scope.row.id)"  v-bind:class="{red:scope.row.gd!='1'}">删除</el-button>
                     </template>
@@ -142,9 +143,9 @@
                     &nbsp&nbsp&nbsp&nbsp&nbsp合同经办人&nbsp&nbsp&nbsp&nbsp
                     <el-input v-model="contract.jbr" style="width: 210px"></el-input>
                 </el-form-item>
-                <el-form-item label="主办单位意见">
-                    <el-input v-model="contract.zbdwyj" type="textarea"></el-input>
-                </el-form-item>
+                <!--<el-form-item label="主办单位意见">-->
+                    <!--<el-input v-model="contract.zbdwyj" type="textarea"></el-input>-->
+                <!--</el-form-item>-->
                 <el-form-item label="对方资质审查">
                     <el-checkbox-group v-model="zzsc">
                         <el-checkbox label="营业执照" ></el-checkbox><br/>
@@ -214,9 +215,9 @@
                     &nbsp&nbsp&nbsp&nbsp&nbsp合同经办人&nbsp&nbsp&nbsp&nbsp
                     <el-input v-model="contract.jbr" style="width: 210px"></el-input>
                 </el-form-item>
-                <el-form-item label="主办单位意见">
-                    <el-input v-model="contract.zbdwyj" type="textarea"></el-input>
-                </el-form-item>
+                <!--<el-form-item label="主办单位意见">-->
+                    <!--<el-input v-model="contract.zbdwyj" type="textarea"></el-input>-->
+                <!--</el-form-item>-->
                 <el-form-item label="对方资质审查">
                     <el-checkbox-group v-model="zzsc">
                         <el-checkbox label="营业执照" ></el-checkbox><br/>
@@ -301,7 +302,7 @@
                 //对方资质审查,数组
                 zzsc:[],
                 xms:[],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://localhost:8080',
                 loading: false,
                 list: [],
                 url: '',
@@ -322,6 +323,10 @@
             this.AllCounts()
         },
         methods: {
+            //合同下载
+            xz(row){
+                window.open('http://localhost:8080/print/ht?id='+row.id)
+            },
             //状态
             zt(row){
                 console.log(row.dqjd)
@@ -702,9 +707,9 @@
                 this.contract=row
                 this.cid=row.id
                 //this.getFileList()
-               // this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+               // this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + row.id
                 if (row.dwyj == '' || row.dwyj == null) {//未申请
-                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -720,7 +725,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://localhost:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.dwyj

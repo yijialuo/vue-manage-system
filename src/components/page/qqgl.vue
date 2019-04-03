@@ -103,16 +103,15 @@
                     </el-table-column>
                     <el-table-column prop="dqjd" label="当前节点">
                     </el-table-column>
-                    <el-table-column label="操作" width="250" align="center">
+                    <el-table-column label="操作" width="200" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-tickets" @click="xmxq(scope.$index, scope.row)">详情
                             </el-button>
                             <el-button type="text" icon="el-icon-tickets" @click="fj(scope.row)">附件</el-button>
                             <el-button type="text" icon="el-icon-star-on" @click="zt(scope.row)">状态</el-button>
                             <!--v-if="isSqs.get(scope.row.id)"-->
-                            <el-button type="text" icon="el-icon-star-on"  v-if="scope.row.canSq"
-                                       @click="kssq(scope.$index, scope.row)">申请
-                            </el-button>
+                            <el-button type="text" icon="el-icon-star-on"  v-if="scope.row.canSq" @click="kssq(scope.$index, scope.row)">申请</el-button>
+                            <el-button type="text" icon="el-icon-download" @click="xz(scope.row)">下载</el-button>
                             <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="text" icon="el-icon-delete"
                                        class="red" @click="handleDelete(scope.$index, scope.row)">删除
                             </el-button>
@@ -435,7 +434,7 @@
                 show_xjxmlxd: false,
                 projects: [],
                 show_xq: false,
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://localhost:8080',
                 project: {
                     id: '',
                     projectNo: '',
@@ -703,6 +702,10 @@
             this.getAllDptName()
         },
         methods: {
+            //下载
+            xz(row){
+                window.open('http://localhost:8080/print/sqb?id='+row.id)
+            },
 
             //上传成功，重新请求
             handleSuccess() {
@@ -784,7 +787,7 @@
                 this.project = row
                 this.showfj = true
                 if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -800,7 +803,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://localhost:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.pid

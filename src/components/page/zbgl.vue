@@ -259,7 +259,7 @@
                 show_xq: false,
                 xms: [],
                 loading: false,
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://localhost:8080',
                 fileList: [],
                 list: [],
                 zhaobiao: {
@@ -437,7 +437,7 @@
                 console.log(row)
                 this.zhaobiao = row
                 this.showfj = true
-                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://localhost:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 this.lqfj(row.zbpid)
             },
             //详情
@@ -506,7 +506,7 @@
 
             //拿到自己经手的招标
             getAllzhaobiao() {
-                if (this.groupId === 'zgjl' || this.groupId === 'jl') {
+                if (this.groupId === 'zgjl' || this.groupId === 'jl'||this.groupId==='doman') {
                     //如果是主管经理或者经理拿到自己部门所有的招标信息
                     axios.get(this.ip + '/zhaobiao/getselfDptZb', {
                         params: {
@@ -561,8 +561,9 @@
                             }
                         }
                     })
-                } else if (this.groupId === 'jsb_jl' || this.groupId === 'jsb_zgjl'||this.groupId==='jsb_doman'||this.groupId==='bgs') {//技术部经理和技术部主管看所有招标信息
-                    axios.get(this.ip + '/zhaobiao/jsbjlGetAllZhaobiao')
+                } //else if (this.groupId === 'jsb_jl' || this.groupId === 'jsb_zgjl'||this.groupId==='jsb_doman'||this.groupId==='bgs') {//技术部经理和技术部主管看所有招标信息
+                    else {
+                        axios.get(this.ip + '/zhaobiao/jsbjlGetAllZhaobiao')
                         .then(res => {
                             if (res.data.length != 0) {
                                 this.clzhaobiaos = res.data
@@ -611,59 +612,59 @@
                             }
                         })
                 }
-                else {
-                    axios.get(this.ip + '/zhaobiao/getAllzhaobiao', {
-                        params: {
-                            userId: localStorage.getItem('userId')
-                        }
-                    }).then(res => {
-                        if (res.data.length != 0) {
-                            this.clzhaobiaos = res.data
-                            //填充项目名称、用户名、中标人、中标金额
-                            for (let i = 0; i < this.clzhaobiaos.length; i++) {
-                                //填充节点
-                                axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
-                                    params:{
-                                        zbpid:this.clzhaobiaos[i].zbpid
-                                    }
-                                }).then(res=>{
-                                    this.clzhaobiaos[i].dqjd = res.data
-                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
-                                })
-                                //填充中标人,中标金额
-                                axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
-                                    params: {
-                                        zbid: this.clzhaobiaos[i].id
-                                    }
-                                }).then(res => {
-                                    if (res.data.length != 0) {
-                                        this.clzhaobiaos[i].zbr = res.data[0].zhongbiaodw
-                                        this.clzhaobiaos[i].zbje = res.data[0].zhongbiaojg
-                                        this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
-                                    }
-                                })
-
-                                //填充项目名
-                                axios.get(this.ip + '/projectApplication/xmIdToxmName', {
-                                    params: {
-                                        xmId: this.clzhaobiaos[i].xmid
-                                    }
-                                }).then(res => {
-                                    this.clzhaobiaos[i].xmName = res.data
-                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
-                                })
-                                axios.get(this.ip + '/user/userIdTouserName', {//填充申请人
-                                    params: {
-                                        userId: this.clzhaobiaos[i].sqr
-                                    }
-                                }).then(res => {
-                                    this.clzhaobiaos[i].userName = res.data
-                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
-                                })
-                            }
-                        }
-                    })
-                }
+                // else {
+                //     axios.get(this.ip + '/zhaobiao/getAllzhaobiao', {
+                //         params: {
+                //             userId: localStorage.getItem('userId')
+                //         }
+                //     }).then(res => {
+                //         if (res.data.length != 0) {
+                //             this.clzhaobiaos = res.data
+                //             //填充项目名称、用户名、中标人、中标金额
+                //             for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                //                 //填充节点
+                //                 axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
+                //                     params:{
+                //                         zbpid:this.clzhaobiaos[i].zbpid
+                //                     }
+                //                 }).then(res=>{
+                //                     this.clzhaobiaos[i].dqjd = res.data
+                //                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
+                //                 })
+                //                 //填充中标人,中标金额
+                //                 axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
+                //                     params: {
+                //                         zbid: this.clzhaobiaos[i].id
+                //                     }
+                //                 }).then(res => {
+                //                     if (res.data.length != 0) {
+                //                         this.clzhaobiaos[i].zbr = res.data[0].zhongbiaodw
+                //                         this.clzhaobiaos[i].zbje = res.data[0].zhongbiaojg
+                //                         this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
+                //                     }
+                //                 })
+                //
+                //                 //填充项目名
+                //                 axios.get(this.ip + '/projectApplication/xmIdToxmName', {
+                //                     params: {
+                //                         xmId: this.clzhaobiaos[i].xmid
+                //                     }
+                //                 }).then(res => {
+                //                     this.clzhaobiaos[i].xmName = res.data
+                //                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
+                //                 })
+                //                 axios.get(this.ip + '/user/userIdTouserName', {//填充申请人
+                //                     params: {
+                //                         userId: this.clzhaobiaos[i].sqr
+                //                     }
+                //                 }).then(res => {
+                //                     this.clzhaobiaos[i].userName = res.data
+                //                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
+                //                 })
+                //             }
+                //         }
+                //     })
+                // }
             },
             //状态
             zt(row) {

@@ -23,7 +23,7 @@ router.beforeEach((to, from, next) => {
         next('/login');
     } else if (to.meta.permission) {
         // 如果是管理员权限则可进入
-        axios.get("http://10.197.33.115:8080/user/checkadmin",{
+        axios.get("http://localhost:8080/user/checkadmin",{
             params:{
                 userId:userId
             }
