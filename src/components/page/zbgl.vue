@@ -39,25 +39,25 @@
                 </div>
                 <el-table height="600px" stripe :data="clzhaobiaos.slice((currentPage-1)*10,currentPage*10)" border
                           class="table">
-                    <el-table-column prop="xmName" width="250px" label="项目名称">
+                    <el-table-column prop="xmName" label="项目名称" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="userName" label="申请人">
+                    <el-table-column prop="userName" label="申请人" width="140">
                     </el-table-column>
-                    <el-table-column prop="zbr" label="中标人">
+                    <el-table-column prop="zbr" label="中标人" width="140">
                     </el-table-column>
-                    <el-table-column prop="zbje" label="中标金额">
+                    <el-table-column prop="zbje" label="中标金额" width="140">
                     </el-table-column>
-                    <el-table-column prop="fbsj" label="发标时间">
+                    <el-table-column prop="fbsj" label="发标时间" width="140">
                     </el-table-column>
-                    <el-table-column prop="dbsj" label="定标时间">
+                    <el-table-column prop="dbsj" label="定标时间" width="140">
                     </el-table-column>
                     <!--<el-table-column prop="jsyq" label="技术要求">-->
                     <!--</el-table-column>-->
-                    <el-table-column prop="cjsj" width="104px" sortable label="创建时间">
+                    <el-table-column prop="cjsj" sortable label="创建时间" width="160">
                     </el-table-column>
-                    <el-table-column prop="dqjd" label="当前节点">
+                    <el-table-column prop="dqjd" label="当前节点" width="160">
                     </el-table-column>
-                    <el-table-column label="操作" width="180" align="center">
+                    <el-table-column label="操作" align="center" width="200">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-upload" @click="fj(scope.row)">附件
                             </el-button>
@@ -259,7 +259,7 @@
                 show_xq: false,
                 xms: [],
                 loading: false,
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 fileList: [],
                 list: [],
                 zhaobiao: {
@@ -437,7 +437,7 @@
                 console.log(row)
                 this.zhaobiao = row
                 this.showfj = true
-                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 this.lqfj(row.zbpid)
             },
             //详情

@@ -23,6 +23,7 @@
 
                     <el-select
                             clearable
+                            multiple
                             style="margin-left: 10px;width: 150px"
                             v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
                             v-model="select_dptnm"
@@ -37,6 +38,8 @@
 
                     <el-select
                             clearable
+                            filterable
+                            multiple
                             style="margin-left: 20px;width: 150px"
                             v-model="select_fqr"
                             placeholder="发起人">
@@ -51,6 +54,8 @@
 
                     <el-select
                             clearable
+                            filterable
+                            multiple
                             style="margin-left: 20px;width: 150px"
                             v-model="select_jbr"
                             placeholder="经办人">
@@ -65,6 +70,7 @@
 
                     <el-select
                             clearable
+                            multiple
                             style="margin-left: 20px;width: 150px"
                             v-model="select_jd"
                             placeholder="节点">
@@ -79,6 +85,7 @@
 
                     <el-select
                             clearable
+                            multiple
                             style="margin-left: 20px;width: 150px"
                             v-model="select_xmfl"
                             placeholder="分类">
@@ -92,6 +99,7 @@
 
                     <el-select
                             clearable
+                            multiple
                             style="margin-left: 20px;width: 150px"
                             v-model="select_xmlb"
                             placeholder="类别">
@@ -108,23 +116,23 @@
 
                 <el-table  stripe :data="projects" border class="table"
                            ref="multipleTable">
-                    <el-table-column   prop="projectNo" sortable label="项目编号">
+                    <el-table-column   prop="projectNo" sortable label="项目编号" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="projectNam" width="300px" label="项目名称">
+                    <el-table-column prop="projectNam" width="300px" label="项目名称" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="declarationDep" sortable label="立项部门">
+                    <el-table-column prop="declarationDep" sortable label="立项部门" width="140">
                     </el-table-column>
-                    <el-table-column prop="proposer"label="发起人">
+                    <el-table-column prop="proposer"label="发起人" width="140">
                     </el-table-column>
-                    <el-table-column prop="bider"  label="经办人">
+                    <el-table-column prop="bider"  label="经办人" width="140">
                     </el-table-column>
-                    <el-table-column prop="projectType"  sortable label="项目类别">
+                    <el-table-column prop="projectType"  sortable label="项目类别" width="140">
                     </el-table-column>
-                    <el-table-column prop="engTechAuditOpinion" sortable label="创建时间">
+                    <el-table-column prop="engTechAuditOpinion" sortable label="创建时间" width="160">
                     </el-table-column>
-                    <el-table-column prop="dqjd" label="当前节点">
+                    <el-table-column prop="dqjd" label="当前节点" width="140">
                     </el-table-column>
-                    <el-table-column label="操作" width="200" align="center">
+                    <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-tickets" @click="xmxq(scope.$index, scope.row)">详情
                             </el-button>
@@ -407,17 +415,17 @@
                 //当前项目是否搜索出来的
                 ss: false,
                 //搜索部门
-                select_dptnm: '',
+                select_dptnm: [],
                 //搜索发起人
-                select_fqr:'',
+                select_fqr:[],
                 //搜索经办人
-                select_jbr:'',
+                select_jbr:[],
                 //搜索节点
-                select_jd: '',
+                select_jd: [],
                 //搜索项目分类
-                select_xmfl: '',
+                select_xmfl: [],
                 //项目类别搜索
-                select_xmlb: '',
+                select_xmlb: [],
                 jds: [{
                     value: '未申请',
                     label: '未申请',
@@ -460,7 +468,7 @@
                 show_xjxmlxd: false,
                 projects: [],
                 show_xq: false,
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 project: {
                     id: '',
                     projectNo: '',
@@ -563,7 +571,7 @@
         methods: {
             //下载
             xz(row){
-                window.open('http://10.197.33.115:8080/print/sqb?id='+row.id)
+                window.open('http://10.197.41.100:8080/print/sqb?id='+row.id)
             },
 
             //上传成功，重新请求
@@ -646,7 +654,7 @@
                 this.project = row
                 this.showfj = true
                 if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -662,7 +670,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.pid
@@ -774,12 +782,14 @@
             qb() {
                 this.getProjects(1)
                 this.ss = false
-                this.select_xmmc = ''
-                this.select_code = ''
-                this.select_dptnm = ''
-                this.select_jd = ''
-                this.select_xmfl = ''
-                this.select_xmlb = ''
+                this.select_code= ''
+                this.select_xmmc= ''
+                this.select_dptnm=[]
+                this.select_fqr=[]
+                this.select_jbr=[]
+                this.select_jd=[]
+                this.select_xmfl=[]
+                this.select_xmlb=[]
             },
             //拿到搜索部门的名称
             getAllDptName() {

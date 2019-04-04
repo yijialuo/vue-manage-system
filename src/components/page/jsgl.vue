@@ -42,7 +42,7 @@
                     </el-button>
                 </div>
                 <el-table height="600" style="width: 100%" :data="jss.slice((currentPage-1)*10,currentPage*10)">
-                    <el-table-column type="expand">
+                    <el-table-column type="expand" min-width="160">
                         <template slot-scope="props">
                             <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
                                 <el-form-item label="发票号码:">
@@ -88,24 +88,24 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="project_name" label="项目名" >
+                    <el-table-column prop="project_name" label="项目名" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="contract_no" sortable label="合同号" >
+                    <el-table-column prop="contract_no" sortable label="合同号" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="rq" sortable label="创建日期" >
+                    <el-table-column prop="rq" sortable label="创建日期" width="140">
                     </el-table-column>
-                    <el-table-column prop="jbbm" label="经办部门" >
+                    <el-table-column prop="jbbm" label="经办部门" width="140">
                     </el-table-column>
-                    <el-table-column prop="jbr" label="经办人" >
+                    <el-table-column prop="jbr" label="经办人" width="140">
                     </el-table-column>
-                    <el-table-column prop="yszmr" label="验收证明人">
+                    <el-table-column prop="yszmr" label="验收证明人" width="140">
                     </el-table-column>
-                    <el-table-column prop="skdw" label="收款单位">
+                    <el-table-column prop="skdw" label="收款单位" width="140">
                     </el-table-column>
-                    <el-table-column prop="bqyf" label="本期已付">
+                    <el-table-column prop="bqyf" label="本期已付" width="140">
                     </el-table-column>
 
-                    <el-table-column label="操作" width="180" align="center">
+                    <el-table-column label="操作" width="140" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-upload" @click="fj(scope.row.id)">附件
                             </el-button>
@@ -273,7 +273,7 @@
                 show_xzjs: false,
                 list: [],
                 list2: [],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 loading: false,
                 loading2: false,
                 //结算数组
@@ -362,7 +362,7 @@
         methods: {
             //下载
             xz(row){
-                window.open("http://10.197.33.115:8080/print/zfspd?id="+row.id)
+                window.open("http://10.197.41.100:8080/print/zfspd?id="+row.id)
             },
 
             currentChange(currentPage){
@@ -455,7 +455,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj = true
             },
             //拿所有的结算记录

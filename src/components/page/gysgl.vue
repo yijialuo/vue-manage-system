@@ -15,23 +15,23 @@
                     <el-button type="primary" icon="el-icon-search" @click="gysmcSearch">搜索</el-button>
                 </div>
                 <el-table height="600" @row-dblclick="sjgys" stripe :data="suppliers" border class="table" ref="multipleTable">
-                    <el-table-column prop="name" label="供应商名称" sortable >
+                    <el-table-column prop="name" label="供应商名称" sortable min-width="160">
                     </el-table-column>
-                    <el-table-column prop="code" label="供应商编号" >
+                    <el-table-column prop="code" label="供应商编号" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="phone" label="座机">
+                    <el-table-column prop="phone" label="座机" width="120">
                     </el-table-column>
-                    <el-table-column prop="mobile" label="手机">
+                    <el-table-column prop="mobile" label="手机" width="120">
                     </el-table-column>
-                    <el-table-column prop="contact" label="联系人">
+                    <el-table-column prop="contact" label="联系人" width="120">
                     </el-table-column>
-                    <el-table-column prop="fax" label="传真">
+                    <el-table-column prop="fax" label="传真" width="160">
                     </el-table-column>
-                    <el-table-column prop="email" label="邮箱">
+                    <el-table-column prop="email" label="邮箱" width="180">
                     </el-table-column>
-                    <el-table-column prop="address" label="地址">
+                    <el-table-column prop="address" label="地址" min-width="180">
                     </el-table-column>
-                    <el-table-column label="操作" width="180" align="center">
+                    <el-table-column label="操作" width="180" align="center" min-width="140">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-star-on"
                                        @click="sjgys(scope.row)">评价
@@ -470,7 +470,7 @@
                 }
                 ],
                 //
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 //添加评价弹窗
                 show_tjpj:false,
                 //添加供应商弹窗

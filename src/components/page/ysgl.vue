@@ -60,21 +60,21 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column prop="ysno" sortable label="验收单编号" >
+                <el-table-column prop="ysno" sortable label="验收单编号" min-width="160">
                 </el-table-column>
-                <el-table-column prop="projectName" label="工程名称" >
+                <el-table-column prop="projectName" label="工程名称" min-width="160">
                 </el-table-column>
-                <el-table-column prop="kgrq" sortable  label="开工日期">
+                <el-table-column prop="kgrq" sortable  label="开工日期" width="160">
                 </el-table-column>
-                <el-table-column prop="sjjgrq" sortable  label="实际竣工日期">
+                <el-table-column prop="sjjgrq" sortable  label="实际竣工日期" width="160">
                 </el-table-column>
-                <el-table-column prop="jhje" sortable  label="计划金额(元)">
+                <el-table-column prop="jhje" sortable  label="计划金额(元)" width="160">
                 </el-table-column>
-                <el-table-column prop="cbje"    label="承包金额(元)">
+                <el-table-column prop="cbje"    label="承包金额(元)" width="160">
                 </el-table-column>
-                <el-table-column prop="ysrq"  sortable label="验收日期">
+                <el-table-column prop="ysrq"  sortable label="验收日期" width="160">
                 </el-table-column>
-                <el-table-column label="操作"  align="center">
+                <el-table-column label="操作"  align="center" width="160">
                     <template slot-scope="scope">
                         <el-button type="text"  @click="djfj(scope.row.id),isgd=scope.row.gd" >附件</el-button>
                         <el-button type="text" :disabled="scope.row.gd=='1'" @click="bjys(scope.row)">编辑</el-button>
@@ -305,7 +305,7 @@
                 yanshous: [],
 
                 xms:[],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 loading: false,
                 list: [],
                 url: '',
@@ -521,7 +521,7 @@
             djfj(id){
                 this.cid=id
                 this.getFileList()
-                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj=true
             },
             //填充附件列表

@@ -28,8 +28,8 @@
                 <el-button type="primary" icon="el-icon-search" style="margin-left: 10px" @click="xmIdSS">搜索</el-button>
                 <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllht(1),ssss=false">全部</el-button>
             </div>
-            <el-table height="600"  :data="contracts" style="width: 100%">
-                <el-table-column  type="expand">
+            <el-table height="600" :data="contracts" style="width: 100%">
+                <el-table-column  type="expand" min-width="160">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
                             <el-form-item label="合同经办人:">
@@ -55,24 +55,24 @@
                             <!--</el-form-item>-->
                         </el-form>
                     </template>
+                </el-table-column >
+                <el-table-column prop="contractNo" sortable label="合同编号" min-width="160">
                 </el-table-column>
-                <el-table-column prop="contractNo" sortable label="合同编号" >
+                <el-table-column prop="projectName" label="合同项目" min-width="160">
                 </el-table-column>
-                <el-table-column prop="projectName" label="合同项目" >
+                <el-table-column prop="rq" sortable  label="合同日期" width="120">
                 </el-table-column>
-                <el-table-column prop="rq" sortable  label="合同日期">
+                <el-table-column prop="dfdsr" label="对方当事人" width="120">
                 </el-table-column>
-                <el-table-column prop="dfdsr" label="对方当事人">
+                <el-table-column prop="tzwh" label="投资文号" width="120">
                 </el-table-column>
-                <el-table-column prop="tzwh" label="投资文号">
+                <el-table-column prop="price" label="合同价款(元)" width="120">
                 </el-table-column>
-                <el-table-column prop="price" label="合同价款(元)">
+                <el-table-column prop="psjl" label="评审结论" min-width="160">
                 </el-table-column>
-                <el-table-column prop="psjl" label="评审结论">
+                <el-table-column prop="dqjd" label="当前节点" width="140">
                 </el-table-column>
-                <el-table-column prop="dqjd" label="当前节点">
-                </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="160" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" @click="djfj(scope.row),isgd=scope.row.gd">附件</el-button>
                         <el-button type="text" v-if="scope.row.canSp" @click="htsq(scope.row.id)">审批</el-button>
@@ -302,7 +302,7 @@
                 //对方资质审查,数组
                 zzsc:[],
                 xms:[],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 loading: false,
                 list: [],
                 url: '',
@@ -325,7 +325,7 @@
         methods: {
             //合同下载
             xz(row){
-                window.open('http://10.197.33.115:8080/print/ht?id='+row.id)
+                window.open('http://10.197.41.100:8080/print/ht?id='+row.id)
             },
             //状态
             zt(row){
@@ -707,9 +707,9 @@
                 this.contract=row
                 this.cid=row.id
                 //this.getFileList()
-               // this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+               // this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
                 if (row.dwyj == '' || row.dwyj == null) {//未申请
-                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -725,7 +725,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.dwyj

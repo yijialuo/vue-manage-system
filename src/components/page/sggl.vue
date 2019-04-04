@@ -38,19 +38,19 @@
                     </el-button>
                 </div>
                 <el-table @row-dblclick="sjxm" stripe :data="projects" border class="table" ref="multipleTable">
-                    <el-table-column prop="projectNam" label="项目名称" >
+                    <el-table-column prop="projectNam" label="项目名称" min-width="180">
                     </el-table-column>
-                    <el-table-column prop="declarationDep" label="立项部门">
+                    <el-table-column prop="declarationDep" label="立项部门" min-width="180">
                     </el-table-column>
-                    <el-table-column prop="personInCharge" label="负责人">
+                    <el-table-column prop="personInCharge" label="负责人" width="180">
                     </el-table-column>
-                    <el-table-column prop="projectType" label="项目类别">
+                    <el-table-column prop="projectType" label="项目类别" width="180">
                     </el-table-column>
-                    <el-table-column prop="techAuditOpinion" label="预计工期">
+                    <el-table-column prop="techAuditOpinion" label="预计工期" width="180">
                     </el-table-column>
-                    <el-table-column prop="sgzt" sortable label="状态">
+                    <el-table-column prop="sgzt" sortable label="状态" width="180">
                     </el-table-column>
-                    <el-table-column label="操作" width="180" align="center">
+                    <el-table-column label="操作" width="180" align="center" min-width="180">
                         <template slot-scope="scope">
                             <el-button type="text"  @click="sjxm(scope.row)">
                                 管理
@@ -223,7 +223,7 @@
                 loading: false,
                 projectId: '',
                 projectName: '',
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 projects: [],
                 xms: [],
                 list: [],

@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import "babel-polyfill";
+import './assets/css/custom.css'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI, {
@@ -23,7 +24,7 @@ router.beforeEach((to, from, next) => {
         next('/login');
     } else if (to.meta.permission) {
         // 如果是管理员权限则可进入
-        axios.get("http://10.197.33.115:8080/user/checkadmin",{
+        axios.get("http://10.197.41.100:8080/user/checkadmin",{
             params:{
                 userId:userId
             }
