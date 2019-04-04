@@ -9,28 +9,24 @@
             <div class="container">
                 <div class="handle-box">
                     <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="primary" icon="el-icon-circle-plus"
-                               class="handle-del mr10" @click="xjxmlxd">
-                        新建项目立项单
+                               class="handle-del mr10" @click="xjxmlxd">新建项目立项单
                     </el-button>
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="qb">全部</el-button>
-
                     <br/>
-                    <br/>
-                    <el-input style="margin-top: 10px" required v-model="select_xmmc" placeholder="项目名称"
-                              class="handle-input mr10"></el-input>
+                    <el-input v-model="select_code" placeholder="项目编号" style=""
+                              class="handle-input mr10">
+                    </el-input>
+                    <el-input style="margin-top: 10px;" required v-model="select_xmmc" placeholder="项目名称"
+                              class="handle-input mr10">
+                    </el-input>
                     <!--<el-button type="primary" icon="el-icon-search" @click="xmmcSearch">搜索</el-button>-->
-
-                    <el-input v-model="select_code" placeholder="项目编号" style="margin-left: 10px"
-                              class="handle-input mr10"></el-input>
-                    <el-button type="primary" icon="el-icon-search" @click="Search">搜索</el-button>
 
                     <el-select
                             clearable
-                            style="margin-left: 50px;width: 130px"
+                            style="margin-left: 10px;width: 150px"
                             v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
                             v-model="select_dptnm"
-                            placeholder="立项部门搜索"
-                    >
+                            placeholder="立项部门">
                         <el-option
                                 v-for="item in bms"
                                 :key="item.value"
@@ -41,10 +37,37 @@
 
                     <el-select
                             clearable
-                            style="margin-left: 20px;width: 140px"
+                            style="margin-left: 20px;width: 150px"
+                            v-model="select_fqr"
+                            placeholder="发起人">
+                        <el-option
+                                clearable
+                                v-for="item in fqrs"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+
+                    <el-select
+                            clearable
+                            style="margin-left: 20px;width: 150px"
+                            v-model="select_jbr"
+                            placeholder="经办人">
+                        <el-option
+                                clearable
+                                v-for="item in jbrs"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+
+                    <el-select
+                            clearable
+                            style="margin-left: 20px;width: 150px"
                             v-model="select_jd"
-                            placeholder="节点搜索"
-                    >
+                            placeholder="节点">
                         <el-option
                                 clearable
                                 v-for="item in jds"
@@ -56,10 +79,9 @@
 
                     <el-select
                             clearable
-                            style="margin-left: 20px;width: 100px"
+                            style="margin-left: 20px;width: 150px"
                             v-model="select_xmfl"
-                            placeholder="分类搜索"
-                    >
+                            placeholder="分类">
                         <el-option
                                 v-for="item in xmfl"
                                 :key="item.value"
@@ -70,10 +92,9 @@
 
                     <el-select
                             clearable
-                            style="margin-left: 20px;width: 100px"
+                            style="margin-left: 20px;width: 150px"
                             v-model="select_xmlb"
-                            placeholder="类别搜索"
-                    >
+                            placeholder="类别">
                         <el-option
                                 v-for="item in xmlb"
                                 :key="item.value"
@@ -86,7 +107,7 @@
                 </div>
 
                 <el-table  stripe :data="projects" border class="table"
-                          ref="multipleTable">
+                           ref="multipleTable">
                     <el-table-column   prop="projectNo" sortable label="项目编号">
                     </el-table-column>
                     <el-table-column prop="projectNam" width="300px" label="项目名称">
@@ -119,7 +140,7 @@
                     </el-table-column>
                 </el-table>
                 <!--所有项目，分批请求-->
-                <div v-if="!ss" style="text-align: center">
+                <div v-if="!ss" style="text-align: left">
                     <el-pagination
                             background
                             @current-change="currentChange"
@@ -272,7 +293,7 @@
                         </el-select>
                         <span>项目类别</span>
                         <el-select  :disabled="!issqr" style="width: 215px;margin-left: 15px" v-model="project.projectType"
-                                   placeholder="请选择">
+                                    placeholder="请选择">
                             <el-option
                                     v-for="item in xmlb"
                                     :key="item.value"
@@ -359,8 +380,7 @@
                         :before-remove="handleBeforeRemove"
                         :on-success="handleSuccess"
                         multiple
-                        :file-list="fileList"
-                >
+                        :file-list="fileList">
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>
                 </el-upload>
@@ -388,6 +408,10 @@
                 ss: false,
                 //搜索部门
                 select_dptnm: '',
+                //搜索发起人
+                select_fqr:'',
+                //搜索经办人
+                select_jbr:'',
                 //搜索节点
                 select_jd: '',
                 //搜索项目分类
@@ -428,13 +452,15 @@
                     value: '申请结束',
                     label: '申请结束'
                 }],
+                fqrs:[],
+                jbrs:[],
                 bms: [],
                 groupId: localStorage.getItem("groupId"),
                 //新建项目立项单
                 show_xjxmlxd: false,
                 projects: [],
                 show_xq: false,
-                ip: 'http://localhost:8080',
+                ip: 'http://10.197.33.115:8080',
                 project: {
                     id: '',
                     projectNo: '',
@@ -511,175 +537,6 @@
             }
         },
         watch: {
-            select_code() {
-                if (this.select_code != '') {
-                    if (this.select_xmmc != '')
-                        this.select_xmmc = ''
-                }
-            },
-            select_xmmc() {
-                if (this.select_xmmc != '') {
-                    if (this.select_code != '')
-                        this.select_code = ''
-                }
-            },
-
-
-            // //项目类别搜索
-            // select_xmlb(){
-            //     if(this.select_xmlb===''||this.select_xmlb==null)
-            //         return
-            //     //其他搜索框制空
-            //     this.select_xmmc=''
-            //     this.select_code=''
-            //     this.select_dptnm=''
-            //     this.select_xmfl=''
-            //     this.select_jd=''
-            //     axios.get(this.ip+'/projectApplication/ssXmByXmlb',{
-            //         params:{
-            //             select_xmlb:this.select_xmlb
-            //         }
-            //     }).then(res=>{
-            //         if(res.data.length==0){
-            //             this.$message.error("没搜索到相关项目！")
-            //         }else {
-            //             this.ss=true
-            //             this.projects=res.data
-            //             //填充节点
-            //             for(let i=0;i<this.projects.length;i++){
-            //                 if(this.projects[i].pid==''||this.projects[i].pid==null){
-            //                     this.projects[i].dqjd="未申请"
-            //                     this.$set(this.projects, i, this.projects[i]);
-            //                 }else {
-            //                     //请求
-            //                     axios.get(this.ip+'/projectApplication/getPidNode',{
-            //                         params:{
-            //                             pid:this.projects[i].pid
-            //                         }
-            //                     })
-            //                         .then(res=>{
-            //                             this.projects[i].dqjd=res.data
-            //                             this.$set(this.projects, i, this.projects[i]);
-            //                         })
-            //                 }
-            //             }
-            //         }
-            //     })
-            // },
-            //
-            // //项目分类搜索
-            // select_xmfl(){
-            //     if(this.select_xmfl===''||this.select_xmfl==null)
-            //         return
-            //     //其他搜索框制空
-            //     this.select_xmmc=''
-            //     this.select_code=''
-            //     this.select_dptnm=''
-            //     this.select_jd=''
-            //     this.select_xmlb=''
-            //     axios.get(this.ip+'/projectApplication/ssXmByXmfl',{
-            //         params:{
-            //             select_xmfl:this.select_xmfl
-            //         }
-            //     }).then(res=>{
-            //         if(res.data.length==0){
-            //             this.$message.error("没搜索到相关项目！")
-            //         }else {
-            //             this.ss=true
-            //             this.projects=res.data
-            //             //填充节点
-            //             for(let i=0;i<this.projects.length;i++){
-            //                 if(this.projects[i].pid==''||this.projects[i].pid==null){
-            //                     this.projects[i].dqjd="未申请"
-            //                     this.$set(this.projects, i, this.projects[i]);
-            //                 }else {
-            //                     //请求
-            //                     axios.get(this.ip+'/projectApplication/getPidNode',{
-            //                         params:{
-            //                             pid:this.projects[i].pid
-            //                         }
-            //                     })
-            //                         .then(res=>{
-            //                             this.projects[i].dqjd=res.data
-            //                             this.$set(this.projects, i, this.projects[i]);
-            //                         })
-            //                 }
-            //             }
-            //         }
-            //     })
-            // },
-            //
-            // //节点搜索
-            // select_jd(){
-            //     if(this.select_jd===''||this.select_jd==null)
-            //         return
-            //     //其他搜索框制空
-            //     this.select_xmmc=''
-            //     this.select_code=''
-            //     this.select_dptnm=''
-            //     this.select_xmfl=''
-            //     this.select_xmlb=''
-            //     axios.get(this.ip+'/projectApplication/ssXmByJd',{
-            //         params:{
-            //             select_jd:this.select_jd
-            //         }
-            //     }).then(res=>{
-            //         if(res.data.length==0){
-            //             this.$message.error("没搜索到相关项目！")
-            //         }else {
-            //             this.ss=true
-            //             this.projects=res.data
-            //             //填充节点
-            //             for(let i=0;i<this.projects.length;i++){
-            //                 this.projects[i].dqjd=this.select_jd
-            //                 this.$set(this.projects, i, this.projects[i]);
-            //             }
-            //         }
-            //     })
-            // },
-            //
-            // //部门搜索
-            // select_dptnm(){
-            //     if(this.select_dptnm===''||this.select_dptnm==null)
-            //         return
-            //     //其他搜索框制空
-            //     this.select_xmmc=''
-            //     this.select_code=''
-            //     this.select_jd=''
-            //     this.select_xmfl=''
-            //     this.select_xmlb=''
-            //     axios.get(this.ip+'/projectApplication/ssXmByBm',{
-            //         params:{
-            //             select_dptnm:this.select_dptnm
-            //         }
-            //     }).then(res=>{
-            //         if(res.data.length==0){
-            //             this.$message.error("没搜索到相关项目！")
-            //         }else {
-            //             this.ss=true
-            //             this.projects=res.data
-            //             //拿到当前项目的节点
-            //             for(let i=0;i<this.projects.length;i++){
-            //                 if(this.projects[i].pid==''||this.projects[i].pid==null){
-            //                     this.projects[i].dqjd="未申请"
-            //                     this.$set(this.projects, i, this.projects[i]);
-            //                 }else {
-            //                     //请求
-            //                     axios.get(this.ip+'/projectApplication/getPidNode',{
-            //                         params:{
-            //                             pid:this.projects[i].pid
-            //                         }
-            //                     })
-            //                         .then(res=>{
-            //                             this.projects[i].dqjd=res.data
-            //                             this.$set(this.projects, i, this.projects[i]);
-            //                         })
-            //                 }
-            //             }
-            //         }
-            //     })
-            // },
-
             investmentEstimate(newValue, oldValue) {
                 if (Number(newValue) < 0) {
                     this.$alert('中标金额只能填写大于等于0!', '提示', {
@@ -700,11 +557,13 @@
             this.getProjects(1)
             this.getcounts()
             this.getAllDptName()
+            this.getAllFQR()
+            this.getAllJBR()
         },
         methods: {
             //下载
             xz(row){
-                window.open('http://localhost:8080/print/sqb?id='+row.id)
+                window.open('http://10.197.33.115:8080/print/sqb?id='+row.id)
             },
 
             //上传成功，重新请求
@@ -787,7 +646,7 @@
                 this.project = row
                 this.showfj = true
                 if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://localhost:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -803,7 +662,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://localhost:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.pid
@@ -838,36 +697,51 @@
             },
             //综合搜索
             zhSearch() {
-                if ((this.select_dptnm == '' || this.select_dptnm == null) && (this.select_jd == '' || this.select_jd == null) && (this.select_xmfl == '' || this.select_xmfl == null) && (this.select_xmlb == '' || this.select_xmlb == null)) {
-                    this.qb()
-                    return
-                }
-                //如果是办事员、主管经理、经理查询自己部门的
-                if (this.groupId === 'doman' || this.groupId === 'zgjl' || this.groupId === 'jl'){
-                    if((this.select_jd == '' || this.select_jd == null) && (this.select_xmfl == '' || this.select_xmfl == null) && (this.select_xmlb == '' || this.select_xmlb == null)){
-                        this.qb()
-                        return
-                    }
-                    this.select_dptnm = localStorage.getItem('departmentName')
-                }
-                axios.get(this.ip + '/projectApplication/zhSearch', {
+                this.ss=true
+                axios.get(this.ip + '/projectApplication/search', {
                     params: {
+                        select_code: this.select_code,
+                        select_xmmc: this.select_xmmc,
                         select_dptnm: this.select_dptnm,
+                        select_fqr: this.select_fqr,
+                        select_jbr: this.select_jbr,
                         select_jd: this.select_jd,
                         select_xmfl: this.select_xmfl,
                         select_xmlb: this.select_xmlb,
                     }
                 }).then(res => {
-                    if (res.data.length == 0) {
-                        this.$message.error("没搜索到相关项目！")
-                    } else {
-                        this.ss = true
-                        this.projects = res.data
-                        //填充节点
+                    this.projects = res.data
+                    if (localStorage.getItem('groupId') != 'doman' && localStorage.getItem('groupId') != 'jsb_doman') {//如果不是办事员或者技术部办事员，不可申请
+                        for (let i = 0; i < res.data.length; i++) {
+                            //this.isSqs.set(res.data[i].id, false)
+                            this.projects[i].canSq = false
+                            this.$set(this.projects, i, this.projects[i])
+                        }
+                        // this.projects = res.data
+                        //拿到当前项目的节点
                         for (let i = 0; i < this.projects.length; i++) {
                             if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                                this.projects[i].dqjd = "未申请"
-                                this.projects[i].canSq = true
+                                this.projects[i].dqjd = "未申请！"
+                                this.$set(this.projects, i, this.projects[i]);
+                            } else {
+                                //请求当前节点
+                                axios.get(this.ip + '/projectApplication/getPidNode', {
+                                    params: {
+                                        pid: this.projects[i].pid
+                                    }
+                                })
+                                    .then(res => {
+                                        this.projects[i].dqjd = res.data
+                                        this.$set(this.projects, i, this.projects[i])
+                                    })
+                            }
+                        }
+                    } else {
+                        for (let i = 0; i < res.data.length; i++) {
+                            if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                                //没有流程直接填充当前节点未申请，和填充申请按钮
+                                this.projects[i].dqjd = "未申请！"
+                                this.projects[i].canSq=true
                                 this.$set(this.projects, i, this.projects[i]);
                             } else {
                                 //请求是否可申请
@@ -881,7 +755,6 @@
                                         this.$set(this.projects, i, this.projects[i])
                                         //this.isSqs.set(res.data[i].id, xxx.data)
                                     })
-
                                 //请求节点
                                 axios.get(this.ip + '/projectApplication/getPidNode', {
                                     params: {
@@ -922,7 +795,40 @@
                         }
                     })
             },
-
+            //获取所有发起人
+            getAllFQR(){
+                axios.get(this.ip + '/user/getDepartmentDoman', {
+                    params: {
+                        departmentId:localStorage.getItem('departmentId')
+                    }
+                }).then(res => {
+                    if (res.data != null) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.fqrs.push({
+                                value: res.data[i].userName,
+                                label: res.data[i].userName,
+                            })
+                        }
+                    }
+                })
+            },
+            //获取所有经办人
+            getAllJBR(){
+                axios.get(this.ip + '/user/getDepartmentjbr', {
+                    params: {
+                        departmentName:localStorage.getItem('departmentName')
+                    }
+                }).then(res => {
+                    if (res.data != null) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.jbrs.push({
+                                value: res.data[i].userName,
+                                label: res.data[i].userName,
+                            })
+                        }
+                    }
+                })
+            },
             //分页请求
             currentChange(pageNum) {
                 this.getProjects(pageNum)
@@ -1229,22 +1135,10 @@
                                 }
                             }
                         } else {
-                            //let qq = []
                             for (let i = 0; i < res.data.length; i++) {
-                                // qq.push(axios.get(this.ip + '/projectApplication/isSq', {
-                                //     params: {
-                                //         projectId: res.data[i].id
-                                //     }
-                                // })
-                                //     .then(xxx => {
-                                //         this.projects[i].canSq = xxx.data
-                                //         this.$set(this.projects, i, this.projects[i])
-                                //         //this.isSqs.set(res.data[i].id, xxx.data)
-                                //     }))
-
                                 if (this.projects[i].pid == '' || this.projects[i].pid == null) {
                                     //没有流程直接填充当前节点未申请，和填充申请按钮
-                                   this.projects[i].dqjd = "未申请！"
+                                    this.projects[i].dqjd = "未申请！"
                                     this.projects[i].canSq=true
                                     this.$set(this.projects, i, this.projects[i]);
                                 } else {
@@ -1271,28 +1165,6 @@
                                         })
                                 }
                             }
-                            // axios.all(qq)
-                            //     .then(axios.spread((acct, perms) => {
-                            //         // this.projects = res.data
-                            //         //拿到当前项目的节点
-                            //         for (let i = 0; i < this.projects.length; i++) {
-                            //             if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                            //                 this.projects[i].dqjd = "未申请！"
-                            //                 this.$set(this.projects, i, this.projects[i]);
-                            //             } else {
-                            //                 //请求
-                            //                 axios.get(this.ip + '/projectApplication/getPidNode', {
-                            //                     params: {
-                            //                         pid: this.projects[i].pid
-                            //                     }
-                            //                 })
-                            //                     .then(res => {
-                            //                         this.projects[i].dqjd = res.data
-                            //                         this.$set(this.projects, i, this.projects[i]);
-                            //                     })
-                            //             }
-                            //         }
-                            //     }))
                         }
                     })
             },
