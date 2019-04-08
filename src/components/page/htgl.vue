@@ -10,10 +10,11 @@
                 <el-button @click="xjht" type="primary" icon="el-icon-circle-plus" class="handle-del mr10">
                     新建合同
                 </el-button>
-                <el-input placeholder="合同编号" v-model="contractNo" class="handle-input mr10"></el-input>
+                <el-input placeholder="合同编号" clearable v-model="contractNo" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search"  @click="htSearch">搜索</el-button>
                 <el-select
                         style="margin-left: 20px"
+                        clearable=""
                         filterable
                         v-model="xmId"
                         placeholder="输入或选择项目"
@@ -404,6 +405,84 @@
                     }
                 })
             },
+            //合同搜索
+            htSearch(){
+                axios.get(this.ip+'/contract/contractNoss',{
+                    params:{
+                        contractNo:this.contractNo
+                    }
+                })
+                    .then(res=>{
+                        if(res.data.length==0)
+                            this.$message.error("没有查询到相关数据！")
+                        else{
+                            this.ssss=true
+                            this.contracts=res.data
+                            //请求合同节点
+                            for(let i=0;i<this.contracts.length;i++){
+                                if(this.contracts[i].dwyj===''||this.contracts[i].dwyj==null){
+                                    this.contracts[i].canSp=true
+                                    this.contracts[i].dqjd='未申请'
+                                    this.$set(this.contracts, i, this.contracts[i])
+                                }else {
+                                    axios.get(this.ip+'/contract/getHtNode',{
+                                        params:{
+                                            dwyj:this.contracts[i].dwyj
+                                        }
+                                    }).then(res=>{
+                                        this.contracts[i].dqjd=res.data
+                                        if(res.data==='填写合同表单'){
+                                            this.contracts[i].canSp=true
+                                        }else {
+                                            this.contracts[i].canSp=false
+                                        }
+                                        this.$set(this.contracts, i, this.contracts[i])
+                                    })
+                                }
+                            }
+                        }
+
+                    })
+            },
+            handleSearch(){
+                var params={
+                    xmId:this.xmId,
+                    contractNo:this.contractNo
+                }
+                axios.get(this.ip+'/contract/search',{
+                    params:params
+                }).then(res=>{
+                        if(res.data.length==0)
+                            this.$message.error("没有查询到相关数据！")
+                        else{
+                            this.ssss=true
+                            this.contracts=res.data
+                            //请求合同节点
+                            for(let i=0;i<this.contracts.length;i++){
+                                if(this.contracts[i].dwyj===''||this.contracts[i].dwyj==null){
+                                    this.contracts[i].canSp=true
+                                    this.contracts[i].dqjd='未申请'
+                                    this.$set(this.contracts, i, this.contracts[i])
+                                }else {
+                                    axios.get(this.ip+'/contract/getHtNode',{
+                                        params:{
+                                            dwyj:this.contracts[i].dwyj
+                                        }
+                                    }).then(res=>{
+                                        this.contracts[i].dqjd=res.data
+                                        if(res.data==='填写合同表单'){
+                                            this.contracts[i].canSp=true
+                                        }else {
+                                            this.contracts[i].canSp=false
+                                        }
+                                        this.$set(this.contracts, i, this.contracts[i])
+                                    })
+                                }
+                            }
+                        }
+
+                    })
+            },
             //拿总条数
             AllCounts(){
                 axios.get(this.ip+'/contract/AllCounts')
@@ -464,45 +543,6 @@
                     this.show_bjht = false,
                     this.contract={}
                   //  this.reload()
-            },
-            //合同搜索
-            htSearch(){
-                axios.get(this.ip+'/contract/contractNoss',{
-                    params:{
-                        contractNo:this.contractNo
-                    }
-                })
-                    .then(res=>{
-                        if(res.data.length==0)
-                            this.$message.error("没有查询到相关数据！")
-                        else{
-                            this.ssss=true
-                            this.contracts=res.data
-                            //请求合同节点
-                            for(let i=0;i<this.contracts.length;i++){
-                                if(this.contracts[i].dwyj===''||this.contracts[i].dwyj==null){
-                                    this.contracts[i].canSp=true
-                                    this.contracts[i].dqjd='未申请'
-                                    this.$set(this.contracts, i, this.contracts[i])
-                                }else {
-                                    axios.get(this.ip+'/contract/getHtNode',{
-                                        params:{
-                                            dwyj:this.contracts[i].dwyj
-                                        }
-                                    }).then(res=>{
-                                        this.contracts[i].dqjd=res.data
-                                        if(res.data==='填写合同表单'){
-                                            this.contracts[i].canSp=true
-                                        }else {
-                                            this.contracts[i].canSp=false
-                                        }
-                                        this.$set(this.contracts, i, this.contracts[i])
-                                    })
-                                }
-                            }
-                        }
-
-                    })
             },
 
             //删除合同
