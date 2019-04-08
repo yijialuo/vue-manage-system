@@ -23,7 +23,6 @@
 
                     <el-select
                             clearable
-                            multiple
                             style="margin-left: 10px;width: 150px"
                             v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
                             v-model="select_dptnm"
@@ -70,7 +69,6 @@
 
                     <el-select
                             clearable
-                            multiple
                             style="margin-left: 20px;width: 150px"
                             v-model="select_jd"
                             placeholder="节点">
@@ -415,13 +413,13 @@
                 //当前项目是否搜索出来的
                 ss: false,
                 //搜索部门
-                select_dptnm: [],
+                select_dptnm: '',
                 //搜索发起人
                 select_fqr:[],
                 //搜索经办人
                 select_jbr:[],
                 //搜索节点
-                select_jd: [],
+                select_jd: '',
                 //搜索项目分类
                 select_xmfl: [],
                 //项目类别搜索
@@ -705,19 +703,21 @@
             },
             //综合搜索
             zhSearch() {
+                var params ={
+                    select_code: this.select_code,
+                    select_xmmc: this.select_xmmc,
+                    select_dptnm: this.select_dptnm,
+                    select_fqr: this.select_fqr,
+                    select_jbr: this.select_jbr,
+                    select_jd: this.select_jd,
+                    select_xmfl: this.select_xmfl,
+                    select_xmlb: this.select_xmlb,
+                }
                 this.ss=true
                 axios.get(this.ip + '/projectApplication/search', {
-                    params: {
-                        select_code: this.select_code,
-                        select_xmmc: this.select_xmmc,
-                        select_dptnm: this.select_dptnm,
-                        select_fqr: this.select_fqr,
-                        select_jbr: this.select_jbr,
-                        select_jd: this.select_jd,
-                        select_xmfl: this.select_xmfl,
-                        select_xmlb: this.select_xmlb,
+                        params: params
                     }
-                }).then(res => {
+                ).then(res => {
                     this.projects = res.data
                     if (localStorage.getItem('groupId') != 'doman' && localStorage.getItem('groupId') != 'jsb_doman') {//如果不是办事员或者技术部办事员，不可申请
                         for (let i = 0; i < res.data.length; i++) {
@@ -784,10 +784,10 @@
                 this.ss = false
                 this.select_code= ''
                 this.select_xmmc= ''
-                this.select_dptnm=[]
+                this.select_dptnm=''
                 this.select_fqr=[]
                 this.select_jbr=[]
-                this.select_jd=[]
+                this.select_jd=''
                 this.select_xmfl=[]
                 this.select_xmlb=[]
             },
@@ -918,136 +918,6 @@
                 }
                 this.show_zt = true
             },
-
-            //搜索按钮点击事件
-            Search() {
-                //其他搜索框制空
-                this.select_jd = ''
-                this.select_dptnm = ''
-                this.select_xmfl = ''
-                this.select_xmlb = ''
-                if (this.select_xmmc != '')
-                    this.xmmcSearch()
-                else if (this.select_code != '')
-                    this.xmbhSearch()
-                else
-                    return
-            },
-
-            //项目编号
-            xmbhSearch() {
-                axios.get(this.ip + '/projectApplication/xmbhss', {
-                    params: {
-                        projectNo: this.select_code,
-                        declarationDep: localStorage.getItem("departmentName")
-                    }
-                })
-                    .then(res => {
-                        if (res.data.length == 0)
-                            this.$message.error("没搜索到相关项目！")
-                        else {
-                            //当前项目列表为搜索结果、取消分页显示
-                            this.ss = true
-                            this.projects = res.data
-                            //拿到当前项目的节点
-                            for (let i = 0; i < this.projects.length; i++) {
-                                if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                                    this.projects[i].dqjd = "未申请！"
-                                    this.projects[i].canSq=true
-                                    this.$set(this.projects, i, this.projects[i]);
-                                } else {
-                                    //请求是否可申请
-                                    axios.get(this.ip + '/projectApplication/isSq', {
-                                        params: {
-                                            projectId: res.data[i].id
-                                        }
-                                    })
-                                        .then(xxx => {
-                                            this.projects[i].canSq = xxx.data
-                                            this.$set(this.projects, i, this.projects[i])
-                                            //this.isSqs.set(res.data[i].id, xxx.data)
-                                        })
-                                    //请求
-                                    axios.get(this.ip + '/projectApplication/getPidNode', {
-                                        params: {
-                                            pid: this.projects[i].pid
-                                        }
-                                    })
-                                        .then(res => {
-                                            this.projects[i].dqjd = res.data
-                                            this.$set(this.projects, i, this.projects[i]);
-                                        })
-                                }
-                            }
-                        }
-                    })
-            },
-
-            //项目名称搜索
-            xmmcSearch() {
-                axios.get(this.ip + '/projectApplication/xmmcss', {
-                    params: {
-                        projectName: this.select_xmmc,
-                        declarationDep: localStorage.getItem("departmentName")
-                    }
-                })
-                    .then(res => {
-                        if (res.data.length == 0)
-                            this.$message.error("没找到相关项目")
-                        else {
-                            //当前项目列表为搜索结果、取消分页显示
-                            this.ss = true
-                            this.projects = res.data
-                            //拿到当前项目的节点
-                            for (let i = 0; i < this.projects.length; i++) {
-                                if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                                    this.projects[i].dqjd = "未申请！"
-                                    this.projects[i].canSq=true
-                                    this.$set(this.projects, i, this.projects[i]);
-                                } else {
-                                    //请求是否可申请
-                                    axios.get(this.ip + '/projectApplication/isSq', {
-                                        params: {
-                                            projectId: res.data[i].id
-                                        }
-                                    })
-                                        .then(xxx => {
-                                            this.projects[i].canSq = xxx.data
-                                            this.$set(this.projects, i, this.projects[i])
-                                            //this.isSqs.set(res.data[i].id, xxx.data)
-                                        })
-                                    //请求
-                                    axios.get(this.ip + '/projectApplication/getPidNode', {
-                                        params: {
-                                            pid: this.projects[i].pid
-                                        }
-                                    })
-                                        .then(res => {
-                                            this.projects[i].dqjd = res.data
-                                            this.$set(this.projects, i, this.projects[i]);
-                                        })
-                                }
-                            }
-                        }
-                    })
-            },
-
-            //判断是否可申请
-            isSq(row) {
-                if (localStorage.getItem('groupId') !== 'doman') {
-                    return false
-                } else {
-                    axios.get(this.ip + '/projectApplication/isSq', {
-                        params: {
-                            projectId: row.id
-                        }
-                    })
-                        .then(res => {
-                            return res.data
-                        })
-                }
-            },
-
             //新建项目立项单
             xjxmlxd() {
                 this.project = {
