@@ -466,7 +466,7 @@
                 show_xjxmlxd: false,
                 projects: [],
                 show_xq: false,
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 project: {
                     id: '',
                     projectNo: '',
@@ -581,7 +581,7 @@
         methods: {
             //下载
             xz(row){
-                window.open('http://10.197.33.115:8080/print/sqb?id='+row.id)
+                window.open('http://10.197.41.100:8080/print/sqb?id='+row.id)
             },
 
             //上传成功，重新请求
@@ -664,7 +664,7 @@
                 this.project = row
                 this.showfj = true
                 if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -680,7 +680,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.pid
@@ -713,6 +713,48 @@
                         }
                     })
             },
+    //请求当前项目节点
+        getNode(){
+        for (let i = 0; i < this.projects.length; i++) {
+            if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                this.projects[i].dqjd = "未申请！"
+                this.$set(this.projects, i, this.projects[i]);
+            } else {
+                //请求当前节点
+                axios.get(this.ip + '/projectApplication/getPidNode', {
+                    params: {
+                        pid: this.projects[i].pid
+                    }
+                })
+                    .then(res => {
+                        this.projects[i].dqjd = res.data
+                        this.$set(this.projects, i, this.projects[i])
+                    })
+            }
+        }
+    },
+
+    //申请按钮的显示与否
+    isSq(){
+        for (let i = 0; i < this.projects.length; i++) {
+            if(localStorage.getItem("userName")!=this.projects[i].proposer){
+                this.projects[i].canSq = false
+                this.$set(this.projects, i, this.projects[i])
+            }else {
+                //请求是否可申请
+                axios.get(this.ip + '/projectApplication/isSq', {
+                    params: {
+                        projectId: this.projects[i].id
+                    }
+                })
+                    .then(xxx => {
+                        this.projects[i].canSq = xxx.data
+                        this.$set(this.projects, i, this.projects[i])
+                    })
+            }
+        }
+    },
+
             //综合搜索
             zhSearch() {
                 var params ={
@@ -735,63 +777,10 @@
                     }
                 ).then(res => {
                     this.projects = res.data
-                    if (localStorage.getItem('groupId') != 'doman' && localStorage.getItem('groupId') != 'jsb_doman') {//如果不是办事员或者技术部办事员，不可申请
-                        for (let i = 0; i < res.data.length; i++) {
-                            //this.isSqs.set(res.data[i].id, false)
-                            this.projects[i].canSq = false
-                            this.$set(this.projects, i, this.projects[i])
-                        }
-                        // this.projects = res.data
-                        //拿到当前项目的节点
-                        for (let i = 0; i < this.projects.length; i++) {
-                            if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                                this.projects[i].dqjd = "未申请！"
-                                this.$set(this.projects, i, this.projects[i]);
-                            } else {
-                                //请求当前节点
-                                axios.get(this.ip + '/projectApplication/getPidNode', {
-                                    params: {
-                                        pid: this.projects[i].pid
-                                    }
-                                })
-                                    .then(res => {
-                                        this.projects[i].dqjd = res.data
-                                        this.$set(this.projects, i, this.projects[i])
-                                    })
-                            }
-                        }
-                    } else {
-                        for (let i = 0; i < res.data.length; i++) {
-                            if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                                //没有流程直接填充当前节点未申请，和填充申请按钮
-                                this.projects[i].dqjd = "未申请！"
-                                this.projects[i].canSq=true
-                                this.$set(this.projects, i, this.projects[i]);
-                            } else {
-                                //请求是否可申请
-                                axios.get(this.ip + '/projectApplication/isSq', {
-                                    params: {
-                                        projectId: res.data[i].id
-                                    }
-                                })
-                                    .then(xxx => {
-                                        this.projects[i].canSq = xxx.data
-                                        this.$set(this.projects, i, this.projects[i])
-                                        //this.isSqs.set(res.data[i].id, xxx.data)
-                                    })
-                                //请求节点
-                                axios.get(this.ip + '/projectApplication/getPidNode', {
-                                    params: {
-                                        pid: this.projects[i].pid
-                                    }
-                                })
-                                    .then(res => {
-                                        this.projects[i].dqjd = res.data
-                                        this.$set(this.projects, i, this.projects[i]);
-                                    })
-                            }
-                        }
-                    }
+                    //拿节点
+                    this.getNode()
+                    //申请按钮的显示
+                    this.isSq()
                 })
             },
             //全部按钮事件
@@ -1005,63 +994,8 @@
                 })
                     .then(res => {
                         this.projects = res.data
-                        if (localStorage.getItem('groupId') != 'doman' && localStorage.getItem('groupId') != 'jsb_doman') {//如果不是办事员或者技术部办事员，不可申请
-                            for (let i = 0; i < res.data.length; i++) {
-                                //this.isSqs.set(res.data[i].id, false)
-                                this.projects[i].canSq = false
-                                this.$set(this.projects, i, this.projects[i])
-                            }
-                            // this.projects = res.data
-                            //拿到当前项目的节点
-                            for (let i = 0; i < this.projects.length; i++) {
-                                if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                                    this.projects[i].dqjd = "未申请！"
-                                    this.$set(this.projects, i, this.projects[i]);
-                                } else {
-                                    //请求当前节点
-                                    axios.get(this.ip + '/projectApplication/getPidNode', {
-                                        params: {
-                                            pid: this.projects[i].pid
-                                        }
-                                    })
-                                        .then(res => {
-                                            this.projects[i].dqjd = res.data
-                                            this.$set(this.projects, i, this.projects[i])
-                                        })
-                                }
-                            }
-                        } else {
-                            for (let i = 0; i < res.data.length; i++) {
-                                if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                                    //没有流程直接填充当前节点未申请，和填充申请按钮
-                                    this.projects[i].dqjd = "未申请！"
-                                    this.projects[i].canSq=true
-                                    this.$set(this.projects, i, this.projects[i]);
-                                } else {
-                                    //请求是否可申请
-                                    axios.get(this.ip + '/projectApplication/isSq', {
-                                        params: {
-                                            projectId: res.data[i].id
-                                        }
-                                    })
-                                        .then(xxx => {
-                                            this.projects[i].canSq = xxx.data
-                                            this.$set(this.projects, i, this.projects[i])
-                                            //this.isSqs.set(res.data[i].id, xxx.data)
-                                        })
-                                    //请求节点
-                                    axios.get(this.ip + '/projectApplication/getPidNode', {
-                                        params: {
-                                            pid: this.projects[i].pid
-                                        }
-                                    })
-                                        .then(res => {
-                                            this.projects[i].dqjd = res.data
-                                            this.$set(this.projects, i, this.projects[i]);
-                                        })
-                                }
-                            }
-                        }
+                        this.getNode()
+                        this.isSq()
                     })
             },
 

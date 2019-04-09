@@ -11,23 +11,30 @@
                     新建合同
                 </el-button>
                 <el-input placeholder="合同编号" clearable v-model="contractNo" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search"  @click="htSearch">搜索</el-button>
+                <el-input placeholder="合同项目" clearable v-model="projectName" class="handle-input mr10"></el-input>
+                <el-date-picker
+                        class="handle-input mr10"
+                        v-model="ContractDate"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="合同日期">
+                </el-date-picker>
+                <el-input placeholder="对方当事人" clearable v-model="dfdsr" class="handle-input mr10"></el-input>
+                <el-input placeholder="投资文号" clearable v-model="tzwh" class="handle-input mr10"></el-input>
                 <el-select
-                        style="margin-left: 20px"
-                        clearable=""
-                        filterable
-                        v-model="xmId"
-                        placeholder="输入或选择项目"
-                >
+                        clearable
+                        class="handle-input mr10"
+                        v-model="dqjd"
+                        placeholder="节点">
                     <el-option
-                            v-for="item in xms"
+                            clearable
+                            v-for="item in jds"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
                     </el-option>
                 </el-select>
-                <el-button type="primary" icon="el-icon-search" style="margin-left: 10px" @click="xmIdSS">搜索</el-button>
-                <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllht(1),ssss=false">全部</el-button>
+                <el-button type="primary" icon="el-icon-search" style="margin-left: 10px" @click="handleSearch">搜索</el-button>
             </div>
             <el-table height="600" :data="contracts" style="width: 100%">
                 <el-table-column  type="expand" min-width="160">
@@ -300,15 +307,36 @@
                     rq:'',
                     gd:''
                 },
+                jds: [{
+                    value: '未申请',
+                    label: '未申请',
+                }, {
+                    value: '填写合同表单',
+                    label: '填写合同表单'
+                }, {
+                    value: '技术部经理审批',
+                    label: '技术部经理审批'
+                }, {
+                    value: '办公室确认',
+                    label: '办公室确认',
+                }, {
+                    value: '合同审批结束',
+                    label: '合同审批结束'
+                }],
                 //对方资质审查,数组
                 zzsc:[],
                 xms:[],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 loading: false,
                 list: [],
                 url: '',
                 cid:'',
                 contractNo:'',
+                projectName:'',
+                ContractDate:'',
+                dfdsr:'',
+                tzwh:'',
+                dqjd:'',
                 //是否归档
                 isgd:'',
                 //合同数
@@ -326,7 +354,7 @@
         methods: {
             //合同下载
             xz(row){
-                window.open('http://10.197.33.115:8080/print/ht?id='+row.id)
+                window.open('http://10.197.41.100:8080/print/ht?id='+row.id)
             },
             //状态
             zt(row){
@@ -446,42 +474,42 @@
             },
             handleSearch(){
                 var params={
-                    xmId:this.xmId,
-                    contractNo:this.contractNo
+                    contractNo:this.contractNo,
+                    projectName:this.projectName,
+                    ContractDate:this.ContractDate,
+                    dfdsr:this.dfdsr,
+                    tzwh:this.tzwh,
+                    dqjd:this.dqjd
+
                 }
                 axios.get(this.ip+'/contract/search',{
                     params:params
                 }).then(res=>{
-                        if(res.data.length==0)
-                            this.$message.error("没有查询到相关数据！")
-                        else{
-                            this.ssss=true
-                            this.contracts=res.data
-                            //请求合同节点
-                            for(let i=0;i<this.contracts.length;i++){
-                                if(this.contracts[i].dwyj===''||this.contracts[i].dwyj==null){
-                                    this.contracts[i].canSp=true
-                                    this.contracts[i].dqjd='未申请'
-                                    this.$set(this.contracts, i, this.contracts[i])
-                                }else {
-                                    axios.get(this.ip+'/contract/getHtNode',{
-                                        params:{
-                                            dwyj:this.contracts[i].dwyj
-                                        }
-                                    }).then(res=>{
-                                        this.contracts[i].dqjd=res.data
-                                        if(res.data==='填写合同表单'){
-                                            this.contracts[i].canSp=true
-                                        }else {
-                                            this.contracts[i].canSp=false
-                                        }
-                                        this.$set(this.contracts, i, this.contracts[i])
-                                    })
+                    this.ssss=true
+                    this.contracts=res.data
+                    //请求合同节点
+                    for(let i=0;i<this.contracts.length;i++){
+                        if(this.contracts[i].dwyj===''||this.contracts[i].dwyj==null){
+                            this.contracts[i].canSp=true
+                            this.contracts[i].dqjd='未申请'
+                            this.$set(this.contracts, i, this.contracts[i])
+                        }else {
+                            axios.get(this.ip+'/contract/getHtNode',{
+                                params:{
+                                    dwyj:this.contracts[i].dwyj
                                 }
-                            }
+                            }).then(res=>{
+                                this.contracts[i].dqjd=res.data
+                                if(res.data==='填写合同表单'){
+                                    this.contracts[i].canSp=true
+                                }else {
+                                    this.contracts[i].canSp=false
+                                }
+                                this.$set(this.contracts, i, this.contracts[i])
+                            })
                         }
-
-                    })
+                    }
+                })
             },
             //拿总条数
             AllCounts(){
@@ -747,9 +775,9 @@
                 this.contract=row
                 this.cid=row.id
                 //this.getFileList()
-               // this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+               // this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
                 if (row.dwyj == '' || row.dwyj == null) {//未申请
-                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -765,7 +793,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.dwyj

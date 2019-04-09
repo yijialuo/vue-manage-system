@@ -223,7 +223,7 @@
                 loading: false,
                 projectId: '',
                 projectName: '',
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 projects: [],
                 xms: [],
                 list: [],
@@ -461,32 +461,31 @@
                 })
             },
             //拿到所有项目
-            getAllProject(pageNum,userId) {
-                axios.get(this.ip + '/projectApplication/getAllProject',{
+            getAllProject(pageNum) {
+                axios.get(this.ip +'/projectApplication/selectByDepartmentName', {
                     params:{
                         pageNum:pageNum,
-                        userId:userId
+                        departmentName:localStorage.getItem('departmentName')
+                    }
+                }).then(res=>{
+                    this.projects = res.data
+                    //请求项目施工状态
+                    for(let i=0;i<res.data.length;i++){
+                        if(res.data[i].finishDte!==''&&res.data[i].finishDte!=null){//有完成时间，表示完成
+                            this.projects[i].sgzt='已完工'
+                            this.$set(this.projects, i, this.projects[i]);
+                        }else {
+                            axios.get(this.ip+'/jindu/getSgzt',{
+                                params:{
+                                    projectId:res.data[i].id
+                                }
+                            }).then(xxx=>{
+                                this.projects[i].sgzt=xxx.data
+                                this.$set(this.projects, i, this.projects[i]);
+                            })
+                        }
                     }
                 })
-                    .then(res => {
-                        this.projects = res.data
-                        //请求项目施工状态
-                        for(let i=0;i<res.data.length;i++){
-                            if(res.data[i].finishDte!==''&&res.data[i].finishDte!=null){//有完成时间，表示完成
-                                this.projects[i].sgzt='已完工'
-                                this.$set(this.projects, i, this.projects[i]);
-                            }else {
-                                axios.get(this.ip+'/jindu/getSgzt',{
-                                    params:{
-                                        projectId:res.data[i].id
-                                    }
-                                }).then(xxx=>{
-                                    this.projects[i].sgzt=xxx.data
-                                    this.$set(this.projects, i, this.projects[i]);
-                                })
-                            }
-                        }
-                    })
             },
             //拿到项目下拉框数据
             getXms() {

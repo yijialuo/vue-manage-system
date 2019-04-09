@@ -250,7 +250,7 @@
                 comment: '',
                 user: {},
                 xm: {},
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 message: 'first',
                 //项目
                 Xms: [],
@@ -543,7 +543,7 @@
                 this.lqfj(row.pid)
                 //查询当前节点
                 this.getNodeId(row.pid)
-                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
             //领取附件
             lqfj(pid) {
