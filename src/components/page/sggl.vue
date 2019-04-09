@@ -223,7 +223,7 @@
                 loading: false,
                 projectId: '',
                 projectName: '',
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 projects: [],
                 xms: [],
                 list: [],

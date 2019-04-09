@@ -108,7 +108,7 @@
 
         <!--新建招标流程弹窗 -->
         <el-dialog :close-on-click-modal="false" title="新建招标流程" :visible.sync="show_xjzblc" width="680px">
-            <el-form ref="form" label-width="100px">
+            <el-form ref="form" :rules="zbRules" :model="zhaobiao" label-width="100px">
                 <el-form-item label="项目">
                     <el-select
                             v-model="zhaobiao.xmid"
@@ -124,8 +124,8 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="技术要求备注">
-                    <el-input v-model="zhaobiao.jsyq" rows="4" type="textarea"></el-input>
+                <el-form-item label="技术要求备注" prop="jsyq">
+                    <el-input v-model="zhaobiao.jsyq" rows="4" type="textarea" placeholder="最多600字"></el-input>
                 </el-form-item>
 
             </el-form>
@@ -259,7 +259,7 @@
                 show_xq: false,
                 xms: [],
                 loading: false,
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 fileList: [],
                 list: [],
                 zhaobiao: {
@@ -285,13 +285,19 @@
                 },
                 //中标单位
                 zhongbiaos: [],
-                showfj: false
+                showfj: false,
                 // //发标时间
                 // fbsj:'',
                 // //评标时间
                 // pbsj:'',
                 // //投标截止时间
                 // tbjzsj:''
+                // 招标新建验证规则
+                zbRules: {
+                    jsyq: [
+                        { max: 600, message: '最多600字', trigger: 'change' }
+                    ]
+                }
             }
         },
         created() {
@@ -437,7 +443,7 @@
                 console.log(row)
                 this.zhaobiao = row
                 this.showfj = true
-                this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 this.lqfj(row.zbpid)
             },
             //详情
@@ -760,13 +766,17 @@
                     console.log("请填写信息！")
                     return
                 }
-                axios.post(this.ip + '/zhaobiao/startZhaobiao', this.zhaobiao)
-                    .then(res => {
-                        if (res.data) {
-                            this.$message.success("申请开始！已转到工程技术部！")
-                            this.reload()
-                        }
-                    })
+                this.$refs['form'].validate((valid) => {
+                    if (valid) {
+                        axios.post(this.ip + '/zhaobiao/startZhaobiao', this.zhaobiao)
+                            .then(res => {
+                                if (res.data) {
+                                    this.$message.success("申请开始！已转到工程技术部！")
+                                    this.reload()
+                                }
+                            })
+                    }
+                })
             },
             //点击文件下载
             handlePreview(file) {

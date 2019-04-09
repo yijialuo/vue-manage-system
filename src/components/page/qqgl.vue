@@ -169,7 +169,7 @@
 
             <!-- 新建项目项目立项单弹窗 -->
             <el-dialog title="申请项目" :close-on-click-modal="false" :visible.sync="show_xjxmlxd" width="680px">
-                <el-form ref="form" style="margin-top: 10px" :model="project" label-width="100px">
+                <el-form ref="form" :rules="applyRules" style="margin-top: 10px" :model="project" label-width="100px">
                     <el-form-item label="项目编号">
                         <el-input
                                 v-model="project.projectNo"
@@ -239,19 +239,19 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="立项背景理由">
+                    <el-form-item label="立项背景理由" prop="establishReason">
                         <el-input v-model="project.establishReason" type="textarea"
-                                  :autosize="{ minRows: 4, maxRows: 10}"
+                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多600字"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="立项内容规模">
+                    <el-form-item label="立项内容规模" prop="scale">
                         <el-input v-model="project.scale" type="textarea"
-                                  :autosize="{ minRows: 4, maxRows: 10}"
+                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多600字"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="投资概算说明">
+                    <el-form-item label="投资概算说明" prop="illustration">
                         <el-input v-model="project.illustration" type="textarea"
-                                  :autosize="{ minRows: 4, maxRows: 10}"
+                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多600字"
                         ></el-input>
                     </el-form-item>
                 </el-form>
@@ -466,7 +466,7 @@
                 show_xjxmlxd: false,
                 projects: [],
                 show_xq: false,
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 project: {
                     id: '',
                     projectNo: '',
@@ -539,7 +539,19 @@
                 count: 0,
                 delVisible: false,
                 //是否申请人、决定修改按钮的显示与否
-                issqr: false
+                issqr: false,
+                // 立项申请验证规则
+                applyRules: {
+                    establishReason: [
+                        { max: 600, message: '最多600字', trigger: 'change' }
+                    ],
+                    scale: [
+                        { max: 600, message: '最多600字', trigger: 'change' }
+                    ],
+                    illustration:[
+                        { max: 600, message: '最多600字', trigger: 'change' }
+                    ]
+                }
             }
         },
         watch: {
@@ -569,7 +581,7 @@
         methods: {
             //下载
             xz(row){
-                window.open('http://10.197.41.100:8080/print/sqb?id='+row.id)
+                window.open('http://10.197.33.115:8080/print/sqb?id='+row.id)
             },
 
             //上传成功，重新请求
@@ -652,7 +664,7 @@
                 this.project = row
                 this.showfj = true
                 if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -668,7 +680,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.pid
@@ -712,6 +724,10 @@
                     select_jd: this.select_jd,
                     select_xmfl: this.select_xmfl,
                     select_xmlb: this.select_xmlb,
+                }
+                // 如果当前账号不是工程技术部，select_dptnm天才当前账号部门
+                if(localStorage.getItem('departmentId')!='20190123022801622'){
+                    params.select_dptnm=localStorage.getItem('departmentId')
                 }
                 this.ss=true
                 axios.get(this.ip + '/projectApplication/search', {
@@ -1079,16 +1095,20 @@
                 }
                 if (this.groupId === 'jsb_doman')//技术部经办人新建的项目，直接设置经办人为当前用户
                     this.project.bider = localStorage.getItem('userName')
-                axios.post(this.ip + '/projectApplication/insertXm', this.project)
-                    .then(res => {
-                        if (res.data) {
-                            this.$message.success('新建成功！')
-                            this.reload()
-                        } else {
-                            this.$message.error('新建失败！')
-                        }
-                    })
-                this.show_xjxmlxd = false
+                this.$refs['form'].validate((valid) => {
+                    if (valid) {
+                        axios.post(this.ip + '/projectApplication/insertXm', this.project)
+                            .then(res => {
+                                if (res.data) {
+                                    this.$message.success('新建成功！')
+                                    this.reload()
+                                } else {
+                                    this.$message.error('新建失败！')
+                                }
+                            })
+                        this.show_xjxmlxd = false
+                    }
+                })
             },
 
             filterTag(value, row) {
