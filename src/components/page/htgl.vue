@@ -36,8 +36,8 @@
                 </el-select>
                 <el-button type="primary" icon="el-icon-search" style="margin-left: 10px" @click="handleSearch">搜索</el-button>
             </div>
-            <el-table height="600" :data="contracts" style="width: 100%">
-                <el-table-column  type="expand" min-width="160">
+            <el-table height="600" :data="contracts" border class="table">
+                <el-table-column  type="expand" width="40">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
                             <el-form-item label="合同经办人:">
@@ -64,21 +64,21 @@
                         </el-form>
                     </template>
                 </el-table-column >
-                <el-table-column prop="contractNo" sortable label="合同编号" min-width="160">
+                <el-table-column prop="contractNo" align="center" sortable label="合同编号" width="140">
                 </el-table-column>
                 <el-table-column prop="projectName" label="合同项目" min-width="160">
                 </el-table-column>
-                <el-table-column prop="rq" sortable  label="合同日期" width="120">
+                <el-table-column prop="rq" sortable align="center"  label="合同日期" width="120">
                 </el-table-column>
-                <el-table-column prop="dfdsr" label="对方当事人" width="120">
+                <el-table-column prop="dfdsr" align="center" label="对方当事人" width="120">
                 </el-table-column>
-                <el-table-column prop="tzwh" label="投资文号" width="120">
+                <el-table-column prop="tzwh" align="center" label="投资文号" width="120">
                 </el-table-column>
-                <el-table-column prop="price" label="合同价款(元)" width="120">
+                <el-table-column prop="price" align="center" label="合同价款(元)" width="120">
                 </el-table-column>
-                <el-table-column prop="psjl" label="评审结论" min-width="160">
+                <el-table-column prop="psjl" align="center" label="评审结论" min-width="160">
                 </el-table-column>
-                <el-table-column prop="dqjd" label="当前节点" width="140">
+                <el-table-column prop="dqjd" align="center" label="当前节点" width="140">
                 </el-table-column>
                 <el-table-column label="操作" width="160" align="center">
                     <template slot-scope="scope">
@@ -92,6 +92,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+
             <div v-if="!ssss" style="text-align: center">
                 <el-pagination
                         background
@@ -103,7 +104,7 @@
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="408px">
+        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="40%">
             <el-upload
                     :disabled="isgd=='1'"
                     class="upload-demo"
@@ -114,6 +115,7 @@
                     :on-success="handleSuccess"
                     multiple
                     :file-list="fileList"
+                    style="width: 100%;"
             >
                 <i class="el-icon-upload" ></i>
                 <div class="el-upload__text" >将文件拖到此处，或<em>点击上传</em></div>
@@ -879,6 +881,7 @@
                     }
                 })
                     .then(res=>{
+                        console.log(res.data)
                         this.contracts=res.data
                         //请求合同节点
                         for(let i=0;i<this.contracts.length;i++){

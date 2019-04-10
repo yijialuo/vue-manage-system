@@ -4,3 +4,9 @@
 .el-table thead{
     color: #000000;
 }
+.el-upload{
+    width: 100%;
+}
+.el-upload-dragger{
+    width: 100%;
+}

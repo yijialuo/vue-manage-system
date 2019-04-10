@@ -8,24 +8,31 @@
             </div>
             <div class="container">
                 <div class="handle-box">
+                    <el-input v-model="projectName" placeholder="项目名称" style="" class="handle-input mr10">
+                    </el-input>
+                    <el-input v-model="fzr" placeholder="负责人" style="" class="handle-input mr10">
+                    </el-input>
                     <el-select
-                            v-model="projectId"
-                            filterable
-                            placeholder="请输入项目或选择"
-                    >
+                            clearable
+                            class="handle-input mr10"
+                            v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
+                            v-model="xmlb"
+                            placeholder="项目类别">
                         <el-option
-                                v-for="item in xms"
+                                v-for="item in xmlbs"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                         </el-option>
                     </el-select>
-                    <el-button style="margin-left: 20px" type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
+                    <el-input v-model="yjgq" placeholder="预计工期" style="" class="handle-input mr10">
+                    </el-input>
                     <el-select
-                            style="margin-left: 20px"
-                            v-model="select_sgzt"
-                            placeholder="施工状态"
-                    >
+                            clearable
+                            class="handle-input mr10"
+                            v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
+                            v-model="zt"
+                            placeholder="状态">
                         <el-option
                                 v-for="item in sgzts"
                                 :key="item.value"
@@ -33,22 +40,23 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
-                    <el-button style="margin-left: 20px" type="primary" @click="sgztss" icon="el-icon-search">搜索</el-button>
-                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllProject(1,userId),ssss=false">全部
-                    </el-button>
+                    <el-button style="margin-left: 20px" type="primary" @click="handleSerch" icon="el-icon-search">搜索</el-button>
+                    <el-button type="success" icon="el-icon-tickets" style="float:right" @click="qb">全部</el-button>
                 </div>
                 <el-table @row-dblclick="sjxm" stripe :data="projects" border class="table" ref="multipleTable">
+                    <el-table-column prop="projectNo" align="center" label="项目编号" width="140">
+                    </el-table-column>
                     <el-table-column prop="projectNam" label="项目名称" min-width="180">
                     </el-table-column>
-                    <el-table-column prop="declarationDep" label="立项部门" min-width="180">
+                    <el-table-column prop="declarationDep" align="center" label="立项部门" min-width="180">
                     </el-table-column>
-                    <el-table-column prop="personInCharge" label="负责人" width="180">
+                    <el-table-column prop="personInCharge" align="center" label="负责人" width="180">
                     </el-table-column>
-                    <el-table-column prop="projectType" label="项目类别" width="180">
+                    <el-table-column prop="projectType" align="center" label="项目类别" width="180">
                     </el-table-column>
-                    <el-table-column prop="techAuditOpinion" label="预计工期" width="180">
+                    <el-table-column prop="techAuditOpinion" align="center" label="预计工期" width="180">
                     </el-table-column>
-                    <el-table-column prop="sgzt" sortable label="状态" width="180">
+                    <el-table-column prop="sgzt" align="center" sortable label="状态" width="180">
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center" min-width="180">
                         <template slot-scope="scope">
@@ -109,8 +117,6 @@
                 </el-table>
             </el-form>
         </el-dialog>
-
-
         <!--编辑节点弹窗 -->
         <el-dialog title="添加施工进度" :close-on-click-modal="false" :visible.sync="show_bj" width="550px">
             <h2 style="text-align: center"> {{projectName}}</h2>
@@ -137,7 +143,6 @@
                 <el-button type="primary" @click="qdxg">确定修改</el-button>
             </span>
         </el-dialog>
-
         <!--新建施工进度弹窗 -->
         <el-dialog title="添加施工进度" :close-on-click-modal="false" :visible.sync="show_xzjd" width="550px">
             <h2 style="text-align: center"> {{projectName}}</h2>
@@ -179,6 +184,18 @@
                 ssss:false,
                 userId:localStorage.getItem('userId'),
                 select_sgzt:'',
+                bms:[],
+                //项目类别
+                xmlbs: [{
+                    value: '固定资产',
+                    label: '固定资产'
+                }, {
+                    value: '维修',
+                    label: '维修'
+                }, {
+                    value: '物资采购',
+                    label: '物资采购'
+                }],
                 sgzts:[{
                     value: '已完工',
                     label: '已完工'
@@ -223,6 +240,11 @@
                 loading: false,
                 projectId: '',
                 projectName: '',
+                departmentName:'',
+                fzr:'',
+                xmlb:'',
+                yjgq:'',
+                zt:'',
                 ip: 'http://10.197.41.100:8080',
                 projects: [],
                 xms: [],
@@ -239,6 +261,7 @@
             this.getXms()
             this.getAllProject(1,this.userId)
             this.getcounts()
+            this.getAllDptName()
         },
         methods: {
             //分页请求
@@ -247,13 +270,27 @@
             },
             //项目数量
             getcounts(){
-                axios.get(this.ip+'/projectApplication/AllCounts', {
+                axios.get(this.ip+'/projectApplication/selfAllCounts', {
                     params:{
                         dpt:localStorage.getItem("departmentName")
                     }
                 })
                     .then(res=>{
                         this.count=res.data
+                    })
+            },
+            //拿到搜索部门的名称
+            getAllDptName() {
+                axios.get(this.ip + '/department/getAllDptName')
+                    .then(res => {
+                        if (res.data != null) {
+                            for (let i = 0; i < res.data.length; i++) {
+                                this.bms.push({
+                                    value: res.data[i],
+                                    label: res.data[i],
+                                })
+                            }
+                        }
                     })
             },
             //删除
@@ -283,6 +320,11 @@
             qxbj(){
                 this.show_bj = false
                 this.getJds()
+            },
+            //全部按钮事件
+            qb() {
+                this.getAllProject(1,this.userId)
+                this.ssss = false
             },
             //确定修改
             qdxg(){
@@ -404,7 +446,6 @@
                             this.wgsj=''
                     })
             },
-
             //施工状态搜索
             sgztss(){
                 if(this.select_sgzt===''||this.select_sgzt==null)
@@ -429,7 +470,6 @@
                     }
                 })
             },
-
             //搜索
             ss() {
                 axios.get(this.ip + '/projectApplication/selectXmById', {
@@ -460,6 +500,37 @@
                     }
                 })
             },
+            handleSerch(){
+                axios.get(this.ip + '/projectApplication/sgSearch', {
+                    params: {
+                        projectName: this.projectName,
+                        departmentName: localStorage.getItem('departmentName'),
+                        fzr: this.fzr,
+                        xmlb: this.xmlb,
+                        yjgq: this.yjgq,
+                        zt: this.zt
+                    }
+                }).then(res => {
+                    this.ssss=true
+                    this.projects = res.data
+                    //请求项目施工状态
+                    for(let i=0;i<res.data.length;i++){
+                        if(res.data[i].finishDte!==''&&res.data[i].finishDte!=null){//有完成时间，表示完成
+                            this.projects[i].sgzt='已完工'
+                            this.$set(this.projects, i, this.projects[i]);
+                        }else {
+                            axios.get(this.ip+'/jindu/getSgzt',{
+                                params:{
+                                    projectId:res.data[i].id
+                                }
+                            }).then(xxx=>{
+                                this.projects[i].sgzt=xxx.data
+                                this.$set(this.projects, i, this.projects[i]);
+                            })
+                        }
+                    }
+                })
+            },
             //拿到所有项目
             getAllProject(pageNum) {
                 axios.get(this.ip +'/projectApplication/selectByDepartmentName', {
@@ -468,6 +539,7 @@
                         departmentName:localStorage.getItem('departmentName')
                     }
                 }).then(res=>{
+                    console.log(res.data)
                     this.projects = res.data
                     //请求项目施工状态
                     for(let i=0;i<res.data.length;i++){

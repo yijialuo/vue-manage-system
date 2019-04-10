@@ -114,21 +114,21 @@
 
                 <el-table  stripe :data="projects" border class="table"
                            ref="multipleTable">
-                    <el-table-column   prop="projectNo" sortable label="项目编号" min-width="160">
+                    <el-table-column   prop="projectNo" align="center" sortable label="项目编号" width="140">
                     </el-table-column>
-                    <el-table-column prop="projectNam" width="300px" label="项目名称" min-width="160">
+                    <el-table-column prop="projectNam"  width="300px" label="项目名称" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="declarationDep" sortable label="立项部门" width="140">
+                    <el-table-column prop="declarationDep" align="center" sortable label="立项部门" width="140">
                     </el-table-column>
-                    <el-table-column prop="proposer"label="发起人" width="140">
+                    <el-table-column prop="proposer" align="center" label="发起人" width="140">
                     </el-table-column>
-                    <el-table-column prop="bider"  label="经办人" width="140">
+                    <el-table-column prop="bider" align="center" label="经办人" width="140">
                     </el-table-column>
-                    <el-table-column prop="projectType"  sortable label="项目类别" width="140">
+                    <el-table-column prop="projectType" align="center" sortable label="项目类别" width="140">
                     </el-table-column>
-                    <el-table-column prop="engTechAuditOpinion" sortable label="创建时间" width="160">
+                    <el-table-column prop="engTechAuditOpinion" align="center" sortable label="创建时间" width="160">
                     </el-table-column>
-                    <el-table-column prop="dqjd" label="当前节点" width="140">
+                    <el-table-column prop="dqjd" align="center" label="当前节点" width="140">
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
@@ -146,7 +146,7 @@
                     </el-table-column>
                 </el-table>
                 <!--所有项目，分批请求-->
-                <div v-if="!ss" style="text-align: left">
+                <div v-if="!ss" style="text-align: center">
                     <el-pagination
                             background
                             @current-change="currentChange"
@@ -377,7 +377,7 @@
             </el-dialog>
 
             <!--上传附件弹窗 -->
-            <el-dialog title="附件" :close-on-click-modal="false" :visible.sync="showfj" width="408px">
+            <el-dialog title="附件" :close-on-click-modal="false" :visible.sync="showfj" width="40%">
                 <el-upload
                         class="upload-demo"
                         drag
@@ -386,7 +386,8 @@
                         :before-remove="handleBeforeRemove"
                         :on-success="handleSuccess"
                         multiple
-                        :file-list="fileList">
+                        :file-list="fileList"
+                        style="width: 100%;">
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>
                 </el-upload>
@@ -769,7 +770,7 @@
                 }
                 // 如果当前账号不是工程技术部，select_dptnm天才当前账号部门
                 if(localStorage.getItem('departmentId')!='20190123022801622'){
-                    params.select_dptnm=localStorage.getItem('departmentId')
+                    params.select_dptnm=localStorage.getItem('departmentName')
                 }
                 this.ss=true
                 axios.get(this.ip + '/projectApplication/search', {

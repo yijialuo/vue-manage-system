@@ -83,18 +83,18 @@
                         <el-tabs v-model="message">
                             <!--待办项目-->
                             <el-tab-pane v-if="user.groupId!='doman'" :label="`前期审批(${Xms.length})`" name="first">
-                                <el-table :data="Xms" height="400px" stripe :show-header="true" style="width: 100%;font-size: 14px;">
-                                    <el-table-column label="项目编号" sortable prop="projectNo" min-width="120">
+                                <el-table :data="Xms" border height="400px" stripe :show-header="true" style="width: 100%;font-size: 14px;">
+                                    <el-table-column label="项目编号" align="center" sortable prop="projectNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectNam" min-width="160">
                                     </el-table-column>
-                                    <el-table-column sortable label="项目分类" prop="reviser" width="120">
+                                    <el-table-column sortable align="center" label="项目分类" prop="reviser" width="120">
                                     </el-table-column>
-                                    <el-table-column label="申请人" sortable prop="proposer" width="120">
+                                    <el-table-column label="申请人" align="center" sortable prop="proposer" width="120">
                                     </el-table-column>
-                                    <el-table-column label="申请时间" sortable prop="applicationDte" width="120">
+                                    <el-table-column label="申请时间" align="center" sortable prop="applicationDte" width="120">
                                     </el-table-column>
-                                    <el-table-column label="操作" width="120">
+                                    <el-table-column label="操作" align="center" width="120">
                                         <template slot-scope="scope">
                                             <el-button type="text" size="small" @click="xmxq(scope.row)">处理</el-button>
                                         </template>
@@ -104,16 +104,16 @@
                             <!--待备案项目-->
                             <el-tab-pane stripe v-if="user.groupId=='jsb_doman'" :label="`待备案项目(${baXms.length})`"
                                          name="second">
-                                <el-table height="400px" :data="baXms" :show-header="true" style="width: 100%;font-size: 14px;">
-                                    <el-table-column label="项目编号" sortable prop="projectNo" min-width="120">
+                                <el-table height="400px" border :data="baXms" :show-header="true" style="width: 100%;font-size: 14px;">
+                                    <el-table-column label="项目编号" align="center" sortable prop="projectNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectNam" min-width="160">
                                     </el-table-column>
-                                    <el-table-column label="申请人" sortable prop="proposer" width="140">
+                                    <el-table-column label="申请人" align="center" sortable prop="proposer" width="140">
                                     </el-table-column>
-                                    <el-table-column label="申请时间" sortable prop="applicationDte" width="140">
+                                    <el-table-column label="申请时间" align="center" sortable prop="applicationDte" width="140">
                                     </el-table-column>
-                                    <el-table-column label="操作" width="140">
+                                    <el-table-column label="操作" align="center" width="140">
                                         <template slot-scope="scope">
                                             <el-button size="small" @click="xmxq(scope.row),ba=true">处理</el-button>
                                         </template>
@@ -122,18 +122,18 @@
                             </el-tab-pane>
                             <!--驳回的项目 -->
                             <el-tab-pane v-if="user.groupId=='doman'" :label="`项目审批(${bhXms.length})`" name="third">
-                                <el-table stripe height="250px" :data="bhXms" :show-header="true" style="width: 100%;font-size: 14px;">
-                                    <el-table-column label="项目编号" sortable prop="projectNo" min-width="120">
+                                <el-table stripe border height="250px" :data="bhXms" :show-header="true" style="width: 100%;font-size: 14px;">
+                                    <el-table-column label="项目编号" align="center" sortable prop="projectNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectNam" min-width="180">
                                     </el-table-column>
-                                    <el-table-column sortable prop="reviser" label="项目分类" width="120">
+                                    <el-table-column sortable align="center" prop="reviser" label="项目分类" width="120">
                                     </el-table-column>
-                                    <el-table-column label="申请人" prop="proposer" width="120">
+                                    <el-table-column label="申请人" align="center" prop="proposer" width="120">
                                     </el-table-column>
-                                    <el-table-column label="申请时间" sortable="" prop="applicationDte" width="120">
+                                    <el-table-column label="申请时间" align="center" sortable="" prop="applicationDte" width="120">
                                     </el-table-column>
-                                    <el-table-column label="操作" width="120">
+                                    <el-table-column label="操作" align="center" width="120">
                                         <template slot-scope="scope">
                                             <el-button type="text" size="small" @click="xmxq(scope.row)">处理</el-button>
                                         </template>
@@ -143,16 +143,16 @@
                             <!--招标的项目-->
                             <el-tab-pane stripe v-if="user.groupId!=='zgjl'&&user.groupId!=='jl'"
                                          :label="`招标审批(${zhaobiaos.length})`" name="fourth">
-                                <el-table height="400px" :data="zhaobiaos" :show-header="true" style="width: 100%;font-size: 14px;">
-                                    <el-table-column label="项目编号" sortable prop="xmid" min-width="160">
+                                <el-table height="400px" border :data="zhaobiaos" :show-header="true" style="width: 100%;font-size: 14px;">
+                                    <el-table-column label="项目编号" align="center" sortable prop="xmNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="xmName" min-width="160">
                                     </el-table-column>
-                                    <el-table-column sortable label="申请人" prop="userName" width="120">
+                                    <el-table-column sortable align="center" label="申请人" prop="userName" width="120">
                                     </el-table-column>
-                                    <el-table-column sortable label="申请时间" prop="cjsj" width="160">
+                                    <el-table-column sortable align="center" label="申请时间" prop="cjsj" width="160">
                                     </el-table-column>
-                                    <el-table-column label="操作" width="120">
+                                    <el-table-column label="操作" align="center" width="120">
                                         <template slot-scope="scope">
                                             <el-button type="text" @click="zbcl(scope.row)">处理</el-button>
                                         </template>
@@ -164,17 +164,17 @@
                                          v-if="user.groupId=='jsb_doman'||user.groupId=='jsb_jl'||user.groupId=='bgs'"
                                          :label="`合同审批(${contracts.length})`" name="fifth">
                                 <el-table height="400px" border :data="contracts" :show-header="true" style="width: 100%;font-size: 14px;">
-                                    <el-table-column label="项目编号" sortable prop="projectId" min-width="160">
+                                    <el-table-column label="项目编号" align="center" sortable prop="projectNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectName" min-width="160">
                                     </el-table-column>
-                                    <el-table-column sortable label="经办人" prop="jbr" width="120">
+                                    <el-table-column sortable align="center" label="经办人" prop="jbr" width="120">
                                     </el-table-column>
-                                    <el-table-column sortable label="投资文号" prop="tzwh" width="120">
+                                    <el-table-column sortable align="center" label="投资文号" prop="tzwh" width="120">
                                     </el-table-column>
-                                    <el-table-column sortable label="合同价款(元)" prop="price" width="140">
+                                    <el-table-column sortable align="center" label="合同价款(元)" prop="price" width="140">
                                     </el-table-column>
-                                    <el-table-column label="操作" width="120">
+                                    <el-table-column label="操作" align="center" width="120">
                                         <template slot-scope="scope">
                                             <el-button type="text" @click="htcl(scope.row)">处理</el-button>
                                         </template>
@@ -1746,6 +1746,16 @@
                         this.zhaobiaos = res.data
                         //填充项目名称和用户名
                         for (let i = 0; i < this.zhaobiaos.length; i++) {
+                            axios.get(this.ip+'/projectApplication/xmIdToxmNo',{
+                                params:{
+                                    xmId:this.zhaobiaos[i].xmid
+                                }
+                            }).then(res=>{
+                                this.zhaobiaos[i].xmNo=res.data
+                                console.log(res.data)
+                                this.$set(this.zhaobiaos, i, this.zhaobiaos[i]);
+                            })
+
                             axios.get(this.ip + '/projectApplication/xmIdToxmName', {
                                 params: {
                                     xmId: this.zhaobiaos[i].xmid

@@ -18,44 +18,29 @@
                               class="handle-input mr10"></el-input>
                     <el-button style="margin-left: 10px" type="primary" icon="el-icon-search" @click="xmmcSearch">搜索
                     </el-button>
-
-                    <!--<el-select-->
-                            <!--clearable-->
-                            <!--style="margin-left: 20px;width: 130px"-->
-                            <!--v-if="groupId!='doman'&&groupId!='gzjl'&&groupId!='jl'"-->
-                            <!--v-model="select_dptnm"-->
-                            <!--placeholder="立项部门搜索"-->
-                    <!--&gt;-->
-                        <!--<el-option-->
-                                <!--v-for="item in bms"-->
-                                <!--:key="item.value"-->
-                                <!--:label="item.label"-->
-                                <!--:value="item.value">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="qb">全部</el-button>
-                    <!--<el-button style="margin-left: 25px" type="primary" icon="el-icon-search" @click="Search">搜索-->
-                    <!--</el-button>-->
                 </div>
                 <el-table height="600px" stripe :data="clzhaobiaos.slice((currentPage-1)*10,currentPage*10)" border
                           class="table">
+                    <el-table-column prop="xmNo" align="center" label="项目编号" width="140">
+                    </el-table-column>
                     <el-table-column prop="xmName" label="项目名称" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="userName" label="申请人" width="140">
+                    <el-table-column prop="userName" align="center" label="申请人" width="140">
                     </el-table-column>
-                    <el-table-column prop="zbr" label="中标人" width="140">
+                    <el-table-column prop="zbr" align="center" label="中标人" width="140">
                     </el-table-column>
-                    <el-table-column prop="zbje" label="中标金额" width="140">
+                    <el-table-column prop="zbje" align="center" label="中标金额" width="140">
                     </el-table-column>
-                    <el-table-column prop="fbsj" label="发标时间" width="140">
+                    <el-table-column prop="fbsj" align="center" label="发标时间" width="140">
                     </el-table-column>
-                    <el-table-column prop="dbsj" label="定标时间" width="140">
+                    <el-table-column prop="dbsj" align="center" label="定标时间" width="140">
                     </el-table-column>
                     <!--<el-table-column prop="jsyq" label="技术要求">-->
                     <!--</el-table-column>-->
-                    <el-table-column prop="cjsj" sortable label="创建时间" width="160">
+                    <el-table-column prop="cjsj"align="center" sortable label="创建时间" width="160">
                     </el-table-column>
-                    <el-table-column prop="dqjd" label="当前节点" width="160">
+                    <el-table-column prop="dqjd" align="center" label="当前节点" width="160">
                     </el-table-column>
                     <el-table-column label="操作" align="center" width="200">
                         <template slot-scope="scope">
@@ -80,7 +65,7 @@
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog :close-on-click-modal="false" title="上传附件" :visible.sync="showfj" width="408px">
+        <el-dialog :close-on-click-modal="false" title="上传附件" :visible.sync="showfj" width="40%">
             <el-upload
                     class="upload-demo"
                     drag
@@ -90,6 +75,7 @@
                     :on-success="handleSuccess"
                     multiple
                     :file-list="fileList"
+                    style="width: 100%;"
             >
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>
@@ -523,6 +509,14 @@
                             this.clzhaobiaos = res.data
                             //填充项目名称、用户名、中标人、中标金额
                             for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                                axios.get(this.ip+'/projectApplication/xmIdToxmNo',{
+                                    params:{
+                                        xmId:this.clzhaobiaos[i].xmid
+                                    }
+                                }).then(res=>{
+                                    this.clzhaobiaos[i].xmNo=res.data
+                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
+                                })
                                 //填充节点
                                 axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
                                     params:{
@@ -575,6 +569,14 @@
                                 this.clzhaobiaos = res.data
                                 //填充项目名称、用户名、中标人、中标金额
                                 for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                                    axios.get(this.ip+'/projectApplication/xmIdToxmNo',{
+                                        params:{
+                                            xmId:this.clzhaobiaos[i].xmid
+                                        }
+                                    }).then(res=>{
+                                        this.clzhaobiaos[i].xmNo=res.data
+                                        this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
+                                    })
                                     //填充节点
                                     axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
                                         params:{

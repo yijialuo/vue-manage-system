@@ -60,19 +60,19 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column prop="ysno" sortable label="验收单编号" min-width="160">
+                <el-table-column prop="ysno" align="center" sortable label="验收单编号" min-width="160">
                 </el-table-column>
                 <el-table-column prop="projectName" label="工程名称" min-width="160">
                 </el-table-column>
-                <el-table-column prop="kgrq" sortable  label="开工日期" width="160">
+                <el-table-column prop="kgrq" align="center" sortable  label="开工日期" width="160">
                 </el-table-column>
-                <el-table-column prop="sjjgrq" sortable  label="实际竣工日期" width="160">
+                <el-table-column prop="sjjgrq" align="center" sortable  label="实际竣工日期" width="160">
                 </el-table-column>
-                <el-table-column prop="jhje" sortable  label="计划金额(元)" width="160">
+                <el-table-column prop="jhje" align="center" sortable  label="计划金额(元)" width="160">
                 </el-table-column>
-                <el-table-column prop="cbje"    label="承包金额(元)" width="160">
+                <el-table-column prop="cbje" align="center" label="承包金额(元)" width="160">
                 </el-table-column>
-                <el-table-column prop="ysrq"  sortable label="验收日期" width="160">
+                <el-table-column prop="ysrq" align="center" sortable label="验收日期" width="160">
                 </el-table-column>
                 <el-table-column label="操作"  align="center" width="160">
                     <template slot-scope="scope">
@@ -94,7 +94,7 @@
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="408px">
+        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="40%">
             <el-upload
                     class="upload-demo"
                     drag
@@ -104,6 +104,7 @@
                     :on-success="handleSuccess"
                     multiple
                     :file-list="fileList"
+                    style="width: 100%;"
             >
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>

@@ -17,19 +17,19 @@
                 <el-table height="600" @row-dblclick="sjgys" stripe :data="suppliers" border class="table" ref="multipleTable">
                     <el-table-column prop="name" label="供应商名称" sortable min-width="160">
                     </el-table-column>
-                    <el-table-column prop="code" label="供应商编号" min-width="160">
+                    <el-table-column prop="code" align="center" label="供应商编号" min-width="160">
                     </el-table-column>
-                    <el-table-column prop="phone" label="座机" width="120">
+                    <el-table-column prop="phone" align="center" label="座机" width="120">
                     </el-table-column>
-                    <el-table-column prop="mobile" label="手机" width="120">
+                    <el-table-column prop="mobile" align="center" label="手机" width="120">
                     </el-table-column>
-                    <el-table-column prop="contact" label="联系人" width="120">
+                    <el-table-column prop="contact" align="center" label="联系人" width="120">
                     </el-table-column>
-                    <el-table-column prop="fax" label="传真" width="160">
+                    <el-table-column prop="fax" align="center" label="传真" width="160">
                     </el-table-column>
-                    <el-table-column prop="email" label="邮箱" width="180">
+                    <el-table-column prop="email" align="center" label="邮箱" width="180">
                     </el-table-column>
-                    <el-table-column prop="address" label="地址" min-width="180">
+                    <el-table-column prop="address" align="center" label="地址" min-width="180">
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center" min-width="140">
                         <template slot-scope="scope">
