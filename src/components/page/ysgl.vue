@@ -64,6 +64,8 @@
                 </el-table-column>
                 <el-table-column prop="projectName" label="工程名称" min-width="160">
                 </el-table-column>
+                <el-table-column prop="xmNo" label="项目编号" min-width="160">
+                </el-table-column>
                 <el-table-column prop="kgrq" align="center" sortable  label="开工日期" width="160">
                 </el-table-column>
                 <el-table-column prop="sjjgrq" align="center" sortable  label="实际竣工日期" width="160">
@@ -306,7 +308,7 @@
                 yanshous: [],
 
                 xms:[],
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 list: [],
                 url: '',
@@ -522,7 +524,7 @@
             djfj(id){
                 this.cid=id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj=true
             },
             //填充附件列表
@@ -556,6 +558,16 @@
                         .then(zzz=>{
                             yyy[i].projectName=zzz.data
                         }))
+
+                    qq.push(
+                        axios.get(this.ip+'/projectApplication/xmIdToxmNo',{
+                            params:{
+                                xmId:xxx[i].projectid
+                            }
+                        }).then(res=>{
+                            yyy[i].xmNo=res.data
+                        })
+                    )
 
                 }
                 axios.all(qq)

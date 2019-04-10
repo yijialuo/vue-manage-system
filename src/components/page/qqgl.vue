@@ -467,7 +467,7 @@
                 show_xjxmlxd: false,
                 projects: [],
                 show_xq: false,
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 project: {
                     id: '',
                     projectNo: '',
@@ -582,7 +582,7 @@
         methods: {
             //下载
             xz(row){
-                window.open('http://10.197.41.100:8080/print/sqb?id='+row.id)
+                window.open('http://10.197.33.115:8080/print/sqb?id='+row.id)
             },
 
             //上传成功，重新请求
@@ -665,7 +665,7 @@
                 this.project = row
                 this.showfj = true
                 if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -681,7 +681,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.pid
@@ -768,7 +768,7 @@
                     select_xmfl: this.select_xmfl,
                     select_xmlb: this.select_xmlb,
                 }
-                // 如果当前账号不是工程技术部，select_dptnm天才当前账号部门
+                // 如果当前账号不是工程技术部，select_dptnmt填充当前账号部门
                 if(localStorage.getItem('departmentId')!='20190123022801622'){
                     params.select_dptnm=localStorage.getItem('departmentName')
                 }
@@ -1060,6 +1060,7 @@
                     this.lqpl(this.project.pid)
                 }
                 this.show_xq = true
+
                 //判断是否申请人
                 axios.get(this.ip + '/projectApplication/qdsqr', {//确定申请人
                     params: {

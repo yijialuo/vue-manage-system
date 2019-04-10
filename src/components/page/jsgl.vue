@@ -87,7 +87,8 @@
                             </el-form>
                         </template>
                     </el-table-column>
-
+                    <el-table-column prop="xmNo" label="项目编号" min-width="160">
+                    </el-table-column>
                     <el-table-column prop="project_name" label="项目名" min-width="160">
                     </el-table-column>
                     <el-table-column prop="contract_no" align="center" sortable label="合同号" min-width="160">
@@ -274,7 +275,7 @@
                 show_xzjs: false,
                 list: [],
                 list2: [],
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 loading2: false,
                 //结算数组
@@ -363,7 +364,7 @@
         methods: {
             //下载
             xz(row){
-                window.open("http://10.197.41.100:8080/print/zfspd?id="+row.id)
+                window.open("http://10.197.33.115:8080/print/zfspd?id="+row.id)
             },
 
             currentChange(currentPage){
@@ -376,8 +377,9 @@
                         contractId: this.contractId
                     }
                 }).then(res => {
-                    if (res.data.length != 0)
+                    if (res.data.length != 0){
                         this.jss = res.data
+                    }
                     else
                         this.$message.error("没找到相关数据！")
                 })
@@ -456,7 +458,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj = true
             },
             //拿所有的结算记录
