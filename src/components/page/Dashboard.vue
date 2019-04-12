@@ -191,8 +191,6 @@
                 <el-button type="primary" @click="show_zt=false">确 定</el-button>
             </span>
             </el-dialog>
-
-
         </div>
         <div class="">
             <div class="crumbs">
@@ -220,7 +218,6 @@
                     </el-table-column>
                 </el-table>
             </div>
-
 
             <!-- 项目详情框 技术部自己项目-->
             <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xqgcjsb" width="680px" center>
@@ -323,83 +320,6 @@
                     <el-button type="primary" @click="cl('jbr',true)">申请</el-button>
                 </span>
             </el-dialog>
-
-            <!--<el-dialog title="项目详情" :visible.sync="show_xq" width="680px" center>-->
-            <!--<el-form label-width="100px">-->
-            <!--<el-form-item label="项目名称">-->
-            <!--<el-input :disabled="true" v-model="xm.projectNam"></el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="申报部门">-->
-            <!--<el-input :disabled="true" v-model="xm.declarationDep"></el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="项目类别">-->
-            <!--<el-input :disabled="true" v-model="xm.projectType"></el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="投资概算">-->
-            <!--<el-input style="width: 215px;padding-right: 15px" :disabled="true"-->
-            <!--v-model="xm.investmentEstimate"></el-input>-->
-            <!--项目负责人-->
-            <!--<el-input style="width: 215px" :disabled="true" v-model="xm.personInCharge"></el-input>-->
-            <!--</el-form-item>-->
-
-            <!--<el-form-item label="立项背景理由">-->
-            <!--<el-input :disabled="true" v-model="xm.establishReason" type="textarea"-->
-            <!--placeholder="立项背景理由"-->
-            <!--:autosize="{ minRows: 4, maxRows: 10}"-->
-            <!--&gt;</el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="立项内容规模">-->
-            <!--<el-input :disabled="true" v-model="xm.scale" type="textarea"-->
-            <!--placeholder="立项内容规模"-->
-            <!--:autosize="{ minRows: 4, maxRows: 10}"-->
-            <!--&gt;</el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item label="投资概算说明">-->
-            <!--<el-input :disabled="true" v-model="xm.illustration" type="textarea"-->
-            <!--placeholder="投资概算说明"-->
-            <!--:autosize="{ minRows: 4, maxRows: 10}"-->
-            <!--&gt;</el-input>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item>-->
-            <!--<el-table-->
-            <!--:data="commentList"-->
-            <!--style="width: 100%">-->
-            <!--<el-table-column-->
-            <!--prop="time"-->
-            <!--label="日期"-->
-            <!--width="180">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-            <!--prop="usernam"-->
-            <!--label="姓名"-->
-            <!--width="180">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-            <!--prop="comment"-->
-            <!--label="审批">-->
-            <!--</el-table-column>-->
-            <!--</el-table>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item>-->
-            <!--<el-upload-->
-            <!--class="upload-demo"-->
-            <!--drag-->
-            <!--:action="url"-->
-            <!--:on-preview="handlePreview"-->
-            <!--:before-remove="handleBeforeRemove"-->
-            <!--:on-success="handleSuccess"-->
-            <!--multiple-->
-            <!--:file-list="fileList"-->
-            <!--&gt;-->
-            <!--<i class="el-icon-upload"></i>-->
-            <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-            <!--</el-upload>-->
-            <!--</el-form-item>-->
-            <!--</el-form>-->
-            <!--<span slot="footer" class="dialog-footer">-->
-            <!--<el-button type="primary" @click="show_xq=false">确 定</el-button>-->
-            <!--</span>-->
-            <!--</el-dialog>-->
 
             <!--技术部办事员合同弹窗-->
             <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_jsbdoman_ht" width="685px">
@@ -689,7 +609,6 @@
                 <el-button type="primary" @click="qrhtjs">确认合同接收</el-button>
             </span>
             </el-dialog>
-
 
             <!--点击处理招标弹窗 -->
             <el-dialog title="招标流程审批" :close-on-click-modal="false" :visible.sync="show_zbxq" width="680px">
@@ -1091,8 +1010,6 @@
             <el-button type="primary" @click="htjsbjlbh">确 定</el-button>
             </span>
             </el-dialog>
-
-
         </div>
     </div>
 </template>
@@ -1147,7 +1064,7 @@
                 comment: '同意',
                 user: {},
                 xm: {},
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 message: 'first',
                 //项目
                 Xms: [],
@@ -1165,7 +1082,7 @@
                 commentList: [],
                 xm: {},
                 fileList: [],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 xmlb: [{
                     value: '固定资产',
                     label: '固定资产'
@@ -1409,7 +1326,7 @@
             //合同处理点击事件
             htcl(row) {
                 this.contract = row
-                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                 //拿合同评论
                 this.gethtbz()
                 //领取附件
@@ -1648,7 +1565,7 @@
                 this.getbzs()
                 this.lqfj(row.zbpid)
                 this.getZhongbiaodw()
-                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 axios.get(this.ip + '/user/userIdToDept', {
                     params: {
                         userId: this.zhaobiao.sqr
@@ -2075,7 +1992,7 @@
                 this.lqfj(row.pid)
                 //查询当前节点
                 this.getNodeId(row.pid)
-                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
             //领取附件
             lqfj(pid) {
@@ -2278,7 +2195,7 @@
                     })
                 //领取附件
                 this.lqfj(row.pid)
-                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
 
             //状态

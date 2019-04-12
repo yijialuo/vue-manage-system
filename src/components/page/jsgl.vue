@@ -11,37 +11,27 @@
                     <el-button v-if="groupId!='bgs'" type="primary" @click="xzjs" icon="el-icon-circle-plus" class="handle-del mr10">
                         新增结算
                     </el-button>
-                    <el-select
-                            v-model="projectId"
-                            filterable
-                            placeholder="请输入或选择项目"
-                    >
-                        <el-option
-                                v-for="item in xms"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                    <el-button type="primary" style="margin-left: 10px" @click="xmss" icon="el-icon-search">搜索</el-button>
-                    <el-select
-                            style="margin-left: 30px"
-                            v-model="contractId"
-                            filterable
-                            placeholder="请输入或选择合同号"
-                    >
-                        <el-option
-                                v-for="item in hts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                    <el-button type="primary" style="margin-left: 10px" @click="htss" icon="el-icon-search">搜索</el-button>
+
+                    <el-input placeholder="项目编号" clearable v-model="projectNo" class="handle-input mr10"></el-input>
+                    <el-input placeholder="项目名" clearable v-model="projectName" class="handle-input mr10"></el-input>
+                    <el-input placeholder="合同号" clearable v-model="contractNo" class="handle-input mr10"></el-input>
+                    <el-date-picker
+                            class="handle-input mr10"
+                            v-model="rq"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="创建日期">
+                    </el-date-picker>
+                    <el-input placeholder="经办部门" clearable v-model="jbbm" class="handle-input mr10"></el-input>
+                    <el-input placeholder="经办人" clearable v-model="jbr" class="handle-input mr10"></el-input>
+                    <el-input placeholder="验收证明人" clearable v-model="yszmr" class="handle-input mr10"></el-input>
+                    <el-input placeholder="收款单位" clearable v-model="skdw" class="handle-input mr10"></el-input>
+                    <el-button style="margin-left: 10px" type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
+
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getALLJsjl">全部
                     </el-button>
                 </div>
-                <el-table height="600" style="width: 100%" :data="jss.slice((currentPage-1)*10,currentPage*10)">
+                <el-table height="600" class="table" border  style="width: 100%" :data="jss.slice((currentPage-1)*10,currentPage*10)">
                     <el-table-column type="expand" min-width="160">
                         <template slot-scope="props">
                             <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
@@ -87,23 +77,23 @@
                             </el-form>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="xmNo" label="项目编号" min-width="160">
+                    <el-table-column prop="xmNo" label="项目编号" width="160">
                     </el-table-column>
-                    <el-table-column prop="project_name" label="项目名" min-width="160">
+                    <el-table-column prop="project_name" label="项目名" min-width="220">
                     </el-table-column>
-                    <el-table-column prop="contract_no" align="center" sortable label="合同号" min-width="160">
+                    <el-table-column prop="contract_no" align="center" sortable label="合同号" min-width="180">
                     </el-table-column>
-                    <el-table-column prop="rq" align="center" sortable label="创建日期" width="140">
+                    <el-table-column prop="rq" align="center" sortable label="创建日期" width="160">
                     </el-table-column>
-                    <el-table-column prop="jbbm" align="center" label="经办部门" width="140">
+                    <el-table-column prop="jbbm" align="center" label="经办部门" width="120">
                     </el-table-column>
-                    <el-table-column prop="jbr" align="center" label="经办人" width="140">
+                    <el-table-column prop="jbr" align="center" label="经办人" width="120">
                     </el-table-column>
-                    <el-table-column prop="yszmr" align="center" label="验收证明人" width="140">
+                    <el-table-column prop="yszmr" align="center" label="验收证明人" width="120">
                     </el-table-column>
-                    <el-table-column prop="skdw" align="center" label="收款单位" width="140">
+                    <el-table-column prop="skdw" align="center" label="收款单位" width="180">
                     </el-table-column>
-                    <el-table-column prop="bqyf" align="center" label="本期已付" width="140">
+                    <el-table-column prop="bqyf" align="center" label="本期已付" width="120">
                     </el-table-column>
 
                     <el-table-column label="操作" width="140" align="center">
@@ -275,13 +265,21 @@
                 show_xzjs: false,
                 list: [],
                 list2: [],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 loading: false,
                 loading2: false,
                 //结算数组
                 jss: [],
                 fileList: [],
                 xms: [],
+                projectNo:'',
+                projectName:'',
+                contractNo:'',
+                rq:'',
+                jbbm:'',
+                jbr:'',
+                yszmr:'',
+                skdw:''
             }
         },
         computed: {
@@ -364,7 +362,7 @@
         methods: {
             //下载
             xz(row){
-                window.open("http://10.197.33.115:8080/print/zfspd?id="+row.id)
+                window.open("http://10.197.41.100:8080/print/zfspd?id="+row.id)
             },
 
             currentChange(currentPage){
@@ -389,6 +387,25 @@
                 axios.get(this.ip + '/payable/pidToPaybles', {
                     params: {
                         projectId: this.projectId
+                    }
+                }).then(res => {
+                    if (res.data.length != 0)
+                        this.jss = res.data
+                    else
+                        this.$message.error("没找到相关数据！")
+                })
+            },
+            ss(){
+                axios.get(this.ip + '/payable/search', {
+                    params: {
+                        projectNo:this.projectNo,
+                        projectName:this.projectName,
+                        contractNo:this.contractNo,
+                        rq:this.rq,
+                        jbbm:this.jbbm,
+                        jbr:this.jbr,
+                        yszmr:this.yszmr,
+                        skdw:this.skdw
                     }
                 }).then(res => {
                     if (res.data.length != 0)
@@ -458,7 +475,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj = true
             },
             //拿所有的结算记录
@@ -532,8 +549,6 @@
                     })
                 this.show_xzjs = false
             },
-
-
         }
     }
 </script>

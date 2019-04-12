@@ -10,26 +10,35 @@
                 <el-button v-if="groupId!='bgs'" @click="xjys" type="primary" icon="el-icon-circle-plus" class="handle-del mr10">
                     新建验收
                 </el-button>
-                <el-input placeholder="编号" v-model="ysNo" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search"  @click="ysSearch">搜索</el-button>
-                <el-select
-                        style="margin-left: 40px"
-                        filterable
-                        v-model="projectId"
-                        placeholder="选择项目"
-                      >
-                    <el-option
-                            v-for="item in xms"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
+                <el-input placeholder="验收单编号" clearable v-model="ysNo" class="handle-input mr10"></el-input>
+                <el-input placeholder="工程名称" clearable v-model="projectName" class="handle-input mr10"></el-input>
+                <el-input placeholder="项目编号" clearable v-model="projectNo" class="handle-input mr10"></el-input>
+                <el-date-picker
+                        class="handle-input mr10"
+                        v-model="kgrq"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="开工日期">
+                </el-date-picker>
+                <el-date-picker
+                        class="handle-input mr10"
+                        v-model="sjjgrq"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="实际竣工日期">
+                </el-date-picker>
+                <el-date-picker
+                        class="handle-input mr10"
+                        v-model="ysrq"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="验收日期">
+                </el-date-picker>
                 <el-button style="margin-left: 10px" type="primary" @click="ss" icon="el-icon-search">搜索</el-button>
 
                 <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllys(1)">全部</el-button>
             </div>
-            <el-table height="600" :data="yanshous" style="width: 100%">
+            <el-table height="600" border :data="yanshous" class="table" style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
@@ -308,12 +317,17 @@
                 yanshous: [],
 
                 xms:[],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 loading: false,
                 list: [],
                 url: '',
                 cid:'',
                 ysNo:'',
+                projectName:'',
+                projectNo:'',
+                kgrq:'',
+                sjjgrq:'',
+                ysrq:'',
                 //验收条数
                 counts:0,
                 //可以验收的项目
@@ -403,9 +417,14 @@
             },
             //项目名称搜索（projectId）
             ss(){
-                axios.get(this.ip+'/yanshou/selectYSbyprojectid',{
+                axios.get(this.ip+'/yanshou/search',{
                     params:{
-                        projectid:this.projectId
+                        ysNo: this.ysNo,
+                        projectName: this.projectName,
+                        projectNo:this.projectNo,
+                        kgrq: this.kgrq,
+                        sjjgrq:this.sjjgrq,
+                        ysrq: this.ysrq
                     }
                 }).then(res=>{
                     if(res.data.length!=0)
@@ -524,7 +543,7 @@
             djfj(id){
                 this.cid=id
                 this.getFileList()
-                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj=true
             },
             //填充附件列表

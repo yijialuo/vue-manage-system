@@ -245,7 +245,7 @@
                 show_xq: false,
                 xms: [],
                 loading: false,
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 fileList: [],
                 list: [],
                 zhaobiao: {
@@ -429,7 +429,7 @@
                 console.log(row)
                 this.zhaobiao = row
                 this.showfj = true
-                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 this.lqfj(row.zbpid)
             },
             //详情
