@@ -375,6 +375,7 @@
             //进度窗口关闭
             close(){
                 this.projectId=''
+                this.projectName=''
             },
             //点击新增节点
             xzjd(){
