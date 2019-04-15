@@ -68,7 +68,7 @@
                 </el-table-column>
                 <el-table-column prop="projectName" label="合同项目" min-width="160">
                 </el-table-column>
-                <el-table-column prop="xmNo" label="项目编号" min-width="160">
+                <el-table-column prop="xmNo" align="center" label="项目编号" min-width="160">
                 </el-table-column>
                 <el-table-column prop="rq" sortable align="center"  label="合同日期" width="120">
                 </el-table-column>
@@ -305,11 +305,11 @@
                     zzsc:'',
                     psjl:'',
                     dwyj:'',
-                    cwbmyj:'',
+                    cwbmyj:localStorage.getItem('userId'),
                     fgldyj:'',
                     zjlyj:'',
                     rq:'',
-                    gd:''
+                    gd:'',
                 },
                 jds: [{
                     value: '未申请',
@@ -849,6 +849,7 @@
                     else
                         this.contract.zzsc=this.contract.zzsc+this.zzsc[i]
                 }
+                this.contract.cwbmyj=localStorage.getItem('userId')
                 axios.post(this.ip+'/contract/addContract',this.contract)
                     .then(res=>{
                         if(res.data)
@@ -868,7 +869,7 @@
             },
             //拿到项目下拉框数据
             getXms(){
-              axios.get(this.ip+'/projectApplication/getAllXmIdAndXmname')
+              axios.get(this.ip+'/projectApplication/getCanHtXmIdAndXmname')
                   .then(res=>{
                       this.xms=res.data
                   })

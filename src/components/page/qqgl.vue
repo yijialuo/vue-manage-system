@@ -769,7 +769,7 @@
                     select_xmlb: this.select_xmlb,
                 }
                 // 如果当前账号不是工程技术部，select_dptnmt填充当前账号部门
-                if(localStorage.getItem('departmentId')!='20190123022801622'){
+                if(localStorage.getItem('departmentId')!='20190123022801622'&&localStorage.getItem('departmentId')!='20190125102616787'){
                     params.select_dptnm=localStorage.getItem('departmentName')
                 }
                 this.ss=true

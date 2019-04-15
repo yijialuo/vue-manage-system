@@ -199,7 +199,7 @@
                 </el-breadcrumb>
             </div>
             <div class="container">
-                <el-table stripe :data="xmList" :show-header="true" height="300" style="width: 100%;font-size:14px;">
+                <el-table stripe :data="xmList" :show-header="true" height="400" style="width: 100%;font-size:14px;">
                     <el-table-column label="项目编号" sortable prop="projectNo" width="200">
                     </el-table-column>
                     <el-table-column label="项目名称" prop="projectNam" min-width="160">
@@ -1359,11 +1359,19 @@
                         this.contracts = res.data
                     })
                 } else if (this.groupId === 'bgs') {
-                    axios.get(this.ip + '/contract/getBgsHts').then(res => {
+                    axios.get(this.ip + '/contract/getBgsHts',{
+                        params:{
+                            userId:localStorage.getItem('userId')
+                        }
+                    }).then(res => {
                         this.contracts = res.data
                     })
                 } else {
-                    axios.get(this.ip + '/contract/getJsbdomanHts').then(res => {
+                    axios.get(this.ip + '/contract/getJsbdomanHts',{
+                        params:{
+                            userId:localStorage.getItem('userId')
+                        }
+                    }).then(res => {
                         this.contracts = res.data
                     })
                 }
