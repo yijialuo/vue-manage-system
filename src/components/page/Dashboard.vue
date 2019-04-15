@@ -1825,6 +1825,14 @@
 
             //同意
             ty() {
+                //办公室人处理、需要检验项目编号
+                if(localStorage.getItem('groupId')==='bgs'){
+                    if(this.xm.projectNo==null||this.xm.projectNo===''){
+                        this.$message.error("请确定项目编号！")
+                        return
+                    }
+                }
+                
                 this.comment = '同意'
                 this.show_ty = true
             },
