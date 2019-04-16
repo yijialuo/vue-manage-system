@@ -1781,7 +1781,7 @@
                                 if (res.data == '两会') {
                                     this.cl('lh', 2)
                                 } else {
-                                    this.cl('zgl', 1)
+                                    this.cl('zjl', 1)
                                 }
                             })
                     }
