@@ -835,11 +835,19 @@
                 </el-input>
                 <el-button v-if="groupId=='bgs'" style="margin-left: 10px" type="primary" @click="qdxmbh">确定项目编号
                 </el-button>
+<<<<<<< HEAD
                 <el-form style="margin-top: 20px" label-width="120px">
                     <el-form-item  v-if="groupId!='bgs'" label="项目编号">
                         <el-input
                                 :readonly="user.groupId!='doman'"
                                 v-model="xm.projectNo"></el-input>
+=======
+                <el-form style="margin-top: 20px" label-width="100px">
+                    <el-form-item  v-if="groupId!='bgs'" label="项目编号">
+                        <el-input
+                                :readonly="user.groupId!='doman'"
+                                  v-model="xm.projectNo"></el-input>
+>>>>>>> a916807c86cd90fbeb61bdbb20a97c895db301d2
                     </el-form-item>
                     <el-form-item label="项目名称">
                         <el-input :readonly="user.groupId!='doman'"

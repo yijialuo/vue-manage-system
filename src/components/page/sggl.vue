@@ -379,9 +379,12 @@
             },
             //点击新增节点
             xzjd(){
+<<<<<<< HEAD
                 this.show_xzjd=true
                 this.jindu={}
                 this.jindu.projectId=this.projectId
+=======
+>>>>>>> a916807c86cd90fbeb61bdbb20a97c895db301d2
                 //新增节点判断该项目是否可以新增节点
                 axios.get(this.ip+'/jindu/canAddjd',{
                     params:{
@@ -396,6 +399,11 @@
                         this.$message.error("该项目招标流程还未结束！禁止施工！")
                     }
                 })
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> a916807c86cd90fbeb61bdbb20a97c895db301d2
             },
             //确定插入节点
             qdcr(){
