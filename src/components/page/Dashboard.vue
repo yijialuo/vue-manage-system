@@ -826,16 +826,11 @@
 
             <!-- 项目详情框 -->
             <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="50%" center>
-                <el-input
-                        v-if="groupId=='bgs'"
-                        placeholder="项目编号"
-                        v-model="xm.projectNo"
-                        style="margin-left: 30px;width: 150px"
-                        clearable>
-                </el-input>
-                <el-button v-if="groupId=='bgs'" style="margin-left: 10px" type="primary" @click="qdxmbh">确定项目编号
-                </el-button>
+
                 <el-form style="margin-top: 20px" label-width="120px">
+                    <el-form-item  v-if="groupId=='bgs'" label="项目编号">
+                        <el-input v-model="xm.projectNo"></el-input>
+                    </el-form-item>
                     <el-form-item  v-if="groupId!='bgs'" label="项目编号">
                         <el-input
                                 :readonly="user.groupId!='doman'"
@@ -1789,6 +1784,10 @@
             },
             //确定同意
             qd_ty() {
+                if(this.groupId=='bgs'){
+                    this.qdxmbh()
+                }
+
                 if (this.user.groupId == 'zgjl') {//主管经理同意
                     this.cl('zgjl', true)
                 } else if (this.user.groupId == 'jl') {
