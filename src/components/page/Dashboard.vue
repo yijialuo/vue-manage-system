@@ -221,19 +221,17 @@
 
             <!-- 项目详情框 技术部自己项目-->
             <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xqgcjsb" width="50%" center>
-                <el-input
-                        v-if="groupId=='bgs'"
-                        placeholder="项目编号"
-                        v-model="xm.projectNo"
-                        style="margin-left: 30px;width: 150px"
-                        clearable>
-                </el-input>
-                <el-button v-if="groupId=='bgs'" style="margin-left: 10px" type="primary" @click="qdxmbh">确定项目编号
-                </el-button>
                 <el-form style="margin-top: 20px" label-width="100px">
-                    <el-form-item label="项目名称">
+                    <el-form-item  v-if="groupId=='bgs'" label="项目编号">
+                        <el-input v-model="xm.projectNo"></el-input>
+                    </el-form-item>
+                    <el-form-item  v-if="groupId!='bgs'" label="项目编号">
                         <el-input
-                                v-model="xm.projectNam"></el-input>
+                                :readonly="user.groupId!='doman'"
+                                v-model="xm.projectNo"></el-input>
+                    </el-form-item>
+                    <el-form-item label="项目名称">
+                        <el-input v-model="xm.projectNam" clearable></el-input>
                     </el-form-item>
                     <el-form-item label="申报部门">
                         <el-input
@@ -1403,14 +1401,6 @@
                         xmbh: this.xm.projectNo
                     }
                 }).then(res => {
-                    if (res.data) {
-                        this.$alert('已经成功修改项目编号!', '成功', {
-                                confirmButtonText: '确定'
-                            }
-                        );
-                    } else {
-                        this.$message.error("修改失败！")
-                    }
                 })
             },
             //拿占比
@@ -1785,7 +1775,46 @@
             //确定同意
             qd_ty() {
                 if(this.groupId=='bgs'){
-                    this.qdxmbh()
+                    axios.get(this.ip + '/projectApplication/xgxmbh', {
+                        params: {
+                            xmid: this.xm.id,
+                            xmbh: this.xm.projectNo
+                        }
+                    }).then(res => {
+                        if (this.user.groupId == 'zgjl') {//主管经理同意
+                            this.cl('zgjl', true)
+                        } else if (this.user.groupId == 'jl') {
+                            this.cl('jl', true)
+                        } else if (this.user.groupId == 'jsb_doman') {
+                            this.cl('jbr', true)
+                        } else if (this.user.groupId == 'jsb_zgjl') {
+                            this.cl('jszgjl', true)
+                        } else if (this.user.groupId == 'jsb_jl') {
+                            this.cl('jsjl', true)
+                        } else if (this.user.groupId == 'bgs') {
+                            if (this.NodeId == '两会') {//两会节点
+                                console.log('lianghui')
+                                if (Number(this.xm.investmentEstimate) >= 10){
+                                    console.log('dayu10wan')
+                                    //大于10万，总经理办公会
+                                    this.cl('lh', 0)
+                                }
+                                else
+                                    this.cl('lh', 1) //结束
+                            } else {//总经理节点
+                                this.$confirm('是否备案', '提示', {
+                                    confirmButtonText: '是',
+                                    cancelButtonText: '否',
+                                    type: 'warning'
+                                }).then(() => {
+                                    this.cl('zjl', 0)//备案
+                                }).catch(() => {
+                                    this.cl('zjl', 2)
+                                });
+                            }
+                        }
+                    })
+                    return
                 }
 
                 if (this.user.groupId == 'zgjl') {//主管经理同意
@@ -1800,8 +1829,12 @@
                     this.cl('jsjl', true)
                 } else if (this.user.groupId == 'bgs') {
                     if (this.NodeId == '两会') {//两会节点
-                        if (Number(this.xm.investmentEstimate) >= 10)//大于10万，总经理办公会
+                        console.log('lianghui')
+                        if (Number(this.xm.investmentEstimate) >= 10){
+                            console.log('dayu10wan')
+                            //大于10万，总经理办公会
                             this.cl('lh', 0)
+                        }
                         else
                             this.cl('lh', 1) //结束
                     } else {//总经理节点
