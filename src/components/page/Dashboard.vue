@@ -92,7 +92,7 @@
                                     </el-table-column>
                                     <el-table-column label="申请人" align="center" sortable prop="proposer" width="120">
                                     </el-table-column>
-                                    <el-table-column label="申请时间" align="center" sortable prop="applicationDte" width="120">
+                                    <el-table-column label="立项时间" align="center" sortable prop="applicationDte" width="120">
                                     </el-table-column>
                                     <el-table-column label="操作" align="center" width="120">
                                         <template slot-scope="scope">
@@ -111,7 +111,7 @@
                                     </el-table-column>
                                     <el-table-column label="申请人" align="center" sortable prop="proposer" width="140">
                                     </el-table-column>
-                                    <el-table-column label="申请时间" align="center" sortable prop="applicationDte" width="140">
+                                    <el-table-column label="立项时间" align="center" sortable prop="applicationDte" width="140">
                                     </el-table-column>
                                     <el-table-column label="操作" align="center" width="140">
                                         <template slot-scope="scope">
@@ -131,7 +131,7 @@
                                     </el-table-column>
                                     <el-table-column label="申请人" align="center" prop="proposer" width="120">
                                     </el-table-column>
-                                    <el-table-column label="申请时间" align="center" sortable="" prop="applicationDte" width="120">
+                                    <el-table-column label="立项时间" align="center" sortable="" prop="applicationDte" width="120">
                                     </el-table-column>
                                     <el-table-column label="操作" align="center" width="120">
                                         <template slot-scope="scope">
@@ -220,7 +220,7 @@
             </div>
 
             <!-- 项目详情框 技术部自己项目-->
-            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xqgcjsb" width="680px" center>
+            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xqgcjsb" width="50%" center>
                 <el-input
                         v-if="groupId=='bgs'"
                         placeholder="项目编号"
@@ -322,7 +322,7 @@
             </el-dialog>
 
             <!--技术部办事员合同弹窗-->
-            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_jsbdoman_ht" width="685px">
+            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_jsbdoman_ht" width="50%">
                 <el-form ref="form" label-width="100px">
                     <el-form-item label="合同项目">
                         <el-input readonly v-model="contract.projectName" style="width: 210px"></el-input>
@@ -437,7 +437,7 @@
             </el-dialog>
 
             <!--技术部经理合同处理弹窗-->
-            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_jsbjl_ht" width="685px">
+            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_jsbjl_ht" width="50%">
                 <el-form ref="form" label-width="100px">
                     <el-form-item label="合同项目">
                         <el-input :readonly="true" v-model="contract.projectName" style="width: 210px"></el-input>
@@ -523,7 +523,7 @@
             </el-dialog>
 
             <!--办公室合同处理弹窗-->
-            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_bgs_ht" width="685px">
+            <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_bgs_ht" width="50%">
                 <el-form ref="form" label-width="100px">
                     <el-form-item label="合同编号">
                     <el-input v-model="contract.contractNo"></el-input>
@@ -611,7 +611,7 @@
             </el-dialog>
 
             <!--点击处理招标弹窗 -->
-            <el-dialog title="招标流程审批" :close-on-click-modal="false" :visible.sync="show_zbxq" width="680px">
+            <el-dialog title="招标流程审批" :close-on-click-modal="false" :visible.sync="show_zbxq" width="50%">
                 <el-form ref="form" label-width="100px">
                     <el-form-item label="项目">
                         <el-input readonly v-model="zhaobiao.xmName" rows="6"></el-input>
@@ -720,7 +720,7 @@
             </el-dialog>
 
             <!--技术部自己招标弹窗（办事员） -->
-            <el-dialog title="招标流程审批" :close-on-click-modal="false" :visible.sync="show_zbxqjsb" width="680px">
+            <el-dialog title="招标流程审批" :close-on-click-modal="false" :visible.sync="show_zbxqjsb" width="50%">
                 <el-form ref="form" label-width="100px">
                     <el-form-item label="项目">
                         <el-input :readonly="true" v-model="zhaobiao.xmName" rows="6"></el-input>
@@ -825,7 +825,7 @@
             </el-dialog>
 
             <!-- 项目详情框 -->
-            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="680px" center>
+            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="50%" center>
                 <el-input
                         v-if="groupId=='bgs'"
                         placeholder="项目编号"
@@ -835,7 +835,12 @@
                 </el-input>
                 <el-button v-if="groupId=='bgs'" style="margin-left: 10px" type="primary" @click="qdxmbh">确定项目编号
                 </el-button>
-                <el-form style="margin-top: 20px" label-width="100px">
+                <el-form style="margin-top: 20px" label-width="120px">
+                    <el-form-item  v-if="groupId!='bgs'" label="项目编号">
+                        <el-input
+                                :readonly="user.groupId!='doman'"
+                                v-model="xm.projectNo"></el-input>
+                    </el-form-item>
                     <el-form-item label="项目名称">
                         <el-input :readonly="user.groupId!='doman'"
                                   v-model="xm.projectNam"></el-input>
@@ -915,6 +920,21 @@
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                         </el-upload>
+                    </el-form-item>
+                    <el-form-item :label="jbrOrZgjl" v-if="jbrOrZgjl=='经办人'||jbrOrZgjl=='技术部主管经理'">
+                        <el-select
+                                clearable
+                                multiple
+                                style="width: 100%;"
+                                v-model="jbrOrZgjlValue"
+                                :placeholder="'请选择'+jbrOrZgjl">
+                            <el-option
+                                    v-for="item in jbrOrZgjlList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-form>
                 <span v-if="!isxq" slot="footer" class="dialog-footer">
@@ -1073,8 +1093,6 @@
                 //驳回项目
                 bhXms: [],
                 NodeId: '',
-
-
                 src: '',
                 cur_page: 1,
                 show_xjsq: false,
@@ -1131,7 +1149,10 @@
                 zbs: [],
                 //招标详情技术部办事员弹窗
                 show_zbxqjsb: false,
-                zzsc:[]
+                zzsc:[],
+                jbrOrZgjl:localStorage.getItem('groupId')=='jl'?'经办人':(localStorage.getItem('groupId')=='jsb_doman'?'技术部主管经理':''),// 弹出框经办人或者经理条目
+                jbrOrZgjlList:[],// 经办人或经理列表
+                jbrOrZgjlValue:''// 下拉选择的经办人或经理值
             }
         },
         watch: {
@@ -1191,6 +1212,8 @@
             this.getzb()
 
             this.handleListener();
+
+            this.getjbrOrZgjlList();// 获取经办人或主管经理列表
         },
 
         activated() {
@@ -1832,7 +1855,7 @@
                         return
                     }
                 }
-                
+
                 this.comment = '同意'
                 this.show_ty = true
             },
@@ -2355,6 +2378,20 @@
             //    // this.$refs.bar.renderChart();
             //     //this.$refs.line.renderChart();
             // }
+            getjbrOrZgjlList(){// 获取经办人或主管经理列表
+                if(this.jbrOrZgjl=='经办人'||this.jbrOrZgjl=='技术部主管经理'){// 为这两个之一才获取
+                    // 经理->经办人，经办人-主管经理
+                    var address=this.jbrOrZgjl=='经办人'?'/user/getAllJsbDoman':'/user/getAllJsbZgjl'
+                    axios.get(this.ip + address).then(res => {
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.jbrOrZgjlList.push({
+                                value: res.data[i].userId,
+                                label: res.data[i].userName,
+                            })
+                        }
+                    })
+                }
+            }
         }
     }
 
