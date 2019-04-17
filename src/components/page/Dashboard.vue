@@ -1145,7 +1145,7 @@
                 zzsc:[],
                 jbrOrZgjl:localStorage.getItem('groupId')=='jl'?'经办人':(localStorage.getItem('groupId')=='jsb_doman'?'技术部主管经理':''),// 弹出框经办人或者经理条目
                 jbrOrZgjlList:[],// 经办人或经理列表
-                jbrOrZgjlValue:''// 下拉选择的经办人或经理值
+                jbrOrZgjlValue:[]// 下拉选择的经办人或经理值
             }
         },
         watch: {
@@ -1888,6 +1888,13 @@
                     }
                 }
 
+                if(this.jbrOrZgjl=='经办人'||this.jbrOrZgjl=='技术部主管经理'){
+                    if(this.jbrOrZgjlValue.length==0){
+                        this.$message.error("请选择"+this.jbrOrZgjl)
+                        return
+                    }
+                }
+
                 this.comment = '同意'
                 this.show_ty = true
             },
@@ -1919,14 +1926,19 @@
                     spinner: 'el-icon-loading',
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
+                var params={
+                    pid: this.xm.pid,
+                    userId: localStorage.getItem('userId'),
+                    comment: this.comment,
+                    varName: varName,
+                    value: value
+                }
+
+                if(this.jbrOrZgjl=='经办人'||this.jbrOrZgjl=='技术部主管经理'){
+                    params.peoples=this.jbrOrZgjlValue
+                }
                 axios.get(this.ip + '/projectApplication/doNode', {
-                    params: {
-                        pid: this.xm.pid,
-                        userId: localStorage.getItem('userId'),
-                        comment: this.comment,
-                        varName: varName,
-                        value: value
-                    }
+                    params: params
                 })
                     .then(res => {
                         loading.close()
