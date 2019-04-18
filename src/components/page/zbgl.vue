@@ -227,6 +227,7 @@
                 currentPage: 1,
                 bzs: [],
                 groupId: localStorage.getItem('groupId'),
+                departmentName:localStorage.getItem('departmentName'),
                 //投标单位
                 dw: '',
                 src: '',
@@ -498,7 +499,7 @@
 
             //拿到自己经手的招标
             getAllzhaobiao() {
-                if (this.groupId === 'zgjl' || this.groupId === 'jl'||this.groupId==='doman') {
+                if (this.departmentName!=='办公室.'&&(this.groupId === 'zgjl' || this.groupId === 'jl'||this.groupId==='doman')) {
                     //如果是主管经理或者经理拿到自己部门所有的招标信息
                     axios.get(this.ip + '/zhaobiao/getselfDptZb', {
                         params: {

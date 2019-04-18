@@ -153,6 +153,7 @@
         methods:{
             getSidebar(){
                 let groupId=localStorage.getItem('groupId')
+                let departmentName=localStorage.getItem('departmentName')
                 if(groupId==='admin'){
                     this.items= [
                         {
@@ -233,7 +234,7 @@
                         },
 
                     ]
-                }else if(groupId==='jsb_doman'||groupId==='jsb_jl'||groupId==='jsb_zgjl'){
+                }else if(groupId==='jsb_doman'||groupId==='jsb_jl'||groupId==='jsb_zgjl'||departmentName==='办公室.'){
                     this.items= [
                         {
                             icon: 'el-icon-lx-home',

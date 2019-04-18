@@ -24,7 +24,7 @@
                     <el-select
                             clearable
                             style="margin-left: 10px;width: 150px"
-                            v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
+                            v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'||departmentName==='办公室.'"
                             v-model="select_dptnm"
                             placeholder="立项部门">
                         <el-option
@@ -463,6 +463,7 @@
                 jbrs:[],
                 bms: [],
                 groupId: localStorage.getItem("groupId"),
+                departmentName:localStorage.getItem("departmentName"),
                 //新建项目立项单
                 show_xjxmlxd: false,
                 projects: [],
@@ -768,8 +769,8 @@
                     select_xmfl: this.select_xmfl,
                     select_xmlb: this.select_xmlb,
                 }
-                // 如果当前账号不是工程技术部，select_dptnmt填充当前账号部门
-                if(localStorage.getItem('departmentId')!='20190123022801622'&&localStorage.getItem('departmentId')!='20190125102616787'){
+                // 如果当前账号不是工程技术部且不是办公室且不是办公室.，select_dptnmt填充当前账号部门
+                if(localStorage.getItem('departmentId')!='20190123022801622'&&localStorage.getItem('departmentId')!='20190125102616787'&&localStorage.getItem('departmentId')!='103a990b-a59a-40bc-8ac9-a505076ca0ae'){
                     params.select_dptnm=localStorage.getItem('departmentName')
                 }
                 this.ss=true
