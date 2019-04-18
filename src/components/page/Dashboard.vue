@@ -1157,6 +1157,11 @@
                     })
                     this.zhongbiao.zhongbiaojg = 1
                 }
+            },
+            show_xq(newValue,oldValue){// 监听详情显示
+                if(newValue==true){
+                    this.getjbrOrZgjlList();// 获取经办人或主管经理列表
+                }
             }
         },
         computed: {
@@ -1205,8 +1210,6 @@
             this.getzb()
 
             this.handleListener();
-
-            this.getjbrOrZgjlList();// 获取经办人或主管经理列表
         },
 
         activated() {
@@ -1658,9 +1661,16 @@
                     })
             },
             //上传成功，重新新请求合同附件
-            handleSuccess4(){
+            handleSuccess4(response, file, fileList){
+                this.fileList=[]
+                for (let i = 0; i < fileList.length; i++) {
+                    this.fileList.push({
+                        name: fileList[i].name,
+                        id: fileList[i].id
+                    })
+                }
                 //领取附件
-                this.lqfj(this.contract.dwyj)
+                //this.lqfj(this.contract.dwyj)
               //this.htcl(this.contract)
             },
 
@@ -2423,18 +2433,40 @@
             //     //this.$refs.line.renderChart();
             // }
             getjbrOrZgjlList(){// 获取经办人或主管经理列表
-                if(this.jbrOrZgjl=='经办人'||this.jbrOrZgjl=='技术部主管经理'){// 为这两个之一才获取
-                    // 经理->经办人，经办人-主管经理
-                    var address=this.jbrOrZgjl=='经办人'?'/user/getAllJsbDoman':'/user/getAllJsbZgjl'
-                    axios.get(this.ip + address).then(res => {
-                        for (let i = 0; i < res.data.length; i++) {
-                            this.jbrOrZgjlList.push({
-                                value: res.data[i].userId,
-                                label: res.data[i].userName,
+                var isReject=false;// 是否驳回
+                var projectId=this.xm.id
+                axios.get(this.ip + '/projectApplication/isReject', {
+                    params: {
+                        projectId: projectId
+                    }
+                })
+                    .then(res => {
+                        if (res.data) {// 被驳回
+                            isReject=true
+                        } else {// 未被驳回
+                            isReject=false
+                        }
+
+                        if(this.jbrOrZgjl=='经办人'||this.jbrOrZgjl=='技术部主管经理'){// 为这两个之一才获取
+                            // 经理->经办人，经办人-主管经理
+                            var address=this.jbrOrZgjl=='经办人'?'/user/getAllJsbDoman':'/user/getAllJsbZgjl'
+                            axios.get(this.ip + address,{
+                                params:{
+                                    projectId:isReject==true?projectId:null
+                                }
                             })
+                                .then(res => {
+                                    console.log(res)
+                                    this.jbrOrZgjlList=[]// 先清空
+                                    for (let i = 0; i < res.data.length; i++) {
+                                        this.jbrOrZgjlList.push({
+                                            value: res.data[i].userId,
+                                            label: res.data[i].userName,
+                                        })
+                                    }
+                                })
                         }
                     })
-                }
             }
         }
     }

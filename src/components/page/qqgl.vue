@@ -112,11 +112,10 @@
                     </el-button>
                 </div>
 
-                <el-table  stripe :data="projects" border class="table"
-                           ref="multipleTable">
+                <el-table  stripe :data="projects" border class="table" ref="multipleTable">
                     <el-table-column   prop="projectNo" align="center" sortable label="项目编号" width="140">
                     </el-table-column>
-                    <el-table-column prop="projectNam"  width="300px" label="项目名称" min-width="160">
+                    <el-table-column prop="projectNam" label="项目名称" min-width="160">
                     </el-table-column>
                     <el-table-column prop="declarationDep" align="center" sortable label="立项部门" width="140">
                     </el-table-column>
