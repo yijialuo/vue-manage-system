@@ -914,7 +914,7 @@
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                         </el-upload>
                     </el-form-item>
-                    <el-form-item :label="jbrOrZgjl" v-if="jbrOrZgjl=='经办人'||jbrOrZgjl=='技术部主管经理'">
+                    <el-form-item :label="jbrOrZgjl" v-if="jbrOrZgjl=='技术部主管经理'">
                         <el-select
                                 clearable
                                 multiple
@@ -1143,9 +1143,9 @@
                 //招标详情技术部办事员弹窗
                 show_zbxqjsb: false,
                 zzsc:[],
-                jbrOrZgjl:localStorage.getItem('groupId')=='jl'?'经办人':(localStorage.getItem('groupId')=='jsb_doman'?'技术部主管经理':''),// 弹出框经办人或者经理条目
-                jbrOrZgjlList:[],// 经办人或经理列表
-                jbrOrZgjlValue:[]// 下拉选择的经办人或经理值
+                jbrOrZgjl:localStorage.getItem('groupId')=='jsb_doman'?'技术部主管经理':'',// 弹出框经理条目
+                jbrOrZgjlList:[],// 经理列表
+                jbrOrZgjlValue:[]// 下拉选择的经理值
             }
         },
         watch: {
@@ -1898,7 +1898,7 @@
                     }
                 }
 
-                if(this.jbrOrZgjl=='经办人'||this.jbrOrZgjl=='技术部主管经理'){
+                if(this.jbrOrZgjl=='技术部主管经理'){
                     if(this.jbrOrZgjlValue.length==0){
                         this.$message.error("请选择"+this.jbrOrZgjl)
                         return
@@ -1944,7 +1944,7 @@
                     value: value
                 }
 
-                if(this.jbrOrZgjl=='经办人'||this.jbrOrZgjl=='技术部主管经理'){
+                if(this.jbrOrZgjl=='技术部主管经理'){
                     params.peoples=this.jbrOrZgjlValue
                 }
                 axios.get(this.ip + '/projectApplication/doNode', {
@@ -2435,6 +2435,7 @@
             getjbrOrZgjlList(){// 获取经办人或主管经理列表
                 var isReject=false;// 是否驳回
                 var projectId=this.xm.id
+                var manageType=this.xm.reviser
                 axios.get(this.ip + '/projectApplication/isReject', {
                     params: {
                         projectId: projectId
@@ -2447,11 +2448,12 @@
                             isReject=false
                         }
 
-                        if(this.jbrOrZgjl=='经办人'||this.jbrOrZgjl=='技术部主管经理'){// 为这两个之一才获取
+                        if(this.jbrOrZgjl=='技术部主管经理'){// 为这个才获取
                             // 经理->经办人，经办人-主管经理
-                            var address=this.jbrOrZgjl=='经办人'?'/user/getAllJsbDoman':'/user/getAllJsbZgjl'
+                            var address='/user/getAllJsbZgjl'
                             axios.get(this.ip + address,{
                                 params:{
+                                    manageType:manageType,
                                     projectId:isReject==true?projectId:null
                                 }
                             })

@@ -18,9 +18,14 @@
                     </el-table-column>
                     <el-table-column prop="passWord" label="密码">
                     </el-table-column>
-                    <el-table-column prop="departmentName" label="部门">
+                    <el-table-column prop="departmentName" sortable label="部门">
                     </el-table-column>
                     <el-table-column prop="groupName" label="职位">
+                    </el-table-column>
+                    <el-table-column label="管理类型">
+                        <template slot-scope="scope">
+                            <span>{{ scope.row.manageType | filterManageType }}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
@@ -70,6 +75,18 @@
                         </el-option>
                     </el-select>
                 </div>
+                <!--是工程技术部的技术部办事员或技术部主管经理才显示-->
+                <div class="demo-input-suffix" v-if="userOV.departmentId=='20190123022801622'&&(userOV.groupId=='jsb_doman'||userOV.groupId=='jsb_zgjl')" style="margin-top: 10px;width: 100%;">
+                    管理类型：
+                    <el-select v-model="userOV.manageType" multiple placeholder="请选择">
+                        <el-option
+                                v-for="item in manageTypes"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="visible = false">取 消</el-button>
                 <el-button type="primary" @click="confirm_user">确 定</el-button>
@@ -108,6 +125,18 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <!--有管理类型才显示-->
+                    <div class="demo-input-suffix" v-if="form.departmentId=='20190123022801622'&&(form.groupId=='jsb_doman'||form.groupId=='jsb_zgjl')" style="margin-top: 10px;width: 100%;">
+                        管理类型：
+                        <el-select v-model="form.manageType" multiple placeholder="请选择">
+                            <el-option
+                                    v-for="item in manageTypes"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -251,7 +280,8 @@
                     groupId: '',
                     groupName: '',
                     departmentId: '',
-                    departmentName: ''
+                    departmentName: '',
+                    manageType:[]
                 },
                 users: [],
                 //添加用户
@@ -260,12 +290,32 @@
                 delVisible: false,
                 group_options: [],
                 department_options: [],
+                manageTypes:[
+                    {
+                        label:'土建',
+                        value:'土建'
+                    },
+                    {
+                        label:'设备',
+                        value:'设备'
+                    },
+                    {
+                        label:'物资',
+                        value:'物资'
+                    },
+                    {
+                        label:'信息',
+                        value:'信息'
+                    },
+
+                ],
                 form: {
                     userId: '',
                     userName: '',
                     passWord: '',
                     groupId: '',
                     departmentId: '',
+                    manageType:[]
                 },
                 idx: -1,
                 show_addDepartment: false,
@@ -292,6 +342,20 @@
             this.getDepartment_optins();
             this.getAlldepartment()
             this.getAllgroup()
+        },
+        watch:{
+            visible(newValue, oldValue) {
+                if(newValue==true){
+
+                }
+            },
+        },
+        filters:{// 过滤、格式化
+            filterManageType:function(value){//时间格式化，"2018-10-21T17:20:16.000+0000"的需要进行格式化
+                if(value!=null)
+                    return value.toString()
+                return null
+            }
         },
         methods: {
             getDepartment_optins() {
@@ -336,6 +400,7 @@
                     })
             },
             editUser(index, row) {
+                console.log(row)
                 this.idx = index;
                 const item = this.users[index];
                 this.form = {
@@ -343,7 +408,8 @@
                     userName: item.userName,
                     passWord: item.passWord,
                     groupId: item.groupId,
-                    departmentId: item.departmentId
+                    departmentId: item.departmentId,
+                    manageType: item.manageType?item.manageType:[]
                 }
                 this.editVisible = true;
             },
