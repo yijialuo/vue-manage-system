@@ -83,7 +83,8 @@
                         <el-tabs v-model="message">
                             <!--待办项目-->
                             <el-tab-pane v-if="user.groupId!='doman'" :label="`前期审批(${Xms.length})`" name="first">
-                                <el-table :data="Xms" border height="400px" stripe :show-header="true" style="width: 100%;font-size: 14px;">
+                                <el-table :data="Xms" border height="400px" stripe :show-header="true"
+                                          style="width: 100%;font-size: 14px;">
                                     <el-table-column label="项目编号" align="center" sortable prop="projectNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectNam" min-width="160">
@@ -92,7 +93,8 @@
                                     </el-table-column>
                                     <el-table-column label="申请人" align="center" sortable prop="proposer" width="120">
                                     </el-table-column>
-                                    <el-table-column label="立项时间" align="center" sortable prop="applicationDte" width="120">
+                                    <el-table-column label="立项时间" align="center" sortable prop="applicationDte"
+                                                     width="120">
                                     </el-table-column>
                                     <el-table-column label="操作" align="center" width="120">
                                         <template slot-scope="scope">
@@ -104,14 +106,16 @@
                             <!--待备案项目-->
                             <el-tab-pane stripe v-if="user.groupId=='jsb_doman'" :label="`待备案项目(${baXms.length})`"
                                          name="second">
-                                <el-table height="400px" border :data="baXms" :show-header="true" style="width: 100%;font-size: 14px;">
+                                <el-table height="400px" border :data="baXms" :show-header="true"
+                                          style="width: 100%;font-size: 14px;">
                                     <el-table-column label="项目编号" align="center" sortable prop="projectNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectNam" min-width="160">
                                     </el-table-column>
                                     <el-table-column label="申请人" align="center" sortable prop="proposer" width="140">
                                     </el-table-column>
-                                    <el-table-column label="立项时间" align="center" sortable prop="applicationDte" width="140">
+                                    <el-table-column label="立项时间" align="center" sortable prop="applicationDte"
+                                                     width="140">
                                     </el-table-column>
                                     <el-table-column label="操作" align="center" width="140">
                                         <template slot-scope="scope">
@@ -122,7 +126,8 @@
                             </el-tab-pane>
                             <!--驳回的项目 -->
                             <el-tab-pane v-if="user.groupId=='doman'" :label="`项目审批(${bhXms.length})`" name="third">
-                                <el-table stripe border height="250px" :data="bhXms" :show-header="true" style="width: 100%;font-size: 14px;">
+                                <el-table stripe border height="400px" :data="bhXms" :show-header="true"
+                                          style="width: 100%;font-size: 14px;">
                                     <el-table-column label="项目编号" align="center" sortable prop="projectNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectNam" min-width="180">
@@ -131,7 +136,8 @@
                                     </el-table-column>
                                     <el-table-column label="申请人" align="center" prop="proposer" width="120">
                                     </el-table-column>
-                                    <el-table-column label="立项时间" align="center" sortable="" prop="applicationDte" width="120">
+                                    <el-table-column label="立项时间" align="center" sortable="" prop="applicationDte"
+                                                     width="120">
                                     </el-table-column>
                                     <el-table-column label="操作" align="center" width="120">
                                         <template slot-scope="scope">
@@ -143,7 +149,8 @@
                             <!--招标的项目-->
                             <el-tab-pane stripe v-if="user.groupId!=='zgjl'&&user.groupId!=='jl'"
                                          :label="`招标审批(${zhaobiaos.length})`" name="fourth">
-                                <el-table height="400px" border :data="zhaobiaos" :show-header="true" style="width: 100%;font-size: 14px;">
+                                <el-table height="400px" border :data="zhaobiaos" :show-header="true"
+                                          style="width: 100%;font-size: 14px;">
                                     <el-table-column label="项目编号" align="center" sortable prop="xmNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="xmName" min-width="160">
@@ -163,7 +170,8 @@
                             <el-tab-pane stripe
                                          v-if="user.groupId=='jsb_doman'||user.groupId=='jsb_jl'||user.groupId=='bgs'"
                                          :label="`合同审批(${contracts.length})`" name="fifth">
-                                <el-table height="400px" border :data="contracts" :show-header="true" style="width: 100%;font-size: 14px;">
+                                <el-table height="400px" border :data="contracts" :show-header="true"
+                                          style="width: 100%;font-size: 14px;">
                                     <el-table-column label="项目编号" align="center" sortable prop="xmNo" width="160">
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectName" min-width="160">
@@ -222,10 +230,10 @@
             <!-- 项目详情框 技术部自己项目-->
             <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xqgcjsb" width="50%" center>
                 <el-form style="margin-top: 20px" label-width="100px">
-                    <el-form-item  v-if="groupId=='bgs'" label="项目编号">
+                    <el-form-item v-if="groupId=='bgs'" label="项目编号">
                         <el-input v-model="xm.projectNo"></el-input>
                     </el-form-item>
-                    <el-form-item  v-if="groupId!='bgs'" label="项目编号">
+                    <el-form-item v-if="groupId!='bgs'" label="项目编号">
                         <el-input
                                 :readonly="user.groupId!='doman'"
                                 v-model="xm.projectNo"></el-input>
@@ -310,6 +318,21 @@
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                         </el-upload>
+                    </el-form-item>
+                    <el-form-item :label="jbrOrZgjl" v-if="jbrOrZgjl=='技术部主管经理'">
+                        <el-select
+                                clearable
+                                multiple
+                                style="width: 100%;"
+                                v-model="jbrOrZgjlValue"
+                                :placeholder="'请选择'+jbrOrZgjl">
+                            <el-option
+                                    v-for="item in jbrOrZgjlList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -400,19 +423,19 @@
                         </el-upload>
                     </el-form-item>
                     <!--<el-form-item label="文件列表">-->
-                        <!--<el-upload-->
-                                <!--class="upload-demo"-->
-                                <!--drag-->
-                                <!--:action="url"-->
-                                <!--:on-preview="handlePreview"-->
-                                <!--:on-remove="handleRemove"-->
-                                <!--:on-success="handleSuccess"-->
-                                <!--multiple-->
-                                <!--:file-list="fileList"-->
-                        <!--&gt;-->
-                            <!--<i class="el-icon-upload"></i>-->
-                            <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-                        <!--</el-upload>-->
+                    <!--<el-upload-->
+                    <!--class="upload-demo"-->
+                    <!--drag-->
+                    <!--:action="url"-->
+                    <!--:on-preview="handlePreview"-->
+                    <!--:on-remove="handleRemove"-->
+                    <!--:on-success="handleSuccess"-->
+                    <!--multiple-->
+                    <!--:file-list="fileList"-->
+                    <!--&gt;-->
+                    <!--<i class="el-icon-upload"></i>-->
+                    <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+                    <!--</el-upload>-->
                     <!--</el-form-item>-->
                     <!--<el-form-item label="单位意见">-->
                     <!--<el-input type="textarea" v-model="contract.dwyj"></el-input>-->
@@ -524,7 +547,7 @@
             <el-dialog title="合同详情" :close-on-click-modal="false" :visible.sync="show_bgs_ht" width="50%">
                 <el-form ref="form" label-width="100px">
                     <el-form-item label="合同编号">
-                    <el-input v-model="contract.contractNo"></el-input>
+                        <el-input v-model="contract.contractNo"></el-input>
                     </el-form-item>
                     <el-form-item label="合同项目">
                         <el-input :readonly="true" v-model="contract.projectName" style="width: 210px"></el-input>
@@ -826,10 +849,10 @@
             <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="50%" center>
 
                 <el-form style="margin-top: 20px" label-width="120px">
-                    <el-form-item  v-if="groupId=='bgs'" label="项目编号">
+                    <el-form-item v-if="groupId=='bgs'" label="项目编号">
                         <el-input v-model="xm.projectNo"></el-input>
                     </el-form-item>
-                    <el-form-item  v-if="groupId!='bgs'" label="项目编号">
+                    <el-form-item v-if="groupId!='bgs'" label="项目编号">
                         <el-input
                                 :readonly="user.groupId!='doman'"
                                 v-model="xm.projectNo"></el-input>
@@ -1066,7 +1089,7 @@
                 //技术部办事员合同处理弹窗
                 show_jsbdoman_ht: false,
                 //办公室合同处理
-                show_bgs_ht:false,
+                show_bgs_ht: false,
                 url: '',
                 fileList: [],
                 commentList: [],
@@ -1142,10 +1165,10 @@
                 zbs: [],
                 //招标详情技术部办事员弹窗
                 show_zbxqjsb: false,
-                zzsc:[],
-                jbrOrZgjl:localStorage.getItem('groupId')=='jsb_doman'?'技术部主管经理':'',// 弹出框经理条目
-                jbrOrZgjlList:[],// 经理列表
-                jbrOrZgjlValue:[]// 下拉选择的经理值
+                zzsc: [],
+                jbrOrZgjl: localStorage.getItem('groupId') == 'jsb_doman' ? '技术部主管经理' : '',// 弹出框经理条目
+                jbrOrZgjlList: [],// 经理列表
+                jbrOrZgjlValue: []// 下拉选择的经理值
             }
         },
         watch: {
@@ -1158,8 +1181,8 @@
                     this.zhongbiao.zhongbiaojg = 1
                 }
             },
-            show_xq(newValue,oldValue){// 监听详情显示
-                if(newValue==true){
+            show_xq(newValue, oldValue) {// 监听详情显示
+                if (newValue == true) {
                     this.getjbrOrZgjlList();// 获取经办人或主管经理列表
                 }
             }
@@ -1175,11 +1198,15 @@
                 return this.user.groupName
             },
             allNum() {
+                if(localStorage.getItem('userId')==='db'||localStorage.getItem('userId')==='lze')
+                    return this.xmList.length+this.bhXms.length
                 if (localStorage.getItem('groupId') === 'jsb_doman')
                     return this.xmList.length + this.Xms.length + this.baXms.length
                 return this.xmList.length + this.Xms.length
             },
             doNum() {
+                if(localStorage.getItem('userId')==='db'||localStorage.getItem('userId')==='lze')
+                    return this.xmList.length
                 if (localStorage.getItem('groupId') === 'doman')
                     return this.xmList.length - this.bhXms.length
                 return this.xmList.length
@@ -1221,23 +1248,23 @@
         },
         methods: {
             //办公室确认合同已接受
-            qrhtjs(){
-                if(this.contract.contractNo===null||this.contract.contractNo===''){
+            qrhtjs() {
+                if (this.contract.contractNo === null || this.contract.contractNo === '') {
                     this.$message.error('请填写合同编号！')
                     return
                 }
-                if(this.fileList.length==0){
+                if (this.fileList.length == 0) {
                     this.$message.error("请上传合同附件！")
                     return
                 }
-                axios.get(this.ip+'/contract/qrhtyjs',{
-                    params:{
-                        dwyj:this.contract.dwyj,
-                        htno:this.contract.contractNo
+                axios.get(this.ip + '/contract/qrhtyjs', {
+                    params: {
+                        dwyj: this.contract.dwyj,
+                        htno: this.contract.contractNo
                     }
                 })
-                    .then(res=>{
-                        if(res.data)
+                    .then(res => {
+                        if (res.data)
                             this.$message.success("处理完成！")
                         else
                             this.$message.error("处理失败！")
@@ -1246,20 +1273,19 @@
             },
 
             //合同再次审批
-            htzcsp(){
-                this.contract.zzsc=''
-                for(let i=0;i<this.zzsc.length;i++){
-                    if(i<this.zzsc.length-1)
-                        this.contract.zzsc=this.contract.zzsc+this.zzsc[i]+'、'
+            htzcsp() {
+                this.contract.zzsc = ''
+                for (let i = 0; i < this.zzsc.length; i++) {
+                    if (i < this.zzsc.length - 1)
+                        this.contract.zzsc = this.contract.zzsc + this.zzsc[i] + '、'
                     else
-                        this.contract.zzsc=this.contract.zzsc+this.zzsc[i]
+                        this.contract.zzsc = this.contract.zzsc + this.zzsc[i]
                 }
-                delete  this.contract.projectName
-                console.log(this.contract)
-                axios.post(this.ip+'/contract/htzcsp',this.contract).then(res=>{
-                    if(res.data){
+                delete this.contract.projectName
+                axios.post(this.ip + '/contract/htzcsp', this.contract).then(res => {
+                    if (res.data) {
                         this.$message.success("已发往技术部经理审批")
-                    }else {
+                    } else {
                         this.$message.error("处理失败！")
                     }
                     this.reload()
@@ -1267,20 +1293,20 @@
             },
 
             //作废合同
-            zfht(){
+            zfht() {
                 this.$confirm('此操作将永久删除该合同,是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.get(this.ip+'/contract/htzf',{
-                        params:{
-                            htid:this.contract.id
+                    axios.get(this.ip + '/contract/htzf', {
+                        params: {
+                            htid: this.contract.id
                         }
-                    }).then(res=>{
-                        if(res.data){
+                    }).then(res => {
+                        if (res.data) {
                             this.$message.success("作废成功！")
-                        }else {
+                        } else {
                             this.$message.error("作废失败！")
                         }
                         this.reload()
@@ -1341,7 +1367,6 @@
             },
 
 
-
             //合同处理点击事件
             htcl(row) {
                 this.contract = row
@@ -1352,11 +1377,11 @@
                 this.lqfj(row.dwyj)
                 if (this.groupId === 'jsb_jl') {
                     this.show_jsbjl_ht = true
-                }else if(this.groupId==='jsb_doman'){
-                    this.zzsc=row.zzsc.split('、')
-                    this.show_jsbdoman_ht=true
-                }else {
-                    this.show_bgs_ht=true
+                } else if (this.groupId === 'jsb_doman') {
+                    this.zzsc = row.zzsc.split('、')
+                    this.show_jsbdoman_ht = true
+                } else {
+                    this.show_bgs_ht = true
                 }
             },
 
@@ -1378,17 +1403,17 @@
                         this.contracts = res.data
                     })
                 } else if (this.groupId === 'bgs') {
-                    axios.get(this.ip + '/contract/getBgsHts',{
-                        params:{
-                            userId:localStorage.getItem('userId')
+                    axios.get(this.ip + '/contract/getBgsHts', {
+                        params: {
+                            userId: localStorage.getItem('userId')
                         }
                     }).then(res => {
                         this.contracts = res.data
                     })
                 } else {
-                    axios.get(this.ip + '/contract/getJsbdomanHts',{
-                        params:{
-                            userId:localStorage.getItem('userId')
+                    axios.get(this.ip + '/contract/getJsbdomanHts', {
+                        params: {
+                            userId: localStorage.getItem('userId')
                         }
                     }).then(res => {
                         this.contracts = res.data
@@ -1661,8 +1686,8 @@
                     })
             },
             //上传成功，重新新请求合同附件
-            handleSuccess4(response, file, fileList){
-                this.fileList=[]
+            handleSuccess4(response, file, fileList) {
+                this.fileList = []
                 for (let i = 0; i < fileList.length; i++) {
                     this.fileList.push({
                         name: fileList[i].name,
@@ -1671,7 +1696,7 @@
                 }
                 //领取附件
                 //this.lqfj(this.contract.dwyj)
-              //this.htcl(this.contract)
+                //this.htcl(this.contract)
             },
 
             //上传成功，重新请求
@@ -1689,12 +1714,12 @@
                         this.zhaobiaos = res.data
                         //填充项目名称和用户名
                         for (let i = 0; i < this.zhaobiaos.length; i++) {
-                            axios.get(this.ip+'/projectApplication/xmIdToxmNo',{
-                                params:{
-                                    xmId:this.zhaobiaos[i].xmid
+                            axios.get(this.ip + '/projectApplication/xmIdToxmNo', {
+                                params: {
+                                    xmId: this.zhaobiaos[i].xmid
                                 }
-                            }).then(res=>{
-                                this.zhaobiaos[i].xmNo=res.data
+                            }).then(res => {
+                                this.zhaobiaos[i].xmNo = res.data
                                 this.$set(this.zhaobiaos, i, this.zhaobiaos[i]);
                             })
 
@@ -1718,6 +1743,7 @@
                     }
                 })
             },
+
             //重新申请
             cxsq() {
                 axios.post(this.ip + '/projectApplication/cxsq', this.xm)
@@ -1726,6 +1752,7 @@
                         this.reload()
                     })
             },
+
             //完成备案
             wcba() {
                 axios.get(this.ip + '/projectApplication/wcba', {
@@ -1738,6 +1765,7 @@
                 })
                 // this.show_xq = false
             },
+
             //拿到当前节点名字
             getNodeId(pid) {
                 axios.get(this.ip + '/projectApplication/getPidNode', {
@@ -1784,47 +1812,38 @@
             },
             //确定同意
             qd_ty() {
-                if(this.groupId=='bgs'){
+                if (this.groupId === 'bgs') {
                     axios.get(this.ip + '/projectApplication/xgxmbh', {
                         params: {
                             xmid: this.xm.id,
                             xmbh: this.xm.projectNo
                         }
                     }).then(res => {
-                        if (this.user.groupId == 'zgjl') {//主管经理同意
-                            this.cl('zgjl', true)
-                        } else if (this.user.groupId == 'jl') {
-                            this.cl('jl', true)
-                        } else if (this.user.groupId == 'jsb_doman') {
-                            this.cl('jbr', true)
-                        } else if (this.user.groupId == 'jsb_zgjl') {
-                            this.cl('jszgjl', true)
-                        } else if (this.user.groupId == 'jsb_jl') {
-                            this.cl('jsjl', true)
-                        } else if (this.user.groupId == 'bgs') {
-                            if (this.NodeId == '两会') {//两会节点
-                                console.log('lianghui')
-                                if (Number(this.xm.investmentEstimate) >= 10){
-                                    console.log('dayu10wan')
-                                    //大于10万，总经理办公会
-                                    this.cl('lh', 0)
-                                }
-                                else
-                                    this.cl('lh', 1) //结束
-                            } else {//总经理节点
-                                this.$confirm('是否备案', '提示', {
-                                    confirmButtonText: '是',
-                                    cancelButtonText: '否',
-                                    type: 'warning'
-                                }).then(() => {
-                                    this.cl('zjl', 0)//备案
-                                }).catch(() => {
-                                    this.cl('zjl', 2)
-                                });
-                            }
-                        }
+                        //两会节点
+                        if (Number(this.xm.investmentEstimate) >= 10) {
+                            //大于10万，总经理办公会
+                            this.cl('lh', 0)
+                        } else
+                            this.cl('lh', 1) //结束
+
                     })
                     return
+                }
+
+                //邓博，李泽恩处理总经会
+                if (this.user.userId === 'db' || this.user.userId === 'lze') {
+                    if (this.NodeId === '总经理办公会') {
+                        this.$confirm('是否备案', '提示', {
+                            confirmButtonText: '是',
+                            cancelButtonText: '否',
+                            type: 'warning'
+                        }).then(() => {
+                            this.cl('zjl', 0)//备案
+                        }).catch(() => {
+                            this.cl('zjl', 2)
+                        })
+                        return
+                    }
                 }
 
                 if (this.user.groupId == 'zgjl') {//主管经理同意
@@ -1837,27 +1856,6 @@
                     this.cl('jszgjl', true)
                 } else if (this.user.groupId == 'jsb_jl') {
                     this.cl('jsjl', true)
-                } else if (this.user.groupId == 'bgs') {
-                    if (this.NodeId == '两会') {//两会节点
-                        console.log('lianghui')
-                        if (Number(this.xm.investmentEstimate) >= 10){
-                            console.log('dayu10wan')
-                            //大于10万，总经理办公会
-                            this.cl('lh', 0)
-                        }
-                        else
-                            this.cl('lh', 1) //结束
-                    } else {//总经理节点
-                        this.$confirm('是否备案', '提示', {
-                            confirmButtonText: '是',
-                            cancelButtonText: '否',
-                            type: 'warning'
-                        }).then(() => {
-                            this.cl('zjl', 0)//备案
-                        }).catch(() => {
-                            this.cl('zjl', 2)
-                        });
-                    }
                 }
             },
 
@@ -1891,16 +1889,16 @@
             //同意
             ty() {
                 //办公室人处理、需要检验项目编号
-                if(localStorage.getItem('groupId')==='bgs'){
-                    if(this.xm.projectNo==null||this.xm.projectNo===''){
+                if (localStorage.getItem('groupId') === 'bgs') {
+                    if (this.xm.projectNo == null || this.xm.projectNo === '') {
                         this.$message.error("请确定项目编号！")
                         return
                     }
                 }
 
-                if(this.jbrOrZgjl=='技术部主管经理'){
-                    if(this.jbrOrZgjlValue.length==0){
-                        this.$message.error("请选择"+this.jbrOrZgjl)
+                if (this.jbrOrZgjl == '技术部主管经理') {
+                    if (this.jbrOrZgjlValue.length == 0) {
+                        this.$message.error("请选择" + this.jbrOrZgjl)
                         return
                     }
                 }
@@ -1930,13 +1928,14 @@
             },
             //处理
             cl(varName, value) {
+
                 const loading = this.$loading({
                     lock: true,
                     text: '处理中……',
                     spinner: 'el-icon-loading',
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
-                var params={
+                var params = {
                     pid: this.xm.pid,
                     userId: localStorage.getItem('userId'),
                     comment: this.comment,
@@ -1944,8 +1943,8 @@
                     value: value
                 }
 
-                if(this.jbrOrZgjl=='技术部主管经理'){
-                    params.peoples=this.jbrOrZgjlValue
+                if (this.jbrOrZgjl == '技术部主管经理') {
+                    params.peoples = this.jbrOrZgjlValue
                 }
                 axios.get(this.ip + '/projectApplication/doNode', {
                     params: params
@@ -2255,7 +2254,7 @@
                     .then(res => {
                         if (res.data) {
                             this.xmList = res.data;
-                            for(let i=0;i<this.xmList.length;i++){
+                            for (let i = 0; i < this.xmList.length; i++) {
                                 //请求当前节点
                                 axios.get(this.ip + '/projectApplication/getPidNode', {
                                     params: {
@@ -2293,45 +2292,45 @@
 
             //状态
             zt(row) {
-                if(Number(row.investmentEstimate)>10){
-                    if(row.dqjd==='填写申请表'){
-                        this.src=require('@/assets/img/s_txsqb.png')
-                    }else if(row.dqjd==='主管经理审批'){
-                        this.src=require('@/assets/img/s_zgjlsp.png')
-                    }else if(row.dqjd==='经理审批'){
-                        this.src=require('@/assets/img/s_jlsp.png')
-                    }else if(row.dqjd==='经办人'){
-                        this.src=require('@/assets/img/s_jbr.png')
-                    }else if(row.dqjd==='技术部主管经理'){
-                        this.src=require('@/assets/img/s_jsbzgjl.png')
-                    }else if(row.dqjd==='技术部经理'){
-                        this.src=require('@/assets/img/s_jsbjl.png')
-                    }else if(row.dqjd==='两会'){
-                        this.src=require('@/assets/img/s_lh.png')
-                    }else if(row.dqjd==='总经理办公会'){
-                        this.src=require('@/assets/img/s_zjlbgh.png')
-                    }else if(row.dqjd==='备案'){
-                        this.src=require('@/assets/img/s_ba.png')
-                    }else if(row.dqjd==='申请结束'){
-                        this.src=require('@/assets/img/s_js.png')
+                if (Number(row.investmentEstimate) > 10) {
+                    if (row.dqjd === '填写申请表') {
+                        this.src = require('@/assets/img/s_txsqb.png')
+                    } else if (row.dqjd === '主管经理审批') {
+                        this.src = require('@/assets/img/s_zgjlsp.png')
+                    } else if (row.dqjd === '经理审批') {
+                        this.src = require('@/assets/img/s_jlsp.png')
+                    } else if (row.dqjd === '经办人') {
+                        this.src = require('@/assets/img/s_jbr.png')
+                    } else if (row.dqjd === '技术部主管经理') {
+                        this.src = require('@/assets/img/s_jsbzgjl.png')
+                    } else if (row.dqjd === '技术部经理') {
+                        this.src = require('@/assets/img/s_jsbjl.png')
+                    } else if (row.dqjd === '两会') {
+                        this.src = require('@/assets/img/s_lh.png')
+                    } else if (row.dqjd === '总经理办公会') {
+                        this.src = require('@/assets/img/s_zjlbgh.png')
+                    } else if (row.dqjd === '备案') {
+                        this.src = require('@/assets/img/s_ba.png')
+                    } else if (row.dqjd === '申请结束') {
+                        this.src = require('@/assets/img/s_js.png')
                     }
-                }else {
-                    if(row.dqjd==='填写申请表'){
-                        this.src=require('@/assets/img/x_txsqb.png')
-                    }else if(row.dqjd==='主管经理审批'){
-                        this.src=require('@/assets/img/x_zgjlsp.png')
-                    }else if(row.dqjd==='经理审批'){
-                        this.src=require('@/assets/img/x_jlsp.png')
-                    }else if(row.dqjd==='经办人'){
-                        this.src=require('@/assets/img/x_jbr.png')
-                    }else if(row.dqjd==='技术部主管经理'){
-                        this.src=require('@/assets/img/x_jsbzgjl.png')
-                    }else if(row.dqjd==='技术部经理'){
-                        this.src=require('@/assets/img/x_jsbjl.png')
-                    }else if(row.dqjd==='两会'){
-                        this.src=require('@/assets/img/x_lh.png')
-                    }else if(row.dqjd==='申请结束'){
-                        this.src=require('@/assets/img/x_js.png')
+                } else {
+                    if (row.dqjd === '填写申请表') {
+                        this.src = require('@/assets/img/x_txsqb.png')
+                    } else if (row.dqjd === '主管经理审批') {
+                        this.src = require('@/assets/img/x_zgjlsp.png')
+                    } else if (row.dqjd === '经理审批') {
+                        this.src = require('@/assets/img/x_jlsp.png')
+                    } else if (row.dqjd === '经办人') {
+                        this.src = require('@/assets/img/x_jbr.png')
+                    } else if (row.dqjd === '技术部主管经理') {
+                        this.src = require('@/assets/img/x_jsbzgjl.png')
+                    } else if (row.dqjd === '技术部经理') {
+                        this.src = require('@/assets/img/x_jsbjl.png')
+                    } else if (row.dqjd === '两会') {
+                        this.src = require('@/assets/img/x_lh.png')
+                    } else if (row.dqjd === '申请结束') {
+                        this.src = require('@/assets/img/x_js.png')
                     }
                 }
                 this.show_zt = true
@@ -2432,10 +2431,10 @@
             //    // this.$refs.bar.renderChart();
             //     //this.$refs.line.renderChart();
             // }
-            getjbrOrZgjlList(){// 获取经办人或主管经理列表
-                var isReject=false;// 是否驳回
-                var projectId=this.xm.id
-                var manageType=this.xm.reviser
+            getjbrOrZgjlList() {// 获取经办人或主管经理列表
+                var isReject = false;// 是否驳回
+                var projectId = this.xm.id
+                var manageType = this.xm.reviser
                 axios.get(this.ip + '/projectApplication/isReject', {
                     params: {
                         projectId: projectId
@@ -2443,23 +2442,23 @@
                 })
                     .then(res => {
                         if (res.data) {// 被驳回
-                            isReject=true
+                            isReject = true
                         } else {// 未被驳回
-                            isReject=false
+                            isReject = false
                         }
 
-                        if(this.jbrOrZgjl=='技术部主管经理'){// 为这个才获取
+                        if (this.jbrOrZgjl == '技术部主管经理') {// 为这个才获取
                             // 经理->经办人，经办人-主管经理
-                            var address='/user/getAllJsbZgjl'
-                            axios.get(this.ip + address,{
-                                params:{
-                                    manageType:manageType,
-                                    projectId:isReject==true?projectId:null
+                            var address = '/user/getAllJsbZgjl'
+                            axios.get(this.ip + address, {
+                                params: {
+                                    manageType: manageType,
+                                    projectId: isReject == true ? projectId : null
                                 }
                             })
                                 .then(res => {
                                     console.log(res)
-                                    this.jbrOrZgjlList=[]// 先清空
+                                    this.jbrOrZgjlList = []// 先清空
                                     for (let i = 0; i < res.data.length; i++) {
                                         this.jbrOrZgjlList.push({
                                             value: res.data[i].userId,
