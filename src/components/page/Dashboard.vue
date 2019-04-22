@@ -854,7 +854,7 @@
                     </el-form-item>
                     <el-form-item v-if="groupId!='bgs'" label="项目编号">
                         <el-input
-                                :readonly="user.groupId!='doman'"
+                                :readonly="user.groupId!='doman'||NodeId==='总经理办公会'"
                                 v-model="xm.projectNo"></el-input>
                     </el-form-item>
                     <el-form-item label="项目名称">
@@ -951,6 +951,22 @@
                                     :value="item.value">
                             </el-option>
                         </el-select>
+                    </el-form-item>
+                    <el-form-item v-if="NodeId=='两会'" label="两会召开时间">
+                        <el-date-picker
+                                v-model="xm.lhsj"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item v-if="NodeId=='总经理办公会'" label="总经会时间">
+                        <el-date-picker
+                                v-model="xm.zjhsj"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                placeholder="选择日期">
+                        </el-date-picker>
                     </el-form-item>
                 </el-form>
                 <span v-if="!isxq" slot="footer" class="dialog-footer">
@@ -1198,14 +1214,14 @@
                 return this.user.groupName
             },
             allNum() {
-                if(localStorage.getItem('userId')==='db'||localStorage.getItem('userId')==='lze')
-                    return this.xmList.length+this.bhXms.length
+                if (localStorage.getItem('userId') === 'db' || localStorage.getItem('userId') === 'lze')
+                    return this.xmList.length + this.bhXms.length
                 if (localStorage.getItem('groupId') === 'jsb_doman')
                     return this.xmList.length + this.Xms.length + this.baXms.length
                 return this.xmList.length + this.Xms.length
             },
             doNum() {
-                if(localStorage.getItem('userId')==='db'||localStorage.getItem('userId')==='lze')
+                if (localStorage.getItem('userId') === 'db' || localStorage.getItem('userId') === 'lze')
                     return this.xmList.length
                 if (localStorage.getItem('groupId') === 'doman')
                     return this.xmList.length - this.bhXms.length
@@ -1813,10 +1829,11 @@
             //确定同意
             qd_ty() {
                 if (this.groupId === 'bgs') {
-                    axios.get(this.ip + '/projectApplication/xgxmbh', {
+                    axios.get(this.ip + '/projectApplication/xgxmbhAndlhsj', {//添加项目编号和两会时间
                         params: {
                             xmid: this.xm.id,
-                            xmbh: this.xm.projectNo
+                            xmbh: this.xm.projectNo,
+                            lhsj: this.xm.lhsj
                         }
                     }).then(res => {
                         //两会节点
@@ -1831,8 +1848,13 @@
                 }
 
                 //邓博，李泽恩处理总经会
-                if (this.user.userId === 'db' || this.user.userId === 'lze') {
-                    if (this.NodeId === '总经理办公会') {
+                if ((this.user.userId === 'db' || this.user.userId === 'lze')&&this.NodeId === '总经理办公会') {
+                    axios.get(this.ip+'/projectApplication/xgzjhsj',{
+                        params:{
+                            xmid:this.xm.id,
+                            zjhsj:this.xm.zjhsj
+                        }
+                    }).then(res=>{
                         this.$confirm('是否备案', '提示', {
                             confirmButtonText: '是',
                             cancelButtonText: '否',
@@ -1843,7 +1865,7 @@
                             this.cl('zjl', 2)
                         })
                         return
-                    }
+                    })
                 }
 
                 if (this.user.groupId == 'zgjl') {//主管经理同意
@@ -1888,10 +1910,17 @@
 
             //同意
             ty() {
-                //办公室人处理、需要检验项目编号
+                //办公室人处理、需要检验项目编号和两会召开时间
                 if (localStorage.getItem('groupId') === 'bgs') {
-                    if (this.xm.projectNo == null || this.xm.projectNo === '') {
-                        this.$message.error("请确定项目编号！")
+                    if (this.xm.projectNo == null || this.xm.projectNo === '' || this.xm.lhsj == null || this.xm.lhsj === '') {
+                        this.$message.error("请确定项目编号和两会时间！")
+                        return
+                    }
+                }
+
+                if(this.NodeId==='总经理办公会'){
+                    if(this.xm.zjhsj==null||this.xm.zjhsj===''){
+                        this.$message.error("请确定总经会时间！")
                         return
                     }
                 }

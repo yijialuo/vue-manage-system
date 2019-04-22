@@ -326,6 +326,13 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="两会时间">
+                        <el-input :readonly="true" v-model="project.lhsj"
+                                  style="width: 215px;padding-right: 15px"></el-input>
+                        总经会时间
+                        <el-input :readonly="true" v-model="project.zjhsj"
+                                       style="width: 215px;padding-right: 15px"></el-input>
+                    </el-form-item>
                     <el-form-item label="立项背景理由">
                         <el-input :readonly="!issqr" v-model="project.establishReason" type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 10}"
@@ -714,7 +721,8 @@
                         }
                     })
             },
-    //请求当前项目节点
+
+        //请求当前项目节点
         getNode(){
         for (let i = 0; i < this.projects.length; i++) {
             if (this.projects[i].pid == '' || this.projects[i].pid == null) {

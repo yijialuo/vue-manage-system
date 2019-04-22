@@ -77,6 +77,8 @@
                             </el-form>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="gszjl" sortable label="付款顺序" width="110">
+                    </el-table-column>
                     <el-table-column prop="xmNo" label="项目编号" width="160">
                     </el-table-column>
                     <el-table-column prop="project_name" label="项目名" min-width="220">
@@ -84,6 +86,8 @@
                     <el-table-column prop="contract_no" align="center" sortable label="合同号" min-width="180">
                     </el-table-column>
                     <el-table-column prop="rq" align="center" sortable label="创建日期" width="160">
+                    </el-table-column>
+                    <el-table-column prop="fgld"  align="center" sortable label="结算类型" width="110" >
                     </el-table-column>
                     <el-table-column prop="jbbm" align="center" label="经办部门" width="120">
                     </el-table-column>
@@ -145,7 +149,7 @@
                     <el-input v-model="Payable.invoice_no"></el-input>
                 </el-form-item>
                 <el-form-item label="收款单位">
-                    <el-input :disabled="true" v-model="skdw"></el-input>
+                    <el-input :readonly="true" v-model="skdw"></el-input>
                 </el-form-item>
                 <el-form-item label="银行账号">
                     <el-input v-model="Payable.account"></el-input>
@@ -154,24 +158,38 @@
                     <el-input v-model="Payable.bank"></el-input>
                 </el-form-item>
                 <el-form-item label="支付项目">
-                    <el-input :disabled="true" v-model="zfxm"></el-input>
+                    <el-input :readonly="true" v-model="zfxm"></el-input>
                 </el-form-item>
                 <el-form-item label="合同签订时间">
-                    <el-input v-model="htrq" :disabled="true"></el-input>
+                    <el-input v-model="htrq" :readonly="true"></el-input>
                 </el-form-item>
 
                 <el-form-item style="margin-top: 15px" label="合同总额(元)">
-                    <el-input v-model="htzje" :disabled="true" style="width: 215px;margin-right:15px"></el-input>
+                    <el-input v-model="htzje" :readonly="true" style="width: 215px;margin-right:15px"></el-input>
                     已支付金额(元)&nbsp&nbsp
-                    <el-input v-model="yzfje" :disabled="true" style="width: 190px;"></el-input>
+                    <el-input v-model="yzfje" :readonly="true" style="width: 190px;"></el-input>
                 </el-form-item>
 
                 <el-form-item style="margin-top: 15px" label="未付金额(元)">
-                    <el-input v-model="wzfje" :disabled="true" style="width: 215px;margin-right: 15px"></el-input>
+                    <el-input v-model="wzfje" :readonly="true" style="width: 215px;margin-right: 15px"></el-input>
                     本期应支付金额(元)
                     <el-input v-model="Payable.bqyf" type="number" style="width: 170px"></el-input>
                 </el-form-item>
-
+                <el-form-item style="margin-top:15px" label="结算类型">
+                    <el-select
+                            v-model="Payable.fgld"
+                            placeholder="请输入或选择结算类型"
+                    >
+                        <el-option
+                                v-for="item in jslx"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp付款次数&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <el-input :readonly="true" style="width: 200px" v-model="Payable.gszjl"></el-input>
+                </el-form-item>
                 <!--<el-form-item style="margin-top: 10px" label="经办部门负责人">-->
                     <!--<el-input type="textarea" v-model="Payable.jbbmfzr" :rows="2"></el-input>-->
                 <!--</el-form-item>-->
@@ -226,6 +244,13 @@
                 currentPage:1,//默认开始页面
                 //合同id
                 contractId:'',
+                jslx:[{
+                    value:'预付款',
+                    lable:'预付款'
+                },{
+                    value:'质保金',
+                    lable:'质保金'
+                }],
                 Payable: {
                     jbbm: '',
                     jbr: '',
@@ -351,6 +376,15 @@
                         .then(res => {
                             this.yzfje = res.data
                         })
+
+                    //拿到改合同已经支付的次数
+                    axios.get(this.ip+'/payable/count',{
+                        params:{
+                            contractId:newValue
+                        }
+                    }).then(res=>{
+                        this.Payable.gszjl=res.data+1;
+                    })
                 }
             }
         },
