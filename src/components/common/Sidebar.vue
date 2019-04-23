@@ -106,6 +106,7 @@
                                 title:'操作手册'
                             }
                         ]
+
                     },
                     {
                         icon: 'el-icon-lx-calendar',
