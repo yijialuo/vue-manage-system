@@ -55,6 +55,11 @@ export default new Router({
                     meta: { title: '权限管理' ,permission: true}
                 },
                 {
+                    path: '/operateManual',
+                    component: resolve => require(['../components/page/operateManual.vue'], resolve),
+                    meta: { title: '操作手册'}
+                },
+                {
                     path: '/lxsp',
                     component: resolve => require(['../components/page/lxsp.vue'], resolve),
                     meta: { title: '立项审批' }

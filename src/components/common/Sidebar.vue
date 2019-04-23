@@ -100,6 +100,10 @@
                                         title:'招标审批'
                                     }
                                 ]
+                            },
+                            {
+                                index:'/operateManual',
+                                title:'操作手册'
                             }
                         ]
                     },
@@ -218,6 +222,10 @@
                                             title:'招标审批'
                                         }
                                     ]
+                                },
+                                {
+                                    index:'/operateManual',
+                                    title:'操作手册'
                                 }
                             ]
                         },
@@ -294,6 +302,10 @@
                                             title:'招标审批'
                                         }
                                     ]
+                                },
+                                {
+                                    index:'/operateManual',
+                                    title:'操作手册'
                                 }
                             ]
                         },
