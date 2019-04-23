@@ -112,8 +112,8 @@
                     </el-button>
                 </div>
 
-                <el-table  stripe :data="projects" border class="table" ref="multipleTable">
-                    <el-table-column   prop="projectNo" align="center" sortable label="项目编号" width="140">
+                <el-table stripe :data="projects" border class="table" ref="multipleTable">
+                    <el-table-column prop="projectNo" align="center" sortable label="项目编号" width="140">
                     </el-table-column>
                     <el-table-column prop="projectNam" label="项目名称" min-width="160">
                     </el-table-column>
@@ -136,7 +136,9 @@
                             <el-button type="text" icon="el-icon-tickets" @click="fj(scope.row)">附件</el-button>
                             <el-button type="text" icon="el-icon-star-on" @click="zt(scope.row)">状态</el-button>
                             <!--v-if="isSqs.get(scope.row.id)"-->
-                            <el-button type="text" icon="el-icon-star-on"  v-if="scope.row.canSq" @click="kssq(scope.$index, scope.row)">申请</el-button>
+                            <el-button type="text" icon="el-icon-star-on" v-if="scope.row.canSq"
+                                       @click="kssq(scope.$index, scope.row)">申请
+                            </el-button>
                             <el-button type="text" icon="el-icon-download" @click="xz(scope.row)">下载</el-button>
                             <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="text" icon="el-icon-delete"
                                        class="red" @click="handleDelete(scope.$index, scope.row)">删除
@@ -198,7 +200,7 @@
                         <!--</el-option>-->
                         <!--</el-select>-->
                     </el-form-item>
-                    <el-form-item label="项目大类">
+                    <el-form-item label="立项类别">
                         <el-select style="width: 215px;padding-right: 20px" v-model="project.depAuditOpinion"
                                    placeholder="请选择">
                             <el-option
@@ -228,7 +230,7 @@
                     <el-form-item label="预计工期">
                         <el-input v-model="project.techAuditOpinion"
                                   style="width: 215px;padding-right: 15px"></el-input>
-                        项目分类
+                        项目大类
                         <el-select style="width: 215px;margin-left: 15px" v-model="project.reviser" placeholder="请选择">
                             <el-option
                                     v-for="item in xmfl"
@@ -271,7 +273,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item label="项目名称">
-                        <el-input :readonly="!issqr"  v-model="project.projectNam"></el-input>
+                        <el-input :readonly="!issqr" v-model="project.projectNam"></el-input>
                     </el-form-item>
                     <el-form-item label="立项时间">
                         <el-date-picker
@@ -286,8 +288,9 @@
                         <el-input readonly style="width: 215px;margin-left: 15px"
                                   v-model="project.declarationDep"></el-input>
                     </el-form-item>
-                    <el-form-item label="项目大类">
-                        <el-select :disabled="!issqr"  style="width: 215px;padding-right: 20px" v-model="project.depAuditOpinion"
+                    <el-form-item label="立项类别">
+                        <el-select :disabled="!issqr" style="width: 215px;padding-right: 20px"
+                                   v-model="project.depAuditOpinion"
                                    placeholder="请选择">
                             <el-option
                                     v-for="item in xmdl"
@@ -297,8 +300,9 @@
                             </el-option>
                         </el-select>
                         <span>项目类别</span>
-                        <el-select  :disabled="!issqr" style="width: 215px;margin-left: 15px" v-model="project.projectType"
-                                    placeholder="请选择">
+                        <el-select :disabled="!issqr" style="width: 215px;margin-left: 15px"
+                                   v-model="project.projectType"
+                                   placeholder="请选择">
                             <el-option
                                     v-for="item in xmlb"
                                     :key="item.value"
@@ -316,8 +320,9 @@
                     <el-form-item label="预计工期">
                         <el-input :readonly="!issqr" v-model="project.techAuditOpinion"
                                   style="width: 215px;padding-right: 15px"></el-input>
-                        项目分类
-                        <el-select :disabled="!issqr"  style="width: 215px;margin-left: 15px" v-model="project.reviser" placeholder="请选择">
+                        项目大类
+                        <el-select :disabled="!issqr" style="width: 215px;margin-left: 15px" v-model="project.reviser"
+                                   placeholder="请选择">
                             <el-option
                                     v-for="item in xmfl"
                                     :key="item.value"
@@ -331,7 +336,7 @@
                                   style="width: 215px;padding-right: 15px"></el-input>
                         总经会时间
                         <el-input :readonly="true" v-model="project.zjhsj"
-                                       style="width: 215px;padding-right: 15px"></el-input>
+                                  style="width: 215px;padding-right: 15px"></el-input>
                     </el-form-item>
                     <el-form-item label="立项背景理由">
                         <el-input :readonly="!issqr" v-model="project.establishReason" type="textarea"
@@ -407,7 +412,8 @@
 
 <script>
     import axios from 'axios'
-    import { Loading } from 'element-ui';
+    import {Loading} from 'element-ui';
+
     export default {
         inject: ['reload'],
         name: 'qqgl',
@@ -422,12 +428,12 @@
                 //搜索部门
                 select_dptnm: '',
                 //搜索发起人
-                select_fqr:[],
+                select_fqr: [],
                 //搜索经办人
-                select_jbr:[],
+                select_jbr: [],
                 //搜索节点
                 select_jd: '',
-                //搜索项目分类
+                //搜索项目大类
                 select_xmfl: [],
                 //项目类别搜索
                 select_xmlb: [],
@@ -465,11 +471,11 @@
                     value: '申请结束',
                     label: '申请结束'
                 }],
-                fqrs:[],
-                jbrs:[],
+                fqrs: [],
+                jbrs: [],
                 bms: [],
                 groupId: localStorage.getItem("groupId"),
-                departmentName:localStorage.getItem("departmentName"),
+                departmentName: localStorage.getItem("departmentName"),
                 //新建项目立项单
                 show_xjxmlxd: false,
                 projects: [],
@@ -497,14 +503,20 @@
                     illustration: '',
                     pid: ''
                 },
-                //项目大类
+                //立项类别
                 xmdl: [{
-                    id: '股份项目',
-                    name: '股份项目'
-                }, {
-                    id: '内部项目',
-                    name: '内部项目'
-                }],
+                        id: '临时立项',
+                        name: '临时立项'
+                    }, {
+                        id: '年度计划',
+                        name: '年度计划'
+                    }, {
+                        id: '年度维保',
+                        name: '年度维保'
+                    }, {
+                        id: '股份项目',
+                        name: '股份项目'
+                    }],
                 //项目类别
                 xmlb: [{
                     value: '固定资产',
@@ -516,7 +528,7 @@
                     value: '物资采购',
                     label: '物资采购'
                 }],
-                //项目分类
+                //项目大类
                 xmfl: [{
                     value: '土建',
                     label: '土建'
@@ -551,13 +563,13 @@
                 // 立项申请验证规则
                 applyRules: {
                     establishReason: [
-                        { max: 600, message: '最多600字', trigger: 'change' }
+                        {max: 600, message: '最多600字', trigger: 'change'}
                     ],
                     scale: [
-                        { max: 600, message: '最多600字', trigger: 'change' }
+                        {max: 600, message: '最多600字', trigger: 'change'}
                     ],
-                    illustration:[
-                        { max: 600, message: '最多600字', trigger: 'change' }
+                    illustration: [
+                        {max: 600, message: '最多600字', trigger: 'change'}
                     ]
                 }
             }
@@ -588,8 +600,8 @@
         },
         methods: {
             //下载
-            xz(row){
-                window.open('http://10.197.41.100:8080/print/sqb?id='+row.id)
+            xz(row) {
+                window.open('http://10.197.41.100:8080/print/sqb?id=' + row.id)
             },
 
             //上传成功，重新请求
@@ -722,51 +734,51 @@
                     })
             },
 
-        //请求当前项目节点
-        getNode(){
-        for (let i = 0; i < this.projects.length; i++) {
-            if (this.projects[i].pid == '' || this.projects[i].pid == null) {
-                this.projects[i].dqjd = "未申请！"
-                this.$set(this.projects, i, this.projects[i]);
-            } else {
-                //请求当前节点
-                axios.get(this.ip + '/projectApplication/getPidNode', {
-                    params: {
-                        pid: this.projects[i].pid
+            //请求当前项目节点
+            getNode() {
+                for (let i = 0; i < this.projects.length; i++) {
+                    if (this.projects[i].pid == '' || this.projects[i].pid == null) {
+                        this.projects[i].dqjd = "未申请！"
+                        this.$set(this.projects, i, this.projects[i]);
+                    } else {
+                        //请求当前节点
+                        axios.get(this.ip + '/projectApplication/getPidNode', {
+                            params: {
+                                pid: this.projects[i].pid
+                            }
+                        })
+                            .then(res => {
+                                this.projects[i].dqjd = res.data
+                                this.$set(this.projects, i, this.projects[i])
+                            })
                     }
-                })
-                    .then(res => {
-                        this.projects[i].dqjd = res.data
-                        this.$set(this.projects, i, this.projects[i])
-                    })
-            }
-        }
-    },
+                }
+            },
 
-    //申请按钮的显示与否
-    isSq(){
-        for (let i = 0; i < this.projects.length; i++) {
-            if(localStorage.getItem("userName")!=this.projects[i].proposer){
-                this.projects[i].canSq = false
-                this.$set(this.projects, i, this.projects[i])
-            }else {
-                //请求是否可申请
-                axios.get(this.ip + '/projectApplication/isSq', {
-                    params: {
-                        projectId: this.projects[i].id
-                    }
-                })
-                    .then(xxx => {
-                        this.projects[i].canSq = xxx.data
+            //申请按钮的显示与否
+            isSq() {
+                for (let i = 0; i < this.projects.length; i++) {
+                    if (localStorage.getItem("userName") != this.projects[i].proposer) {
+                        this.projects[i].canSq = false
                         this.$set(this.projects, i, this.projects[i])
-                    })
-            }
-        }
-    },
+                    } else {
+                        //请求是否可申请
+                        axios.get(this.ip + '/projectApplication/isSq', {
+                            params: {
+                                projectId: this.projects[i].id
+                            }
+                        })
+                            .then(xxx => {
+                                this.projects[i].canSq = xxx.data
+                                this.$set(this.projects, i, this.projects[i])
+                            })
+                    }
+                }
+            },
 
             //综合搜索
             zhSearch() {
-                var params ={
+                var params = {
                     select_code: this.select_code,
                     select_xmmc: this.select_xmmc,
                     select_dptnm: this.select_dptnm,
@@ -777,10 +789,10 @@
                     select_xmlb: this.select_xmlb,
                 }
                 // 如果当前账号不是工程技术部且不是办公室且不是办公室.，select_dptnmt填充当前账号部门
-                if(localStorage.getItem('departmentId')!='20190123022801622'&&localStorage.getItem('departmentId')!='20190125102616787'&&localStorage.getItem('departmentId')!='103a990b-a59a-40bc-8ac9-a505076ca0ae'){
-                    params.select_dptnm=localStorage.getItem('departmentName')
+                if (localStorage.getItem('departmentId') != '20190123022801622' && localStorage.getItem('departmentId') != '20190125102616787' && localStorage.getItem('departmentId') != '103a990b-a59a-40bc-8ac9-a505076ca0ae') {
+                    params.select_dptnm = localStorage.getItem('departmentName')
                 }
-                this.ss=true
+                this.ss = true
                 axios.get(this.ip + '/projectApplication/search', {
                         params: params
                     }
@@ -796,14 +808,14 @@
             qb() {
                 this.getProjects(1)
                 this.ss = false
-                this.select_code= ''
-                this.select_xmmc= ''
-                this.select_dptnm=''
-                this.select_fqr=[]
-                this.select_jbr=[]
-                this.select_jd=''
-                this.select_xmfl=[]
-                this.select_xmlb=[]
+                this.select_code = ''
+                this.select_xmmc = ''
+                this.select_dptnm = ''
+                this.select_fqr = []
+                this.select_jbr = []
+                this.select_jd = ''
+                this.select_xmfl = []
+                this.select_xmlb = []
             },
             //拿到搜索部门的名称
             getAllDptName() {
@@ -820,10 +832,10 @@
                     })
             },
             //获取所有发起人
-            getAllFQR(){
+            getAllFQR() {
                 axios.get(this.ip + '/user/getDepartmentDoman', {
                     params: {
-                        departmentId:localStorage.getItem('departmentId')
+                        departmentId: localStorage.getItem('departmentId')
                     }
                 }).then(res => {
                     if (res.data != null) {
@@ -837,10 +849,10 @@
                 })
             },
             //获取所有经办人
-            getAllJBR(){
+            getAllJBR() {
                 axios.get(this.ip + '/user/getDepartmentjbr', {
                     params: {
-                        departmentName:localStorage.getItem('departmentName')
+                        departmentName: localStorage.getItem('departmentName')
                     }
                 }).then(res => {
                     if (res.data != null) {
@@ -871,45 +883,45 @@
             //状态
             zt(row) {
                 if (row.pid != null && row.pid != '') {
-                    if(Number(row.investmentEstimate)>10){
-                        if(row.dqjd==='填写申请表'){
-                            this.src=require('@/assets/img/s_txsqb.png')
-                        }else if(row.dqjd==='主管经理审批'){
-                            this.src=require('@/assets/img/s_zgjlsp.png')
-                        }else if(row.dqjd==='经理审批'){
-                            this.src=require('@/assets/img/s_jlsp.png')
-                        }else if(row.dqjd==='经办人'){
-                            this.src=require('@/assets/img/s_jbr.png')
-                        }else if(row.dqjd==='技术部主管经理'){
-                            this.src=require('@/assets/img/s_jsbzgjl.png')
-                        }else if(row.dqjd==='技术部经理'){
-                            this.src=require('@/assets/img/s_jsbjl.png')
-                        }else if(row.dqjd==='两会'){
-                            this.src=require('@/assets/img/s_lh.png')
-                        }else if(row.dqjd==='总经理办公会'){
-                            this.src=require('@/assets/img/s_zjlbgh.png')
-                        }else if(row.dqjd==='备案'){
-                            this.src=require('@/assets/img/s_ba.png')
-                        }else if(row.dqjd==='申请结束'){
-                            this.src=require('@/assets/img/s_js.png')
+                    if (Number(row.investmentEstimate) > 10) {
+                        if (row.dqjd === '填写申请表') {
+                            this.src = require('@/assets/img/s_txsqb.png')
+                        } else if (row.dqjd === '主管经理审批') {
+                            this.src = require('@/assets/img/s_zgjlsp.png')
+                        } else if (row.dqjd === '经理审批') {
+                            this.src = require('@/assets/img/s_jlsp.png')
+                        } else if (row.dqjd === '经办人') {
+                            this.src = require('@/assets/img/s_jbr.png')
+                        } else if (row.dqjd === '技术部主管经理') {
+                            this.src = require('@/assets/img/s_jsbzgjl.png')
+                        } else if (row.dqjd === '技术部经理') {
+                            this.src = require('@/assets/img/s_jsbjl.png')
+                        } else if (row.dqjd === '两会') {
+                            this.src = require('@/assets/img/s_lh.png')
+                        } else if (row.dqjd === '总经理办公会') {
+                            this.src = require('@/assets/img/s_zjlbgh.png')
+                        } else if (row.dqjd === '备案') {
+                            this.src = require('@/assets/img/s_ba.png')
+                        } else if (row.dqjd === '申请结束') {
+                            this.src = require('@/assets/img/s_js.png')
                         }
-                    }else {
-                        if(row.dqjd==='填写申请表'){
-                            this.src=require('@/assets/img/x_txsqb.png')
-                        }else if(row.dqjd==='主管经理审批'){
-                            this.src=require('@/assets/img/x_zgjlsp.png')
-                        }else if(row.dqjd==='经理审批'){
-                            this.src=require('@/assets/img/x_jlsp.png')
-                        }else if(row.dqjd==='经办人'){
-                            this.src=require('@/assets/img/x_jbr.png')
-                        }else if(row.dqjd==='技术部主管经理'){
-                            this.src=require('@/assets/img/x_jsbzgjl.png')
-                        }else if(row.dqjd==='技术部经理'){
-                            this.src=require('@/assets/img/x_jsbjl.png')
-                        }else if(row.dqjd==='两会'){
-                            this.src=require('@/assets/img/x_lh.png')
-                        }else if(row.dqjd==='申请结束'){
-                            this.src=require('@/assets/img/x_js.png')
+                    } else {
+                        if (row.dqjd === '填写申请表') {
+                            this.src = require('@/assets/img/x_txsqb.png')
+                        } else if (row.dqjd === '主管经理审批') {
+                            this.src = require('@/assets/img/x_zgjlsp.png')
+                        } else if (row.dqjd === '经理审批') {
+                            this.src = require('@/assets/img/x_jlsp.png')
+                        } else if (row.dqjd === '经办人') {
+                            this.src = require('@/assets/img/x_jbr.png')
+                        } else if (row.dqjd === '技术部主管经理') {
+                            this.src = require('@/assets/img/x_jsbzgjl.png')
+                        } else if (row.dqjd === '技术部经理') {
+                            this.src = require('@/assets/img/x_jsbjl.png')
+                        } else if (row.dqjd === '两会') {
+                            this.src = require('@/assets/img/x_lh.png')
+                        } else if (row.dqjd === '申请结束') {
+                            this.src = require('@/assets/img/x_js.png')
                         }
                     }
 
@@ -927,7 +939,7 @@
                     //         this.show_zt = true
                     //     })
                 } else {
-                    this.src=require('@/assets/img/wsq.png')
+                    this.src = require('@/assets/img/wsq.png')
                     // this.$message.info("该项目还未开始申请！")
                 }
                 this.show_zt = true
@@ -943,7 +955,7 @@
 
             //开始申请
             kssq(index, row) {
-                let loadingInstance=Loading.service({ fullscreen: true });
+                let loadingInstance = Loading.service({fullscreen: true});
                 axios.post(this.ip + '/projectApplication/qqglStartSq', row)
                     .then(res => {
                         loadingInstance.close();

@@ -26,7 +26,7 @@
                     </el-card>
                     <el-card shadow="hover" style="height:300px;margin-top: 10px">
                         <div slot="header" class="clearfix">
-                            <span>项目分类</span>
+                            <span>项目大类</span>
                         </div>
                         土建
                         <el-progress :percentage="zbs[3]" color="#42b983"></el-progress>
@@ -89,7 +89,7 @@
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectNam" min-width="160">
                                     </el-table-column>
-                                    <el-table-column sortable align="center" label="项目分类" prop="reviser" width="120">
+                                    <el-table-column sortable align="center" label="项目大类" prop="reviser" width="120">
                                     </el-table-column>
                                     <el-table-column label="申请人" align="center" sortable prop="proposer" width="120">
                                     </el-table-column>
@@ -132,7 +132,7 @@
                                     </el-table-column>
                                     <el-table-column label="项目名称" prop="projectNam" min-width="180">
                                     </el-table-column>
-                                    <el-table-column sortable align="center" prop="reviser" label="项目分类" width="120">
+                                    <el-table-column sortable align="center" prop="reviser" label="项目大类" width="120">
                                     </el-table-column>
                                     <el-table-column label="申请人" align="center" prop="proposer" width="120">
                                     </el-table-column>
@@ -251,7 +251,7 @@
                                 readonly
                                 style="width: 215px;padding-right: 15px"
                                 v-model="xm.projectType"></el-input>
-                        项目分类&nbsp&nbsp
+                        项目大类&nbsp&nbsp
                         <el-input style="width: 215px"
                                   readonly
                                   v-model="xm.reviser"></el-input>
@@ -869,7 +869,7 @@
                         <el-input readonly
                                   style="width: 215px;padding-right: 15px"
                                   v-model="xm.projectType"></el-input>
-                        项目分类&nbsp&nbsp
+                        项目大类&nbsp&nbsp
                         <el-input style="width: 215px" readonly
                                   v-model="xm.reviser"></el-input>
                     </el-form-item>
