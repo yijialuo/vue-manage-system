@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
-        <el-menu  class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
-            text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
+        <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
+                 text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
             <template v-for="item in items">
                 <template v-if="item.subs">
                     <el-submenu :index="item.index" :key="item.index">
@@ -33,6 +33,7 @@
 
 <script>
     import bus from '../common/bus';
+
     export default {
         data() {
             return {
@@ -73,37 +74,37 @@
                                 title: '结算管理'
                             },
                             {
-                                index:'/gysgl',
-                                title:'供应商管理'
+                                index: '/gysgl',
+                                title: '供应商管理'
                             }
-                            ]
+                        ]
                     },
                     {
                         icon: 'el-icon-lx-cascades',
                         index: 'table',
                         title: '系统管理',
-                        subs:[
+                        subs: [
                             {
                                 index: '/qxgl',
                                 title: '权限管理'
                             },
                             {
-                                index:'2',
-                                title:'工作流管理',
-                                subs:[
+                                index: '2',
+                                title: '工作流管理',
+                                subs: [
                                     {
-                                        index:'/lxsp',
-                                        title:'立项审批'
+                                        index: '/lxsp',
+                                        title: '立项审批'
                                     },
                                     {
-                                        index:'/zbsp',
-                                        title:'招标审批'
+                                        index: '/zbsp',
+                                        title: '招标审批'
                                     }
                                 ]
                             },
                             {
-                                index:'/operateManual',
-                                title:'操作手册'
+                                index: '/operateManual',
+                                title: '操作手册'
                             }
                         ]
 
@@ -141,12 +142,12 @@
                 ]
             }
         },
-        computed:{
-            onRoutes(){
-                return this.$route.path.replace('/','');
+        computed: {
+            onRoutes() {
+                return this.$route.path.replace('/', '');
             }
         },
-        created(){
+        created() {
             //菜单获取
             this.getSidebar()
 
@@ -155,12 +156,12 @@
                 this.collapse = msg;
             })
         },
-        methods:{
-            getSidebar(){
-                let groupId=localStorage.getItem('groupId')
-                let departmentName=localStorage.getItem('departmentName')
-                if(groupId==='admin'){
-                    this.items= [
+        methods: {
+            getSidebar() {
+                let groupId = localStorage.getItem('groupId')
+                let departmentName = localStorage.getItem('departmentName')
+                if (groupId === 'admin') {
+                    this.items = [
                         {
                             icon: 'el-icon-lx-home',
                             index: '/dashboard',
@@ -196,8 +197,8 @@
                                     title: '结算管理'
                                 },
                                 {
-                                    index:'/gysgl',
-                                    title:'供应商管理'
+                                    index: '/gysgl',
+                                    title: '供应商管理'
                                 }
                             ]
                         },
@@ -205,28 +206,24 @@
                             icon: 'el-icon-lx-cascades',
                             index: 'table',
                             title: '系统管理',
-                            subs:[
+                            subs: [
                                 {
                                     index: '/qxgl',
                                     title: '权限管理'
                                 },
                                 {
-                                    index:'2',
-                                    title:'工作流管理',
-                                    subs:[
+                                    index: '2',
+                                    title: '工作流管理',
+                                    subs: [
                                         {
-                                            index:'/lxsp',
-                                            title:'立项审批'
+                                            index: '/lxsp',
+                                            title: '立项审批'
                                         },
                                         {
-                                            index:'/zbsp',
-                                            title:'招标审批'
+                                            index: '/zbsp',
+                                            title: '招标审批'
                                         }
                                     ]
-                                },
-                                {
-                                    index:'/operateManual',
-                                    title:'操作手册'
                                 }
                             ]
                         },
@@ -241,10 +238,14 @@
                                 },
                             ]
                         },
-
+                        {
+                            icon: 'el-icon-lx-calendar',
+                            index: '/operateManual',
+                            title: '操作手册'
+                        },
                     ]
-                }else if(groupId==='jsb_doman'||groupId==='jsb_jl'||groupId==='jsb_zgjl'||departmentName==='办公室.'){
-                    this.items= [
+                } else if (groupId === 'jsb_doman' || groupId === 'jsb_jl' || groupId === 'jsb_zgjl' || departmentName === '办公室.') {
+                    this.items = [
                         {
                             icon: 'el-icon-lx-home',
                             index: '/dashboard',
@@ -280,8 +281,8 @@
                                     title: '结算管理'
                                 },
                                 {
-                                    index:'/gysgl',
-                                    title:'供应商管理'
+                                    index: '/gysgl',
+                                    title: '供应商管理'
                                 }
                             ]
                         },
@@ -289,24 +290,20 @@
                             icon: 'el-icon-lx-cascades',
                             index: 'table',
                             title: '系统管理',
-                            subs:[
+                            subs: [
                                 {
-                                    index:'2',
-                                    title:'工作流管理',
-                                    subs:[
+                                    index: '2',
+                                    title: '工作流管理',
+                                    subs: [
                                         {
-                                            index:'/lxsp',
-                                            title:'立项审批'
+                                            index: '/lxsp',
+                                            title: '立项审批'
                                         },
                                         {
-                                            index:'/zbsp',
-                                            title:'招标审批'
+                                            index: '/zbsp',
+                                            title: '招标审批'
                                         }
                                     ]
-                                },
-                                {
-                                    index:'/operateManual',
-                                    title:'操作手册'
                                 }
                             ]
                         },
@@ -321,10 +318,14 @@
                                 },
                             ]
                         },
-
+                        {
+                            icon: 'el-icon-lx-calendar',
+                            index: '/operateManual',
+                            title: '操作手册'
+                        },
                     ]
-                } else if(groupId==='bgs'){
-                    this.items= [
+                } else if (groupId === 'bgs') {
+                    this.items = [
                         {
                             icon: 'el-icon-lx-home',
                             index: '/dashboard',
@@ -361,9 +362,14 @@
                                 }
                             ]
                         },
+                        {
+                            icon: 'el-icon-lx-calendar',
+                            index: '/operateManual',
+                            title: '操作手册'
+                        },
                     ]
-                }else {
-                    this.items= [
+                } else {
+                    this.items = [
                         {
                             icon: 'el-icon-lx-home',
                             index: '/dashboard',
@@ -381,11 +387,16 @@
                                 {
                                     index: '/zbgl',
                                     title: '招标管理'
-                                },{
+                                }, {
                                     index: '/sggl',
                                     title: '施工管理'
                                 }
                             ]
+                        },
+                        {
+                            icon: 'el-icon-lx-calendar',
+                            index: '/operateManual',
+                            title: '操作手册'
                         },
                     ]
                 }
@@ -395,21 +406,24 @@
 </script>
 
 <style scoped>
-    .sidebar{
+    .sidebar {
         display: block;
         position: absolute;
         left: 0;
         top: 70px;
-        bottom:0;
+        bottom: 0;
         overflow-y: scroll;
     }
-    .sidebar::-webkit-scrollbar{
+
+    .sidebar::-webkit-scrollbar {
         width: 0;
     }
-    .sidebar-el-menu:not(.el-menu--collapse){
+
+    .sidebar-el-menu:not(.el-menu--collapse) {
         width: 250px;
     }
+
     .sidebar > ul {
-        height:100%;
+        height: 100%;
     }
 </style>

@@ -7,7 +7,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="add">增加
+                <el-button  v-if="userId=='admin'" type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="add">增加
                 </el-button>
             </div>
             <el-table
@@ -28,9 +28,9 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" width="140">
                     <template slot-scope="scope">
-                        <el-button type="text" size="mini" @click="update(scope.row)">修改</el-button>
+                        <el-button type="text" size="mini" v-if="userId=='admin'" @click="update(scope.row)">修改</el-button>
                         <el-button type="text" size="mini" @click="download(scope.row)">下载</el-button>
-                        <el-button type="text" style="color: #ff0000;" size="mini" @click="deleteData(new Array().concat(scope.row.id))">删除</el-button>
+                        <el-button type="text" style="color: #ff0000;" size="mini" v-if="userId=='admin'" @click="deleteData(new Array().concat(scope.row.id))">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -88,6 +88,7 @@
                     offset: 1,
                     limit: 10
                 },
+                userId:localStorage.getItem('userId'),
                 dialogVisible:false,
                 dialogTitle: '',
                 dialogRules: {// 对话框表单验证规则
