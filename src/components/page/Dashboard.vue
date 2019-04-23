@@ -103,7 +103,30 @@
                                     </el-table-column>
                                 </el-table>
                             </el-tab-pane>
-                            <!--待备案项目-->
+
+                            <!--待办公室苏燕春备案股份项目-->
+                            <el-tab-pane stripe v-if="userId=='syc'" :label="`股份备案(${baXms.length})`"
+                                         name="second">
+                                <el-table height="400px" border :data="baXms" :show-header="true"
+                                          style="width: 100%;font-size: 14px;">
+                                    <el-table-column label="项目编号" align="center" sortable prop="projectNo" width="160">
+                                    </el-table-column>
+                                    <el-table-column label="项目名称" prop="projectNam" min-width="160">
+                                    </el-table-column>
+                                    <el-table-column label="申请人" align="center" sortable prop="proposer" width="140">
+                                    </el-table-column>
+                                    <el-table-column label="立项时间" align="center" sortable prop="applicationDte"
+                                                     width="140">
+                                    </el-table-column>
+                                    <el-table-column label="操作" align="center" width="140">
+                                        <template slot-scope="scope">
+                                            <el-button size="small" @click="xmxq(scope.row),ba=true">处理</el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </el-tab-pane>
+
+                            <!--待技术部经办人备案项目-->
                             <el-tab-pane stripe v-if="user.groupId=='jsb_doman'" :label="`待备案项目(${baXms.length})`"
                                          name="second">
                                 <el-table height="400px" border :data="baXms" :show-header="true"
@@ -229,7 +252,7 @@
 
             <!-- 项目详情框 技术部自己项目-->
             <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xqgcjsb" width="50%" center>
-                <el-form style="margin-top: 20px" label-width="100px">
+                <el-form style="margin-top: 20px" label-width="120px">
                     <el-form-item v-if="groupId=='bgs'" label="项目编号">
                         <el-input v-model="xm.projectNo"></el-input>
                     </el-form-item>
@@ -244,12 +267,17 @@
                     <el-form-item label="申报部门">
                         <el-input
                                 readonly
+                                style="width: 215px;padding-right: 55px"
                                 v-model="xm.declarationDep"></el-input>
+                        立项类型&nbsp&nbsp
+                        <el-input readonly
+                                  style="width: 215px;padding-right: 15px"
+                                  v-model="xm.depAuditOpinion"></el-input>
                     </el-form-item>
                     <el-form-item label="项目类别">
                         <el-input
                                 readonly
-                                style="width: 215px;padding-right: 15px"
+                                style="width: 215px;padding-right: 55px"
                                 v-model="xm.projectType"></el-input>
                         项目大类&nbsp&nbsp
                         <el-input style="width: 215px"
@@ -257,7 +285,7 @@
                                   v-model="xm.reviser"></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算">
-                        <el-input style="width: 215px;padding-right: 15px"
+                        <el-input style="width: 215px;padding-right: 55px"
                                   v-model="xm.investmentEstimate"></el-input>
                         项目负责人
                         <el-input style="width: 215px"
@@ -338,7 +366,7 @@
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="show_xqgcjsb = false">取消</el-button>
                     <el-button type="warning" @click="xmzf">作废</el-button>
-                    <el-button type="primary" @click="cl('jbr',true)">申请</el-button>
+                    <el-button type="primary" @click="jsbsq">申请</el-button>
                 </span>
             </el-dialog>
 
@@ -422,33 +450,6 @@
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                         </el-upload>
                     </el-form-item>
-                    <!--<el-form-item label="文件列表">-->
-                    <!--<el-upload-->
-                    <!--class="upload-demo"-->
-                    <!--drag-->
-                    <!--:action="url"-->
-                    <!--:on-preview="handlePreview"-->
-                    <!--:on-remove="handleRemove"-->
-                    <!--:on-success="handleSuccess"-->
-                    <!--multiple-->
-                    <!--:file-list="fileList"-->
-                    <!--&gt;-->
-                    <!--<i class="el-icon-upload"></i>-->
-                    <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-                    <!--</el-upload>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="单位意见">-->
-                    <!--<el-input type="textarea" v-model="contract.dwyj"></el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="财务部门意见">-->
-                    <!--<el-input type="textarea" v-model="contract.cwbmyj"></el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="分管领导意见">-->
-                    <!--<el-input type="textarea" v-model="contract.fgldyj"></el-input>-->
-                    <!--</el-form-item>-->
-                    <!--<el-form-item label="总经理意见">-->
-                    <!--<el-input type="textarea" v-model="contract.zjlyj"></el-input>-->
-                    <!--</el-form-item>-->
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="show_jsbdoman_ht=false">取消</el-button>
@@ -849,7 +850,7 @@
             <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="50%" center>
 
                 <el-form style="margin-top: 20px" label-width="120px">
-                    <el-form-item v-if="groupId=='bgs'" label="项目编号">
+                    <el-form-item v-if="groupId=='bgs'&&NodeId=='两会'" label="项目编号">
                         <el-input v-model="xm.projectNo"></el-input>
                     </el-form-item>
                     <el-form-item v-if="groupId!='bgs'" label="项目编号">
@@ -863,18 +864,23 @@
                     </el-form-item>
                     <el-form-item label="申报部门">
                         <el-input readonly
+                                  style="width: 215px;padding-right: 55px"
                                   v-model="xm.declarationDep"></el-input>
+                        立项类型&nbsp&nbsp
+                        <el-input readonly
+                                  style="width: 215px;padding-right: 15px"
+                                  v-model="xm.depAuditOpinion"></el-input>
                     </el-form-item>
                     <el-form-item label="项目类别">
                         <el-input readonly
-                                  style="width: 215px;padding-right: 15px"
+                                  style="width: 215px;padding-right: 55px"
                                   v-model="xm.projectType"></el-input>
                         项目大类&nbsp&nbsp
                         <el-input style="width: 215px" readonly
                                   v-model="xm.reviser"></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算">
-                        <el-input style="width: 215px;padding-right: 15px"
+                        <el-input style="width: 215px;padding-right: 55px"
                                   :readonly="user.groupId!='doman'"
                                   v-model="xm.investmentEstimate"></el-input>
                         项目负责人
@@ -1114,6 +1120,7 @@
                 //工程技术部
                 show_xqgcjsb: false,
                 comment: '同意',
+                userId: localStorage.getItem('userId'),
                 user: {},
                 xm: {},
                 ip: 'http://10.197.41.100:8080',
@@ -1197,7 +1204,15 @@
                     this.zhongbiao.zhongbiaojg = 1
                 }
             },
+
             show_xq(newValue, oldValue) {// 监听详情显示
+                if (newValue == true) {
+                    this.getjbrOrZgjlList();// 获取经办人或主管经理列表
+                }
+            },
+
+            //技术部自己的项目弹窗
+            show_xqgcjsb(newValue,oldValue){
                 if (newValue == true) {
                     this.getjbrOrZgjlList();// 获取经办人或主管经理列表
                 }
@@ -1263,6 +1278,15 @@
             bus.$off('collapse', this.handleBus);
         },
         methods: {
+            //技术部自己的项目，驳回再申请
+            jsbsq(){
+                if(this.jbrOrZgjlValue==null||this.jbrOrZgjlValue.length==0){
+                    this.$message.error("请选择技术部主管经理！")
+                    return
+                }
+                this.cl('jbr',true)
+            },
+
             //办公室确认合同已接受
             qrhtjs() {
                 if (this.contract.contractNo === null || this.contract.contractNo === '') {
@@ -1811,18 +1835,9 @@
                     } else if (this.user.groupId == 'jsb_jl') {
                         this.cl('jsjl', false)
                     } else if (this.user.groupId == 'bgs') {
-                        axios.get(this.ip + '/projectApplication/getPidNode', {
-                            params: {
-                                pid: this.xm.pid
-                            }
-                        })
-                            .then(res => {
-                                if (res.data == '两会') {
-                                    this.cl('lh', 2)
-                                } else {
-                                    this.cl('zjl', 1)
-                                }
-                            })
+                        this.cl('lh', 2)
+                    } else {//doman的驳回的话，只能是邓博、和李泽恩的总经会的驳回
+                        this.cl('zjl',1)
                     }
                 }
             },
@@ -1848,23 +1863,28 @@
                 }
 
                 //邓博，李泽恩处理总经会
-                if ((this.user.userId === 'db' || this.user.userId === 'lze')&&this.NodeId === '总经理办公会') {
-                    axios.get(this.ip+'/projectApplication/xgzjhsj',{
-                        params:{
-                            xmid:this.xm.id,
-                            zjhsj:this.xm.zjhsj
+                if ((this.user.userId === 'db' || this.user.userId === 'lze') && this.NodeId === '总经理办公会') {
+                    axios.get(this.ip + '/projectApplication/xgzjhsj', {
+                        params: {
+                            xmid: this.xm.id,
+                            zjhsj: this.xm.zjhsj
                         }
-                    }).then(res=>{
-                        this.$confirm('是否备案', '提示', {
-                            confirmButtonText: '是',
-                            cancelButtonText: '否',
-                            type: 'warning'
-                        }).then(() => {
-                            this.cl('zjl', 0)//备案
-                        }).catch(() => {
-                            this.cl('zjl', 2)
-                        })
-                        return
+                    }).then(res => {
+                        if (this.xm.depAuditOpinion != '股份项目') {
+                            this.$confirm('是否备案', '提示', {
+                                confirmButtonText: '是',
+                                cancelButtonText: '否',
+                                type: 'warning'
+                            }).then(() => {
+                                this.cl('zjl', 0)//备案
+                            }).catch(() => {
+                                this.cl('zjl', 2)
+                            })
+                            return
+                        } else {
+                            this.cl('zjl', 0)
+                        }
+
                     })
                 }
 
@@ -1918,8 +1938,8 @@
                     }
                 }
 
-                if(this.NodeId==='总经理办公会'){
-                    if(this.xm.zjhsj==null||this.xm.zjhsj===''){
+                if (this.NodeId === '总经理办公会') {
+                    if (this.xm.zjhsj == null || this.xm.zjhsj === '') {
                         this.$message.error("请确定总经会时间！")
                         return
                     }
@@ -1957,7 +1977,6 @@
             },
             //处理
             cl(varName, value) {
-
                 const loading = this.$loading({
                     lock: true,
                     text: '处理中……',
@@ -2007,40 +2026,11 @@
                 })
                     .catch(() => {
                         this.reload()
-                        //重新请求
-                        // axios.get(this.ip + '/Attachment/getattachment', {
-                        //     params: {
-                        //         pid: this.xm.pid
-                        //     }
-                        // })
-                        //     .then(res => {
-                        //         if (res.data) {
-                        //             this.fileList = []
-                        //             for (let i = 0; i < res.data.length; i++) {
-                        //                 this.fileList.push({
-                        //                     name: res.data[i].attachment_nam,
-                        //                     id: res.data[i].attachment_id
-                        //                 })
-                        //             }
-                        //         }
-                        //     })
                     })
             },
             //点击文件下载
             handlePreview(file) {
                 window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
-                // axios.get(this.ip + '/Attachment/getrank', {
-                //     params: {
-                //         userId: localStorage.getItem('userId'),
-                //         attachment_id: file.id
-                //     }
-                // })
-                //     .then(res => {
-                //         if (res.data)
-                //             window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
-                //         else
-                //             this.$message.info("没有下载权限")
-                //     })
             },
             //领取评论
             lqpl(pid) {
@@ -2147,7 +2137,7 @@
                             this.bhXms = res.data
                         } else
                             this.Xms = res.data
-                        if (this.user.groupId == 'jsb_doman') {//如果是经办人，还要拿到备案的项目
+                        if (this.user.groupId == 'jsb_doman' || this.user.userId == 'syc') {//如果是经办人或者苏燕春，还要拿到备案的项目
                             axios.get(this.ip + '/projectApplication/getBaXm', {
                                 params: {
                                     userId: this.user.userId
@@ -2486,7 +2476,6 @@
                                 }
                             })
                                 .then(res => {
-                                    console.log(res)
                                     this.jbrOrZgjlList = []// 先清空
                                     for (let i = 0; i < res.data.length; i++) {
                                         this.jbrOrZgjlList.push({
