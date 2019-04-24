@@ -44,6 +44,7 @@
                     </el-table-column>
                     <el-table-column label="操作" align="center" width="200">
                         <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-star-on" v-if="scope.row.sqr===userId&&(scope.row.dqjd==='立项部门提出技术要求'||scope.row.dqjd==='未申请')" @click="sq(scope.row)">申请</el-button>
                             <el-button type="text" icon="el-icon-upload" @click="fj(scope.row)">附件
                             </el-button>
                             <el-button type="text" icon="el-icon-star-on" @click="zt(scope.row)">状态
@@ -110,7 +111,7 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="技术要求备注" prop="jsyq">
+                <el-form-item label="备注" prop="jsyq">
                     <el-input v-model="zhaobiao.jsyq" rows="4" type="textarea" placeholder="最多600字"></el-input>
                 </el-form-item>
 
@@ -118,7 +119,7 @@
 
             <span slot="footer" class="dialog-footer">
                 <el-button @click="show_xjzblc = false">取 消</el-button>
-                <el-button type="primary" @click="ks">开 始</el-button>
+                <el-button type="primary" @click="ks">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -128,7 +129,7 @@
                 <el-form-item label="项目">
                     <el-input readonly style="color:#FF0000;"  v-model="zhaobiao.xmName" rows="6"></el-input>
                 </el-form-item>
-                <el-form-item label="技术要求备注">
+                <el-form-item label="备注">
                     <el-input readonly v-model="zhaobiao.jsyq" rows="6" type="textarea"></el-input>
                 </el-form-item>
                 <el-form-item label="发标时间">
@@ -226,6 +227,7 @@
                 //默认当前页
                 currentPage: 1,
                 bzs: [],
+                userId:localStorage.getItem('userId'),
                 groupId: localStorage.getItem('groupId'),
                 departmentName:localStorage.getItem('departmentName'),
                 //投标单位
@@ -427,7 +429,10 @@
             },
             //附件
             fj(row) {
-                console.log(row)
+                if(row.dqjd==='未申请'){
+                    this.$message.info("请先申请再上传附件！")
+                    return
+                }
                 this.zhaobiao = row
                 this.showfj = true
                 this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
@@ -497,7 +502,7 @@
                 })
             },
 
-            //拿到自己经手的招标
+            //拿到招标
             getAllzhaobiao() {
                 if (this.departmentName!=='办公室.'&&(this.groupId === 'zgjl' || this.groupId === 'jl'||this.groupId==='doman')) {
                     //如果是主管经理或者经理拿到自己部门所有的招标信息
@@ -519,14 +524,20 @@
                                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
                                 })
                                 //填充节点
-                                axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
-                                    params:{
-                                        zbpid:this.clzhaobiaos[i].zbpid
-                                    }
-                                }).then(res=>{
-                                    this.clzhaobiaos[i].dqjd = res.data
+                                if(this.clzhaobiaos[i].zbpid==null||this.clzhaobiaos[i].zbpid==''){
+                                    this.clzhaobiaos[i].dqjd = '未申请'
                                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
-                                })
+                                }else {
+                                    axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
+                                        params:{
+                                            zbpid:this.clzhaobiaos[i].zbpid
+                                        }
+                                    }).then(res=>{
+                                        this.clzhaobiaos[i].dqjd = res.data
+                                        this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
+                                    })
+                                }
+
                                 //填充中标人,中标金额
                                 axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
                                     params: {
@@ -579,14 +590,19 @@
                                         this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
                                     })
                                     //填充节点
-                                    axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
-                                        params:{
-                                            zbpid:this.clzhaobiaos[i].zbpid
-                                        }
-                                    }).then(res=>{
-                                        this.clzhaobiaos[i].dqjd = res.data
+                                    if(this.clzhaobiaos[i].zbpid==null||this.clzhaobiaos[i].zbpid==''){
+                                        this.clzhaobiaos[i].dqjd = '未申请'
                                         this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
-                                    })
+                                    }else {
+                                        axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
+                                            params:{
+                                                zbpid:this.clzhaobiaos[i].zbpid
+                                            }
+                                        }).then(res=>{
+                                            this.clzhaobiaos[i].dqjd = res.data
+                                            this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
+                                        })
+                                    }
                                     //填充中标人,中标金额
                                     axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
                                         params: {
@@ -621,59 +637,6 @@
                             }
                         })
                 }
-                // else {
-                //     axios.get(this.ip + '/zhaobiao/getAllzhaobiao', {
-                //         params: {
-                //             userId: localStorage.getItem('userId')
-                //         }
-                //     }).then(res => {
-                //         if (res.data.length != 0) {
-                //             this.clzhaobiaos = res.data
-                //             //填充项目名称、用户名、中标人、中标金额
-                //             for (let i = 0; i < this.clzhaobiaos.length; i++) {
-                //                 //填充节点
-                //                 axios.get(this.ip+'/zhaobiao/getZhaobiaoNode',{
-                //                     params:{
-                //                         zbpid:this.clzhaobiaos[i].zbpid
-                //                     }
-                //                 }).then(res=>{
-                //                     this.clzhaobiaos[i].dqjd = res.data
-                //                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i])
-                //                 })
-                //                 //填充中标人,中标金额
-                //                 axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
-                //                     params: {
-                //                         zbid: this.clzhaobiaos[i].id
-                //                     }
-                //                 }).then(res => {
-                //                     if (res.data.length != 0) {
-                //                         this.clzhaobiaos[i].zbr = res.data[0].zhongbiaodw
-                //                         this.clzhaobiaos[i].zbje = res.data[0].zhongbiaojg
-                //                         this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
-                //                     }
-                //                 })
-                //
-                //                 //填充项目名
-                //                 axios.get(this.ip + '/projectApplication/xmIdToxmName', {
-                //                     params: {
-                //                         xmId: this.clzhaobiaos[i].xmid
-                //                     }
-                //                 }).then(res => {
-                //                     this.clzhaobiaos[i].xmName = res.data
-                //                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
-                //                 })
-                //                 axios.get(this.ip + '/user/userIdTouserName', {//填充申请人
-                //                     params: {
-                //                         userId: this.clzhaobiaos[i].sqr
-                //                     }
-                //                 }).then(res => {
-                //                     this.clzhaobiaos[i].userName = res.data
-                //                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
-                //                 })
-                //             }
-                //         }
-                //     })
-                // }
             },
             //状态
             zt(row) {
@@ -691,24 +654,6 @@
                     this.src=require('@/assets/img/zbjs.png')
                 }
                 this.show_zt = true
-
-                // const loading = this.$loading({
-                //     lock: true,
-                //     text: '处理中……',
-                //     spinner: 'el-icon-loading',
-                //     background: 'rgba(0, 0, 0, 0.7)'
-                // });
-                // axios.get(this.ip + '/projectApplication/zt', {
-                //     params: {
-                //         pi: row.zbpid
-                //     }
-                // })
-                //     .then(res => {
-                //         loading.close()
-                //         //得到图片流
-                //         this.src = 'data:image/png;base64,' + res.data
-                //         this.show_zt = true
-                //     })
             },
             //领取附件
             lqfj(zbpId) {
@@ -729,53 +674,49 @@
                         }
                     })
             },
-            //领取招标
-            // lqzhaobiao() {
-            //     axios.get(this.ip + '/zhaobiao/lqzhaobiao', {
-            //         params: {
-            //             userId: localStorage.getItem('userId')
-            //         }
-            //     }).then(res => {
-            //         if (res.data.length != 0) {
-            //             this.zhaobiaos = res.data
-            //             //填充项目名称和用户名
-            //             for (let i = 0; i < this.zhaobiaos.length; i++) {
-            //                 axios.get(this.ip + '/projectApplication/xmIdToxmName', {
-            //                     params: {
-            //                         xmId: this.zhaobiaos[i].xmid
-            //                     }
-            //                 }).then(res => {
-            //                     this.zhaobiaos[i].xmName = res.data
-            //                     this.$set(this.zhaobiaos, i, this.zhaobiaos[i]);
-            //                 })
-            //                 axios.get(this.ip + '/user/userIdTouserName', {
-            //                     params: {
-            //                         userId: this.zhaobiaos[i].sqr
-            //                     }
-            //                 }).then(res => {
-            //                     this.zhaobiaos[i].userName = res.data
-            //                     this.$set(this.zhaobiaos, i, this.zhaobiaos[i]);
-            //                 })
-            //             }
-            //         }
-            //     })
-            // },
 
+            //申请
+            sq(row){
+                //判断该项目是否可进行招标申请
+                axios.get(this.ip+"/zhaobiao/canZhaobiaoSq",{
+                    params:{
+                        projectId:row.xmid
+                    }
+                }).then(res=>{
+                    if(res.data){//可以申请
+                        axios.get(this.ip+'/zhaobiao/startZhaobiao',{
+                            params:{
+                                id:row.id
+                            }
+                        }).then(res=>{
+                            if(res.data){
+                                this.$message.success("申请成功！")
+                                this.reload()
+                            }else {
+                                this.$message.error("申请失败！")
+                            }
+                        })
+                    }else {
+                        this.$message.error("该项目还未进行到两会！不能进行招标！")
+                    }
+                })
+            },
 
             //开始
             ks() {
                 if (this.zhaobiao.xmid == null || this.zhaobiao.xmid == '' || this.zhaobiao.jsyq == null || this.zhaobiao.jsyq == '') {
                     this.$message.error("请填写信息！")
-                    console.log("请填写信息！")
                     return
                 }
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
-                        axios.post(this.ip + '/zhaobiao/startZhaobiao', this.zhaobiao)
-                            .then(res => {
-                                if (res.data) {
-                                    this.$message.success("申请开始！已转到工程技术部！")
+                        axios.post(this.ip + '/zhaobiao/insertZhaobiao', this.zhaobiao)
+                            .then(res=>{
+                                if(res.data){
+                                    this.$message.success("创建成功！")
                                     this.reload()
+                                }else {
+                                    this.$message.error("创建失败！")
                                 }
                             })
                     }
