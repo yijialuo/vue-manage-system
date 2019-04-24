@@ -111,7 +111,7 @@
         methods:{
             getList(){
                 var _this=this
-                axios.get('http://localhost:8080/operateManual/get', {
+                axios.get('http://10.197.41.100:8080/operateManual/get', {
                     params: {
                         page: _this.listQuery.offset,
                         size: _this.listQuery.limit
@@ -164,7 +164,7 @@
                             headers: {'Content-Type': 'multipart/form-data'}
                         }
 
-                        axios.post('http://localhost:8080/operateManual/add', form, config)
+                        axios.post('http://10.197.41.100:8080/operateManual/add', form, config)
                             .then((res => {
                                 this.$message.success("上传成功!")
                                 this.dialogVisible = false
@@ -182,7 +182,7 @@
                     type: 'warning'
                 }).then(() => {
                     axios.request({
-                        url: 'http://localhost:8080/operateManual/delete',
+                        url: 'http://10.197.41.100:8080/operateManual/delete',
                         method: 'delete',
                         data:row
                     }).then(res=>{
@@ -232,7 +232,7 @@
                             headers: {'Content-Type': 'multipart/form-data'}
                         }
 
-                        axios.put('http://localhost:8080/operateManual/update',form, config)
+                        axios.put('http://10.197.41.100:8080/operateManual/update',form, config)
                             .then(res=>{
                                 this.$message.success("修改成功!")
                                 this.dialogVisible = false
@@ -242,7 +242,7 @@
                 })
             },
             download(row){
-                window.location.href='http://localhost:8080/operateManual/download?id='+row.id
+                window.location.href='http://10.197.41.100:8080/operateManual/download?id='+row.id
             },
             handleCurrentChange(val) {
                 this.listQuery.offset=val;
