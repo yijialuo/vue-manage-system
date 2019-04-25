@@ -1683,6 +1683,7 @@
                     this.zhongbiaos = res.data
                 })
             },
+
             //项目作废（工程技术部）
             xmzf() {
                 this.$confirm("该操作将作废该条项目，是非确定", "提示")

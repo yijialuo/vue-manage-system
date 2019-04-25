@@ -640,6 +640,10 @@
             },
             //状态
             zt(row) {
+                if(row.dq==='未申请'){
+                    this.$message.info("当前项目还未招标申请！无状态！")
+                    return
+                }
                 if(row.dqjd==='立项部门提出技术要求'){
                     this.src=require('@/assets/img/lxbmtcjsyq.png')
                 }else if(row.dqjd==='技术部经办人'){
