@@ -115,8 +115,12 @@
                         title: '统计报表',
                         subs: [
                             {
-                                index: '/ndlxb',
-                                title: '年度立项表'
+                                index: '/xmssjdbb',
+                                title: '项目实施进度报表'
+                            },
+                            {
+                                index: '/xmtjbb',
+                                title: '项目统计报表'
                             },
                             // {
                             //     index: '3-2',
@@ -233,8 +237,12 @@
                             title: '统计报表',
                             subs: [
                                 {
-                                    index: '/ndlxb',
-                                    title: '年度立项表'
+                                    index: '/xmssjdbb',
+                                    title: '项目实施进度报表'
+                                },
+                                {
+                                    index: '/xmtjbb',
+                                    title: '项目统计报表'
                                 },
                             ]
                         },
@@ -313,8 +321,12 @@
                             title: '统计报表',
                             subs: [
                                 {
-                                    index: '/ndlxb',
-                                    title: '年度立项表'
+                                    index: '/xmssjdbb',
+                                    title: '项目实施进度报表'
+                                },
+                                {
+                                    index: '/xmtjbb',
+                                    title: '项目统计报表'
                                 },
                             ]
                         },

@@ -75,9 +75,14 @@ export default new Router({
                     meta: { title: '合同审批' }
                 },
                 {
-                    path: '/ndlxb',
-                    component: resolve => require(['../components/page/ndlxb.vue'], resolve),
-                    meta: { title: '年度立项表' }
+                    path: '/xmssjdbb',
+                    component: resolve => require(['../components/page/xmssjdbb.vue'], resolve),
+                    meta: {title: '项目实施进度报表'}
+                },
+                {
+                    path: '/xmtjbb',
+                    component: resolve => require(['../components/page/xmtjbb.vue'], resolve),
+                    meta: {title: '项目统计报表'}
                 },
                 {
                     path: '/dashboard',
