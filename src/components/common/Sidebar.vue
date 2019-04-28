@@ -76,6 +76,10 @@
                             {
                                 index: '/gysgl',
                                 title: '供应商管理'
+                            },
+                            {
+                                index: '/xxmgl',
+                                title: '小项目管理'
                             }
                         ]
                     },
@@ -203,6 +207,10 @@
                                 {
                                     index: '/gysgl',
                                     title: '供应商管理'
+                                },
+                                {
+                                    index: '/xxmgl',
+                                    title: '小项目管理'
                                 }
                             ]
                         },
@@ -291,6 +299,10 @@
                                 {
                                     index: '/gysgl',
                                     title: '供应商管理'
+                                },
+                                {
+                                    index: '/xxmgl',
+                                    title: '小项目管理'
                                 }
                             ]
                         },
@@ -371,6 +383,10 @@
                                 {
                                     index: '/jsgl',
                                     title: '结算管理'
+                                },
+                                {
+                                    index: '/xxmgl',
+                                    title: '小项目管理'
                                 }
                             ]
                         },

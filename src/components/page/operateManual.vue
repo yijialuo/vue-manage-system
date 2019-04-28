@@ -67,7 +67,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogVisible = false">取消</el-button>
+                    <el-button @click="addUpdateDialogVisible = false">取消</el-button>
                     <el-button type="primary" @click="dialogTitle==='增加'?addData():updateData()">确定</el-button>
                 </div>
             </el-dialog>
@@ -89,8 +89,8 @@
                     limit: 10
                 },
                 userId:localStorage.getItem('userId'),
-                dialogVisible:false,
-                dialogTitle: '',
+                addUpdateDialogVisible:false,
+                addUpdateDialogTitle: '',
                 dialogRules: {// 对话框表单验证规则
                     name: [{  required: true, message: '名称不可为空', trigger: 'blur' }],
                     description: [{  required: false,max:255, message: '最多255个字', trigger: 'change' }],

@@ -50,6 +50,11 @@ export default new Router({
                     meta:{title:'供应商管理'}
                 },
                 {
+                    path:'/xxmgl',
+                    component:resolve => require(['../components/page/xxmgl.vue'], resolve),
+                    meta:{title:'小项目管理'}
+                },
+                {
                     path: '/qxgl',
                     component: resolve => require(['../components/page/qxgl.vue'], resolve),
                     meta: { title: '权限管理' ,permission: true}

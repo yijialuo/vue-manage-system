@@ -83,7 +83,7 @@
                 })
             },
             download(row){
-                window.location.href='http://10.197.41.100:8080/Bb/download'
+                window.location.href='http://10.197.41.100:8080/Bb/downloadXMSSJDB'
             }
         }
     }
