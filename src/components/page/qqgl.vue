@@ -140,7 +140,7 @@
                                        @click="kssq(scope.$index, scope.row)">申请
                             </el-button>
                             <el-button type="text" icon="el-icon-download" @click="xz(scope.row)">下载</el-button>
-                            <el-button v-if="groupId==='doman'||groupId==='jsb_doman'" type="text" icon="el-icon-delete"
+                            <el-button  v-if="groupId==='doman'||groupId==='jsb_doman'" type="text" icon="el-icon-delete"
                                        class="red" @click="handleDelete(scope.$index, scope.row)">删除
                             </el-button>
                         </template>

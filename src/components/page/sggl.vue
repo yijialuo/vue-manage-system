@@ -379,9 +379,6 @@
             },
             //点击新增节点
             xzjd(){
-                this.show_xzjd=true
-                this.jindu={}
-                this.jindu.projectId=this.projectId
                 //新增节点判断该项目是否可以新增节点
                 axios.get(this.ip+'/jindu/canAddjd',{
                     params:{

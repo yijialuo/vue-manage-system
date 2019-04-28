@@ -51,6 +51,8 @@
                             </el-button>
                             <el-button type="text" icon="el-icon-tickets" @click="xq(scope.row)">详情
                             </el-button>
+                            <el-button type="text" class="red"  icon="el-icon-delete" v-if="scope.row.sqr===userId" @click="sc(scope.row)">删除
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -295,6 +297,22 @@
             this.getAllDptName()
         },
         methods: {
+            //删除事件
+            sc(row){
+                axios.get(this.ip+'/zhaobiao/delete',{
+                    params:{
+                        id:row.id
+                    }
+                }).then(res=>{
+                    if(res.data){
+                        this.$message.success("删除成功！")
+                        this.reload()
+                    }else {
+                        this.$message.error("改招标正在申请中!无法删除！")
+                    }
+                })
+            },
+
             //全部按钮
             qb(){
                 this.getAllzhaobiao()
