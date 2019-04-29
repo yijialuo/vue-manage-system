@@ -41,6 +41,7 @@
                     :page-size="listQuery.limit"
                     layout="total,prev,pager,next"
                     :total="total"
+                    background
                     style="text-align: center">
             </el-pagination>
             <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="50%" >

@@ -636,7 +636,7 @@
                     }).then(() => {
                         axios.get(this.ip + '/contract/deletFj', {
                             params: {
-                                Fjid: file.id
+                                fid: file.id
                             }
                         })
                             .then(res => {
@@ -737,7 +737,7 @@
                     }).then(() => {
                         axios.get(this.ip + '/contract/deletFj', {
                             params: {
-                                Fjid: file.id
+                                fid: file.id
                             }
                         })
                             .then(res => {
@@ -754,7 +754,7 @@
                 // }).then(() => {
                 //     axios.get(this.ip + '/contract/deletFj', {
                 //         params: {
-                //             Fjid: file.id
+                //             fid: file.id
                 //         }
                 //     })
                 //         .then(res => {
