@@ -290,7 +290,7 @@
                 show_xzjs: false,
                 list: [],
                 list2: [],
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 loading2: false,
                 //结算数组
@@ -396,7 +396,7 @@
         methods: {
             //下载
             xz(row){
-                window.open("http://10.197.41.100:8080/print/zfspd?id="+row.id)
+                window.open("http://10.197.33.115:8080/print/zfspd?id="+row.id)
             },
 
             currentChange(currentPage){
@@ -509,7 +509,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id
                 this.show_scfj = true
             },
             //拿所有的结算记录

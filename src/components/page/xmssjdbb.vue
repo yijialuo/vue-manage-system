@@ -82,14 +82,14 @@
         },
         methods:{
             getList(){
-                axios.get('http://10.197.41.100:8080/sgjdb/getAllSgjdb', {
+                axios.get('http://10.197.33.115:8080/sgjdb/getAllSgjdb', {
 
                 }).then(res => {
                     this.list=res.data
                 })
             },
             download(row){
-                window.location.href='http://10.197.41.100:8080/Bb/downloadXMSSJDB'
+                window.location.href='http://10.197.33.115:8080/Bb/downloadXMSSJDB'
             }
         }
     }

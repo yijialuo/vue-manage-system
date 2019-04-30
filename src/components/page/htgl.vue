@@ -330,7 +330,7 @@
                 //对方资质审查,数组
                 zzsc:[],
                 xms:[],
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 list: [],
                 url: '',
@@ -358,7 +358,7 @@
         methods: {
             //合同下载
             xz(row){
-                window.open('http://10.197.41.100:8080/print/ht?id='+row.id)
+                window.open('http://10.197.33.115:8080/print/ht?id='+row.id)
             },
             //状态
             zt(row){
@@ -779,9 +779,9 @@
                 this.contract=row
                 this.cid=row.id
                 //this.getFileList()
-               // this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
+               // this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
                 if (row.dwyj == '' || row.dwyj == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
+                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id
                     //拿附件信息
                     axios.get(this.ip + '/contract/getFjs', {
                         params: {
@@ -797,7 +797,7 @@
                         }
                     })
                 } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                     axios.get(this.ip + '/Attachment/getattachment', {
                         params: {
                             pid: row.dwyj
