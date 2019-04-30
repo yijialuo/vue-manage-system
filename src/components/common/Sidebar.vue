@@ -58,6 +58,10 @@
                                 title: '招标管理'
                             },
                             {
+                                index: '/xxmgl',
+                                title: '小项目管理'
+                            },
+                            {
                                 index: '/htgl',
                                 title: '合同管理'
                             },
@@ -76,10 +80,6 @@
                             {
                                 index: '/gysgl',
                                 title: '供应商管理'
-                            },
-                            {
-                                index: '/xxmgl',
-                                title: '小项目管理'
                             }
                         ]
                     },
@@ -189,6 +189,10 @@
                                     title: '招标管理'
                                 },
                                 {
+                                    index: '/xxmgl',
+                                    title: '小项目管理'
+                                },
+                                {
                                     index: '/htgl',
                                     title: '合同管理'
                                 },
@@ -207,10 +211,6 @@
                                 {
                                     index: '/gysgl',
                                     title: '供应商管理'
-                                },
-                                {
-                                    index: '/xxmgl',
-                                    title: '小项目管理'
                                 }
                             ]
                         },
@@ -281,6 +281,10 @@
                                     title: '招标管理'
                                 },
                                 {
+                                    index: '/xxmgl',
+                                    title: '小项目管理'
+                                },
+                                {
                                     index: '/htgl',
                                     title: '合同管理'
                                 },
@@ -299,10 +303,6 @@
                                 {
                                     index: '/gysgl',
                                     title: '供应商管理'
-                                },
-                                {
-                                    index: '/xxmgl',
-                                    title: '小项目管理'
                                 }
                             ]
                         },
@@ -369,6 +369,10 @@
                                     title: '招标管理'
                                 },
                                 {
+                                    index: '/xxmgl',
+                                    title: '小项目管理'
+                                },
+                                {
                                     index: '/htgl',
                                     title: '合同管理'
                                 },
@@ -383,10 +387,6 @@
                                 {
                                     index: '/jsgl',
                                     title: '结算管理'
-                                },
-                                {
-                                    index: '/xxmgl',
-                                    title: '小项目管理'
                                 }
                             ]
                         },

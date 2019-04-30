@@ -47,16 +47,46 @@
             <el-dialog :title="addUpdateDialogTitle" :close-on-click-modal="false" :visible.sync="addUpdateDialogVisible" width="50%" >
                 <el-form ref="projectDataForm" :model="projectTemp" label-position="left" label-width="120px">
                     <el-form-item label="项目编号">
-                        <el-input v-model="projectTemp.xmbh"/>
+                        <el-select
+                                clearable
+                                filterable
+                                v-model="projectTemp.xmbh"
+                                style="width: 100%"
+                                placeholder="项目编号"
+                                value-key="xmbh"
+                                @change="xmbhSelectChange">
+                            <el-option
+                                    clearable
+                                    v-for="(item, index) in projects"
+                                    :key="index"
+                                    :label="item.xmbh"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="项目名称">
-                        <el-input v-model="projectTemp.xmmc"/>
+                        <el-select
+                                clearable
+                                filterable
+                                style="width: 100%"
+                                v-model="projectTemp.xmmc"
+                                placeholder="项目名称"
+                                value-key="xmmc"
+                                @change="xmmcSelectChange">
+                            <el-option
+                                    clearable
+                                    v-for="(item, index) in projects"
+                                    :key="index"
+                                    :label="item.xmmc"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="立项部门">
-                        <el-input v-model="projectTemp.lxbm"/>
+                        <el-input v-model="projectTemp.lxbm" readonly/>
                     </el-form-item>
                     <el-form-item label="申请人">
-                        <el-input v-model="projectTemp.sqr"/>
+                        <el-input v-model="projectTemp.sqr" readonly/>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -177,7 +207,8 @@
                     xmbh:'',
                     xmmc:'',
                     lxbm:'',
-                    sqr:''
+                    sqr:'',
+                    y1:''
                 },
                 smallProjectTemp:{
                     id:'',
@@ -192,6 +223,7 @@
                 },
                 attachmentUrl:'',
                 attachmentFileList: [],
+                projects:[]
             }
         },
         created() {
@@ -215,7 +247,8 @@
                     xmbh:'',
                     xmmc:'',
                     lxbm:'',
-                    sqr:''
+                    sqr:'',
+                    y1:''
                 }
                 this.addUpdateDialogVisible=true;// 对话框可见
                 this.addUpdateDialogTitle="增加"// 修改标题
@@ -231,7 +264,8 @@
                                 xmbh:this.projectTemp.xmbh,
                                 xmmc:this.projectTemp.xmmc,
                                 lxbm:this.projectTemp.lxbm,
-                                sqr:this.projectTemp.sqr
+                                sqr:this.projectTemp.sqr,
+                                y1:this.projectTemp.y1
                             }
                         }).then(res => {
                             this.addUpdateDialogVisible = false
@@ -275,7 +309,8 @@
                                 xmbh:this.projectTemp.xmbh,
                                 xmmc:this.projectTemp.xmmc,
                                 lxbm:this.projectTemp.lxbm,
-                                sqr:this.projectTemp.sqr
+                                sqr:this.projectTemp.sqr,
+                                y1:this.projectTemp.y1
                             }
                         }).then(res => {
                             this.addUpdateDialogVisible=false
@@ -287,6 +322,20 @@
             handleCurrentChange(val) {
                 this.listQuery.offset=val;
                 this.getProjectList()
+            },
+            xmbhSelectChange(item){
+                this.projectTemp.xmbh=item.xmbh
+                this.projectTemp.xmmc=item.xmmc
+                this.projectTemp.lxbm=item.lxbm
+                this.projectTemp.sqr=item.sqr
+                this.projectTemp.y1=item.y1
+            },
+            xmmcSelectChange(item){
+                this.projectTemp.xmbh=item.xmbh
+                this.projectTemp.xmmc=item.xmmc
+                this.projectTemp.lxbm=item.lxbm
+                this.projectTemp.sqr=item.sqr
+                this.projectTemp.y1=item.y1
             },
 
             openSmallProject(row){
@@ -436,7 +485,32 @@
             handleSuccess(response, file, fileList){
                 this.attachment(this.smallProjectTemp)
             },
-        }
+        },
+        watch: {
+            addUpdateDialogVisible(newValue, oldValue) {
+                if (newValue==true) {
+                    axios.get('http://10.197.41.100:8080/xxmgl/getProjects', {
+                        params: {
+                            userName: localStorage.getItem('userName')
+                        }
+                    }).then(res => {
+                        if (res.data != null) {
+                            for (let i = 0; i < res.data.length; i++) {
+                                this.projects.push({
+                                    xmbh:res.data[i].xmbh,
+                                    xmmc:res.data[i].xmmc,
+                                    lxbm:res.data[i].lxbm,
+                                    sqr:res.data[i].sqr,
+                                    y1:res.data[i].y1
+                                })
+                            }
+                        }
+                    })
+                }else{
+                    this.projects=[]
+                }
+            }
+        },
     }
 </script>
 

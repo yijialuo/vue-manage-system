@@ -44,7 +44,7 @@
                     background
                     style="text-align: center">
             </el-pagination>
-            <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="50%" >
+            <el-dialog :title="addUpdateDialogTitle" :visible.sync="addUpdateDialogVisible" width="50%" >
                 <el-form ref="dataForm" :model="temp" :rules="dialogRules" label-position="left" label-width="120px">
                     <el-form-item label="名称" prop="name">
                         <el-input v-model="temp.name"/>
@@ -69,7 +69,7 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="addUpdateDialogVisible = false">取消</el-button>
-                    <el-button type="primary" @click="dialogTitle==='增加'?addData():updateData()">确定</el-button>
+                    <el-button type="primary" @click="addUpdateDialogTitle==='增加'?addData():updateData()">确定</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -131,8 +131,8 @@
                     description:'',
                     createTime:''
                 }
-                this.dialogVisible=true;// 对话框可见
-                this.dialogTitle="增加"// 修改标题
+                this.addUpdateDialogVisible=true;// 对话框可见
+                this.addUpdateDialogTitle="增加"// 修改标题
                 this.$nextTick(() => {
                     this.$refs['dataForm'].clearValidate()
                     this.$refs.upload.uploadFiles=[]
@@ -168,7 +168,7 @@
                         axios.post('http://10.197.41.100:8080/operateManual/add', form, config)
                             .then((res => {
                                 this.$message.success("上传成功!")
-                                this.dialogVisible = false
+                                this.addUpdateDialogVisible = false
                                 this.getList()
                             }))
                     }
@@ -196,8 +196,8 @@
             },
             update(row){
                 this.temp=row
-                this.dialogVisible=true;
-                this.dialogTitle="修改"
+                this.addUpdateDialogVisible=true;
+                this.addUpdateDialogTitle="修改"
                 this.$nextTick(() => {
                     this.$refs['dataForm'].clearValidate()
                     this.$refs.upload.uploadFiles=[]
@@ -236,7 +236,7 @@
                         axios.put('http://10.197.41.100:8080/operateManual/update',form, config)
                             .then(res=>{
                                 this.$message.success("修改成功!")
-                                this.dialogVisible = false
+                                this.addUpdateDialogVisible = false
                                 this.getList()
                             })
                     }

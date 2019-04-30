@@ -25,6 +25,11 @@ export default new Router({
                     meta: { title: '招标管理' }
                 },
                 {
+                    path:'/xxmgl',
+                    component:resolve => require(['../components/page/xxmgl.vue'], resolve),
+                    meta:{title:'小项目管理'}
+                },
+                {
                     path: '/htgl',
                     component: resolve => require(['../components/page/htgl.vue'], resolve),
                     meta: { title: '合同管理' }
@@ -48,11 +53,6 @@ export default new Router({
                     path:'/gysgl',
                     component:resolve => require(['../components/page/gysgl.vue'], resolve),
                     meta:{title:'供应商管理'}
-                },
-                {
-                    path:'/xxmgl',
-                    component:resolve => require(['../components/page/xxmgl.vue'], resolve),
-                    meta:{title:'小项目管理'}
                 },
                 {
                     path: '/qxgl',
