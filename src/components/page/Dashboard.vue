@@ -1123,7 +1123,7 @@
                 userId: localStorage.getItem('userId'),
                 user: {},
                 xm: {},
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 message: 'first',
                 //项目
                 Xms: [],
@@ -1139,7 +1139,7 @@
                 commentList: [],
                 xm: {},
                 fileList: [],
-                ip: 'http://10.197.33.115:8080',
+                ip: 'http://10.197.41.100:8080',
                 xmlb: [{
                     value: '固定资产',
                     label: '固定资产'
@@ -1410,7 +1410,7 @@
             //合同处理点击事件
             htcl(row) {
                 this.contract = row
-                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                 //拿合同评论
                 this.gethtbz()
                 //领取附件
@@ -1649,7 +1649,7 @@
                 this.getbzs()
                 this.lqfj(row.zbpid)
                 this.getZhongbiaodw()
-                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 axios.get(this.ip + '/user/userIdToDept', {
                     params: {
                         userId: this.zhaobiao.sqr
@@ -2104,7 +2104,7 @@
                 this.lqfj(row.pid)
                 //查询当前节点
                 this.getNodeId(row.pid)
-                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
             //领取附件
             lqfj(pid) {
@@ -2307,7 +2307,7 @@
                     })
                 //领取附件
                 this.lqfj(row.pid)
-                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
 
             //状态

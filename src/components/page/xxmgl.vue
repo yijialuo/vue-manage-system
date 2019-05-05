@@ -232,7 +232,7 @@
         methods:{
             getProjectList(){
                 var _this=this
-                axios.get('http://10.197.33.115:8080/xxmgl/selectAll', {
+                axios.get('http://10.197.41.100:8080/xxmgl/selectAll', {
                     params: {
                         pageNum: _this.listQuery.offset
                     }
@@ -259,7 +259,7 @@
             addProjectData(){
                 this.$refs['projectDataForm'].validate((valid) => {
                     if (valid) {
-                        axios.get('http://10.197.33.115:8080/xxmgl/insert', {
+                        axios.get('http://10.197.41.100:8080/xxmgl/insert', {
                             params: {
                                 xmbh:this.projectTemp.xmbh,
                                 xmmc:this.projectTemp.xmmc,
@@ -280,7 +280,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.get('http://10.197.33.115:8080/xxmgl/delete', {
+                    axios.get('http://10.197.41.100:8080/xxmgl/delete', {
                         params: {
                             id: row
                         }
@@ -303,7 +303,7 @@
             updateProjectData(){
                 this.$refs['projectDataForm'].validate((valid) => {
                     if (valid) {
-                        axios.get('http://10.197.33.115:8080/xxmgl/updata', {
+                        axios.get('http://10.197.41.100:8080/xxmgl/updata', {
                             params: {
                                 id:this.projectTemp.id,
                                 xmbh:this.projectTemp.xmbh,
@@ -349,7 +349,7 @@
             },
             getSmallProjectList(){
                 var _this=this
-                axios.get('http://10.197.33.115:8080/xxmcb/select', {
+                axios.get('http://10.197.41.100:8080/xxmcb/select', {
                     params: {
                         xxmid: _this.smallProjectTemp.xxmid
                     }
@@ -379,7 +379,7 @@
                 this.$refs['smallProjectDataForm'].validate((valid) => {
                     if (valid) {
                         console.log(this.smallProjectTemp.xxmid)
-                        axios.get('http://10.197.33.115:8080/xxmcb/insert', {
+                        axios.get('http://10.197.41.100:8080/xxmcb/insert', {
                             params: {
                                 xxmid:this.smallProjectTemp.xxmid,
                                 xxmbh:this.smallProjectTemp.xxmbh,
@@ -402,7 +402,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.get('http://10.197.33.115:8080/xxmcb/delete', {
+                    axios.get('http://10.197.41.100:8080/xxmcb/delete', {
                         params: {
                             id: row
                         }
@@ -424,7 +424,7 @@
             updateSmallProjectData(){
                 this.$refs['smallProjectDataForm'].validate((valid) => {
                     if (valid) {
-                        axios.get('http://10.197.33.115:8080/xxmcb/updata', {
+                        axios.get('http://10.197.41.100:8080/xxmcb/updata', {
                             params: {
                                 id:this.smallProjectTemp.id,
                                 xh:this.smallProjectTemp.xh,// 非必填
@@ -445,9 +445,9 @@
             attachment(row){
                 this.smallProjectTemp=row
                 this.attachmentVisiable=true
-                this.attachmentUrl='http://10.197.33.115:8080/contract/uploadHtfj?id='+this.smallProjectTemp.id
+                this.attachmentUrl='http://10.197.41.100:8080/contract/uploadHtfj?id='+this.smallProjectTemp.id
 
-                axios.get('http://10.197.33.115:8080/contract/getFjs', {
+                axios.get('http://10.197.41.100:8080/contract/getFjs', {
                     params: {
                         cid: this.smallProjectTemp.id
                     }
@@ -462,7 +462,7 @@
                 })
             },
             handlePreview(file) {
-                window.open('http://10.197.33.115:8080/contract/getFj?fid='+file.id+'&fname='+file.name)
+                window.open('http://10.197.41.100:8080/contract/getFj?fid='+file.id+'&fname='+file.name)
             },
             handleBeforeRemove(file, fileList) {
                 this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
@@ -470,7 +470,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.get('http://10.197.33.115:8080/contract/deletFj', {
+                    axios.get('http://10.197.41.100:8080/contract/deletFj', {
                         params: {
                             fid: file.id
                         }
@@ -489,7 +489,7 @@
         watch: {
             addUpdateDialogVisible(newValue, oldValue) {
                 if (newValue==true) {
-                    axios.get('http://10.197.33.115:8080/xxmgl/getProjects', {
+                    axios.get('http://10.197.41.100:8080/xxmgl/getProjects', {
                         params: {
                             userName: localStorage.getItem('userName')
                         }

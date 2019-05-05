@@ -114,7 +114,7 @@
                 var dates=this.dateSelect.split('-')
                 var year=dates[0]
                 var month=dates[1]
-                window.location.href='http://10.197.33.115:8080/Bb/downloadXMTJBB?year='+year+'&month='+month
+                window.location.href='http://10.197.41.100:8080/Bb/downloadXMTJBB?year='+year+'&month='+month
             },
             dateSelectChange(){
                 if(this.dateSelect==null){
@@ -125,7 +125,7 @@
                 var year=dates[0]
                 var month=dates[1]
                 var _this=this
-                axios.get('http://10.197.33.115:8080/Bb/get', {
+                axios.get('http://10.197.41.100:8080/Bb/get', {
                     params: {
                         year: year,
                         month:month
