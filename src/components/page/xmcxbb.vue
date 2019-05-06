@@ -7,6 +7,8 @@
         </div>
         <div class="container">
             <div class="handle-box">
+                <el-input v-model="getObject.projectCode" placeholder="项目编号" style="" class="handle-input mr10">
+                </el-input>
                 <el-button type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="download">下载
                 </el-button>
             </div>
@@ -79,8 +81,8 @@
         name: "xmcxbb",
         data(){
             return{
-                list:null,
-                ip:'http://10.197.41.100:8080'
+                list:[],
+                ip:'http://10.197.41.100:8080',
             }
         },
         created() {
