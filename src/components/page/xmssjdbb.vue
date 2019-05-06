@@ -10,18 +10,19 @@
                 <el-button type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="download">下载
                 </el-button>
             </div>
+            <h3 style="text-align: center">项目实施进度报表</h3>
             <el-table
+                    max-height="780"
                     ref="multipleTable"
                     :data="list"
                     border
                     stripe
                     class="table">
-                <el-table-column label="项目实施进度报表" align="center">
-                    <el-table-column label="序号" align="center" sortable prop="id" min-width="300">
+                    <el-table-column fixed label="序号" align="center" sortable prop="id" min-width="80">
                     </el-table-column>
-                    <el-table-column label="项目计划号" align="center" prop="projectNo" width="120">
+                    <el-table-column fixed label="项目计划号" align="center" prop="projectNo" width="120">
                     </el-table-column>
-                    <el-table-column label="项目名称" align="center" prop="projectNam" min-width="320">
+                    <el-table-column fixed label="项目名称" align="center" prop="projectNam" min-width="320">
                     </el-table-column>
                     <el-table-column label="计划金额(万元)" align="center" prop="investmentEstimate" width="120">
                     </el-table-column>
@@ -61,7 +62,6 @@
                     </el-table-column>
                     <el-table-column label="施工单位" align="center" prop="sgdw" width="120">
                     </el-table-column>
-                </el-table-column>
             </el-table>
         </div>
     </div>

@@ -2029,10 +2029,13 @@
                         this.reload()
                     })
             },
+
+
             //点击文件下载
             handlePreview(file) {
                 window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
             },
+
             //领取评论
             lqpl(pid) {
                 axios.get(this.ip + '/projectApplication/projecttocomment', {
@@ -2046,6 +2049,7 @@
                         }
                     })
             },
+
             //审批
             sp() {
                 if (!this.comment) {
@@ -2089,6 +2093,7 @@
                     this.$message.info("处理完成")
                 }
             },
+
             //项目详情
             xmxq(row) {
                 this.isxq = false
@@ -2106,6 +2111,7 @@
                 this.getNodeId(row.pid)
                 this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
+
             //领取附件
             lqfj(pid) {
                 axios.get(this.ip + '/Attachment/getattachment', {
@@ -2125,6 +2131,7 @@
                         }
                     })
             },
+
             //领取项目
             lqxm() {
                 axios.get(this.ip + '/projectApplication/lqxm', {
@@ -2160,11 +2167,13 @@
                     }
                 })
             },
+
             // 分页导航
             handleCurrentChange(val) {
                 this.cur_page = val;
                 this.getData();
             },
+
             //上传成功，重新请求
             handleSuccess() {
                 //重新请求
@@ -2312,65 +2321,74 @@
 
             //状态
             zt(row) {
-                if (Number(row.investmentEstimate) > 10) {
-                    if (row.dqjd === '填写申请表') {
-                        this.src = require('@/assets/img/s_txsqb.png')
-                    } else if (row.dqjd === '主管经理审批') {
-                        this.src = require('@/assets/img/s_zgjlsp.png')
-                    } else if (row.dqjd === '经理审批') {
-                        this.src = require('@/assets/img/s_jlsp.png')
-                    } else if (row.dqjd === '经办人') {
-                        this.src = require('@/assets/img/s_jbr.png')
-                    } else if (row.dqjd === '技术部主管经理') {
-                        this.src = require('@/assets/img/s_jsbzgjl.png')
-                    } else if (row.dqjd === '技术部经理') {
-                        this.src = require('@/assets/img/s_jsbjl.png')
-                    } else if (row.dqjd === '两会') {
-                        this.src = require('@/assets/img/s_lh.png')
-                    } else if (row.dqjd === '总经理办公会') {
-                        this.src = require('@/assets/img/s_zjlbgh.png')
-                    } else if (row.dqjd === '备案') {
-                        this.src = require('@/assets/img/s_ba.png')
-                    } else if (row.dqjd === '申请结束') {
-                        this.src = require('@/assets/img/s_js.png')
+                if(row.depAuditOpinion=='股份项目'){
+                    if (row.pid != null && row.pid != '') {
+                        if (row.dqjd === '填写申请表') {
+                            this.src = require('@/assets/img/g_txsqb.png')
+                        } else if (row.dqjd === '主管经理审批') {
+                            this.src = require('@/assets/img/g_zgjlsp.png')
+                        } else if (row.dqjd === '经理审批') {
+                            this.src = require('@/assets/img/g_jlsp.png')
+                        } else if (row.dqjd === '经办人') {
+                            this.src = require('@/assets/img/g_jbr.png')
+                        } else if (row.dqjd === '技术部主管经理') {
+                            this.src = require('@/assets/img/g_jsbzgjl.png')
+                        } else if (row.dqjd === '技术部经理') {
+                            this.src = require('@/assets/img/g_jsbjl.png')
+                        } else if (row.dqjd === '总经理办公会') {
+                            this.src = require('@/assets/img/g_zjlbgh.png')
+                        } else if (row.dqjd === '备案') {
+                            this.src = require('@/assets/img/g_ba.png')
+                        } else if (row.dqjd === '申请结束') {
+                            this.src = require('@/assets/img/g_js.png')
+                        }
+                    }else {
+                        this.src = require('@/assets/img/g_wsq.png')
                     }
-                } else {
-                    if (row.dqjd === '填写申请表') {
-                        this.src = require('@/assets/img/x_txsqb.png')
-                    } else if (row.dqjd === '主管经理审批') {
-                        this.src = require('@/assets/img/x_zgjlsp.png')
-                    } else if (row.dqjd === '经理审批') {
-                        this.src = require('@/assets/img/x_jlsp.png')
-                    } else if (row.dqjd === '经办人') {
-                        this.src = require('@/assets/img/x_jbr.png')
-                    } else if (row.dqjd === '技术部主管经理') {
-                        this.src = require('@/assets/img/x_jsbzgjl.png')
-                    } else if (row.dqjd === '技术部经理') {
-                        this.src = require('@/assets/img/x_jsbjl.png')
-                    } else if (row.dqjd === '两会') {
-                        this.src = require('@/assets/img/x_lh.png')
-                    } else if (row.dqjd === '申请结束') {
-                        this.src = require('@/assets/img/x_js.png')
+                }else {
+                    if (Number(row.investmentEstimate) > 10) {
+                        if (row.dqjd === '填写申请表') {
+                            this.src = require('@/assets/img/s_txsqb.png')
+                        } else if (row.dqjd === '主管经理审批') {
+                            this.src = require('@/assets/img/s_zgjlsp.png')
+                        } else if (row.dqjd === '经理审批') {
+                            this.src = require('@/assets/img/s_jlsp.png')
+                        } else if (row.dqjd === '经办人') {
+                            this.src = require('@/assets/img/s_jbr.png')
+                        } else if (row.dqjd === '技术部主管经理') {
+                            this.src = require('@/assets/img/s_jsbzgjl.png')
+                        } else if (row.dqjd === '技术部经理') {
+                            this.src = require('@/assets/img/s_jsbjl.png')
+                        } else if (row.dqjd === '两会') {
+                            this.src = require('@/assets/img/s_lh.png')
+                        } else if (row.dqjd === '总经理办公会') {
+                            this.src = require('@/assets/img/s_zjlbgh.png')
+                        } else if (row.dqjd === '备案') {
+                            this.src = require('@/assets/img/s_ba.png')
+                        } else if (row.dqjd === '申请结束') {
+                            this.src = require('@/assets/img/s_js.png')
+                        }
+                    } else {
+                        if (row.dqjd === '填写申请表') {
+                            this.src = require('@/assets/img/x_txsqb.png')
+                        } else if (row.dqjd === '主管经理审批') {
+                            this.src = require('@/assets/img/x_zgjlsp.png')
+                        } else if (row.dqjd === '经理审批') {
+                            this.src = require('@/assets/img/x_jlsp.png')
+                        } else if (row.dqjd === '经办人') {
+                            this.src = require('@/assets/img/x_jbr.png')
+                        } else if (row.dqjd === '技术部主管经理') {
+                            this.src = require('@/assets/img/x_jsbzgjl.png')
+                        } else if (row.dqjd === '技术部经理') {
+                            this.src = require('@/assets/img/x_jsbjl.png')
+                        } else if (row.dqjd === '两会') {
+                            this.src = require('@/assets/img/x_lh.png')
+                        } else if (row.dqjd === '申请结束') {
+                            this.src = require('@/assets/img/x_js.png')
+                        }
                     }
                 }
                 this.show_zt = true
-                // const loading = this.$loading({
-                //     lock: true,
-                //     text: '处理中……',
-                //     spinner: 'el-icon-loading',
-                //     background: 'rgba(0, 0, 0, 0.7)'
-                // })
-                // axios.get(this.ip + '/projectApplication/zt', {
-                //     params: {
-                //         pi: row.pid
-                //     }
-                // })
-                //     .then(res => {
-                //         loading.close()
-                //         //得到图片流
-                //         this.src = 'data:image/png;base64,' + res.data
-                //         this.show_zt = true
-                //     })
             },
 
             //点击文件下载

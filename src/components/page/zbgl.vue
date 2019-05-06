@@ -658,7 +658,7 @@
             },
             //状态
             zt(row) {
-                if(row.dq==='未申请'){
+                if(row.dqjd==='未申请'){
                     this.$message.info("当前项目还未招标申请！无状态！")
                     return
                 }

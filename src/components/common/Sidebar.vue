@@ -126,6 +126,10 @@
                                 index: '/xmtjbb',
                                 title: '项目统计报表'
                             },
+                            {
+                                index: '/xmcxbb',
+                                title: '项目查询报表'
+                            },
                             // {
                             //     index: '3-2',
                             //     title: '三级菜单',
@@ -252,6 +256,10 @@
                                     index: '/xmtjbb',
                                     title: '项目统计报表'
                                 },
+                                {
+                                    index: '/xmcxbb',
+                                    title: '项目查询报表'
+                                }
                             ]
                         },
                         {
@@ -340,6 +348,10 @@
                                     index: '/xmtjbb',
                                     title: '项目统计报表'
                                 },
+                                {
+                                    index: '/xmcxbb',
+                                    title: '项目查询报表'
+                                }
                             ]
                         },
                         {

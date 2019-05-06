@@ -7,7 +7,8 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="addProject">增加
+                <el-button type="primary" icon="el-icon-circle-plus" v-if="groupId=='jsb_doman'" class="handle-del mr10"
+                           @click="addProject">增加
                 </el-button>
             </div>
             <el-table
@@ -30,7 +31,9 @@
                     <template slot-scope="scope">
                         <el-button type="text" size="mini" @click="updateProject(scope.row)">修改</el-button>
                         <el-button type="text" size="mini" @click="openSmallProject(scope.row)">小项目管理</el-button>
-                        <el-button type="text" style="color: #ff0000;" size="mini" @click="deleteProjectData(scope.row.id)">删除</el-button>
+                        <el-button type="text" style="color: #ff0000;" size="mini"
+                                   @click="deleteProjectData(scope.row.id)">删除
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -44,8 +47,10 @@
                     :total="projectTotal"
                     style="text-align: center">
             </el-pagination>
-            <el-dialog :title="addUpdateDialogTitle" :close-on-click-modal="false" :visible.sync="addUpdateDialogVisible" width="50%" >
-                <el-form ref="projectDataForm" :model="projectTemp" label-position="left" label-width="120px">
+            <el-dialog :title="addUpdateDialogTitle" :close-on-click-modal="false"
+                       :visible.sync="addUpdateDialogVisible" width="50%">
+                <el-form ref="projectDataForm" :rules="addUpdateRule" :model="projectTemp" label-position="left"
+                         label-width="120px">
                     <el-form-item label="项目编号">
                         <el-select
                                 clearable
@@ -64,7 +69,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="项目名称">
+                    <el-form-item label="项目名称" prop="xmmc">
                         <el-select
                                 clearable
                                 filterable
@@ -91,11 +96,16 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="addUpdateDialogVisible = false">取消</el-button>
-                    <el-button type="primary" @click="addUpdateDialogTitle==='增加'?addProjectData():updateProjectData()">确定</el-button>
+                    <el-button type="primary" @click="addUpdateDialogTitle==='增加'?addProjectData():updateProjectData()">
+                        确定
+                    </el-button>
                 </div>
             </el-dialog>
-            <el-dialog title="小项目管理" :close-on-click-modal="false" :visible.sync="smallProjectDialogVisible" width="80%" >
-                <el-button type="primary" icon="el-icon-circle-plus" @click="addSmallProject">增加
+
+            <el-dialog title="小项目管理" :close-on-click-modal="false" :visible.sync="smallProjectDialogVisible"
+                       width="80%">
+                <el-button type="primary" icon="el-icon-circle-plus" v-if="groupId=='jsb_doman'"
+                           @click="addSmallProject">增加
                 </el-button>
                 <el-table
                         :data="smallProjectList"
@@ -120,7 +130,9 @@
                         <template slot-scope="scope">
                             <el-button type="text" size="mini" @click="updateSmallProject(scope.row)">修改</el-button>
                             <el-button type="text" size="mini" @click="attachment(scope.row)">附件</el-button>
-                            <el-button type="text" style="color: #ff0000;" size="mini" @click="deleteSmallProjectData(scope.row.id)">删除</el-button>
+                            <el-button type="text" style="color: #ff0000;" size="mini"
+                                       @click="deleteSmallProjectData(scope.row.id)">删除
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -128,19 +140,21 @@
                     <el-button @click="closeSmallProject">确定</el-button>
                 </div>
             </el-dialog>
-            <el-dialog :title="addUpdateSmallProjectDialogTitle" :close-on-click-modal="false" :visible.sync="addUpdateSmallProjectDialogVisible" width="50%" >
-                <el-form ref="smallProjectDataForm" :model="smallProjectTemp" label-position="left" label-width="120px">
-                    <el-form-item label="小项目编号">
-                        <el-input v-model="smallProjectTemp.xxmbh"/>
+
+            <el-dialog :title="addUpdateSmallProjectDialogTitle"  :close-on-click-modal="false"
+                       :visible.sync="addUpdateSmallProjectDialogVisible" width="50%">
+                <el-form ref="smallProjectDataForm" :model="smallProjectTemp" :rules="addUpdateRule2" label-position="left" label-width="120px">
+                    <el-form-item label="小项目编号" prop="xxmbh">
+                        <el-input v-model="smallProjectTemp.xxmbh" />
                     </el-form-item>
-                    <el-form-item label="工作步骤名称">
-                        <el-input v-model="smallProjectTemp.gzbzmc"/>
+                    <el-form-item label="工作步骤名称" prop="gzbzmc">
+                        <el-input v-model="smallProjectTemp.gzbzmc" />
                     </el-form-item>
-                    <el-form-item label="施工单位">
-                        <el-input v-model="smallProjectTemp.sgdw"/>
+                    <el-form-item label="施工单位" prop="sgdw">
+                        <el-input v-model="smallProjectTemp.sgdw" />
                     </el-form-item>
-                    <el-form-item label="合同金额">
-                        <el-input type="number" v-model="smallProjectTemp.htje"/>
+                    <el-form-item label="合同金额" prop="htje">
+                        <el-input type="number" v-model="smallProjectTemp.htje" />
                     </el-form-item>
                     <el-form-item label="合同签订时间">
                         <el-date-picker
@@ -148,7 +162,7 @@
                                 type="datetime"
                                 placeholder="选择日期时间"
                                 value-format="yyyy-MM-dd HH:mm:ss"
-                        style="width: 100%;">
+                                style="width: 100%;">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="备注">
@@ -157,9 +171,13 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="addUpdateSmallProjectDialogVisible = false">取消</el-button>
-                    <el-button type="primary" @click="addUpdateSmallProjectDialogTitle==='增加'?addSmallProjectData():updateSmallProjectData()">确定</el-button>
+                    <el-button type="primary"
+                               @click="addUpdateSmallProjectDialogTitle==='增加'?addSmallProjectData():updateSmallProjectData()">
+                        确定
+                    </el-button>
                 </div>
             </el-dialog>
+
             <el-dialog title="附件" :close-on-click-modal="false" :visible.sync="attachmentVisiable" width="50%">
                 <el-upload
                         class="upload-demo"
@@ -184,88 +202,104 @@
 
 <script>
     import axios from 'axios'
+
     export default {
         name: "xxmgl",
         inject: ['reload'],
-        data(){
-            return{
-                projectList:null,
-                smallProjectList:null,
-                projectTotal:0,
+        data() {
+            return {
+                userName: localStorage.getItem('userName'),
+                groupId: localStorage.getItem('groupId'),
+                projectList: null,
+                smallProjectList: null,
+                projectTotal: 0,
                 listQuery: {
                     offset: 1,
                     limit: 10
                 },
-                addUpdateDialogVisible:false,
-                smallProjectDialogVisible:false,
-                addUpdateSmallProjectDialogVisible:false,
-                attachmentVisiable:false,
+                addUpdateDialogVisible: false,
+                smallProjectDialogVisible: false,
+                addUpdateSmallProjectDialogVisible: false,
+                attachmentVisiable: false,
                 addUpdateDialogTitle: '',
-                addUpdateSmallProjectDialogTitle:'',
-                projectTemp:{
-                    id:'',
-                    xmbh:'',
-                    xmmc:'',
-                    lxbm:'',
-                    sqr:'',
-                    y1:''
+                addUpdateSmallProjectDialogTitle: '',
+                projectTemp: {
+                    id: '',
+                    xmbh: '',
+                    xmmc: '',
+                    lxbm: '',
+                    sqr: '',
+                    y1: ''
                 },
-                smallProjectTemp:{
-                    id:'',
-                    xxmid:"" ,// 小项目id，外部id=内部xxmid
-                    xh:'',
-                    xxmbh:'',
-                    gzbzmc:'',
-                    sgdw:'',
-                    htje:'',
-                    htqdsj:'',
-                    bz:''
+                smallProjectTemp: {
+                    id: '',
+                    xxmid: "",// 小项目id，外部id=内部xxmid
+                    xh: '',
+                    xxmbh: '',
+                    gzbzmc: '',
+                    sgdw: '',
+                    htje: '',
+                    htqdsj: '',
+                    bz: ''
                 },
-                attachmentUrl:'',
+                sqr: '',
+                attachmentUrl: '',
                 attachmentFileList: [],
-                projects:[]
+                projects: [],
+                //添加外面表的验证
+                addUpdateRule: {
+                    xmmc: [{required: true, message: '名称不可为空', trigger: 'blur'}],
+                },
+                //添加里面表的验证
+                addUpdateRule2: {
+                    xxmbh: [{required: true, message: '不可为空', trigger: 'blur'}],
+                    gzbzmc: [{required: true, message: '不可为空', trigger: 'blur'}],
+                    sgdw: [{required: true, message: '不可为空', trigger: 'blur'}],
+                    htje: [{required: true, message: '不可为空', trigger: 'blur'}],
+                }
             }
         },
         created() {
             this.getProjectList()
         },
-        methods:{
-            getProjectList(){
-                var _this=this
+        methods: {
+            getProjectList() {
+                var _this = this
                 axios.get('http://10.197.41.100:8080/xxmgl/selectAll', {
                     params: {
-                        pageNum: _this.listQuery.offset
+                        pageNum: _this.listQuery.offset,
+                        departmentName: localStorage.getItem('departmentName')
                     }
                 }).then(res => {
-                    this.projectList=res.data
-                    this.projectTotal=parseInt(res.headers.allcount)
+                    this.projectList = res.data
+                    this.projectTotal = parseInt(res.headers.allcount)
                 })
             },
-            addProject(){
-                this.projectTemp={
-                    id:'',
-                    xmbh:'',
-                    xmmc:'',
-                    lxbm:'',
-                    sqr:'',
-                    y1:''
+            addProject() {
+                this.projectTemp = {
+                    id: '',
+                    xmbh: '',
+                    xmmc: '',
+                    lxbm: '',
+                    sqr: '',
+                    y1: ''
                 }
-                this.addUpdateDialogVisible=true;// 对话框可见
-                this.addUpdateDialogTitle="增加"// 修改标题
+                this.addUpdateDialogVisible = true;// 对话框可见
+                this.addUpdateDialogTitle = "增加"// 修改标题
                 this.$nextTick(() => {
                     this.$refs['projectDataForm'].clearValidate()
                 })
             },
-            addProjectData(){
+            addProjectData() {
                 this.$refs['projectDataForm'].validate((valid) => {
                     if (valid) {
                         axios.get('http://10.197.41.100:8080/xxmgl/insert', {
                             params: {
-                                xmbh:this.projectTemp.xmbh,
-                                xmmc:this.projectTemp.xmmc,
-                                lxbm:this.projectTemp.lxbm,
-                                sqr:this.projectTemp.sqr,
-                                y1:this.projectTemp.y1
+                                xmbh: this.projectTemp.xmbh,
+                                xmmc: this.projectTemp.xmmc,
+                                lxbm: this.projectTemp.lxbm,
+                                sqr: this.projectTemp.sqr,
+                                y1: this.projectTemp.y1
                             }
                         }).then(res => {
                             this.addUpdateDialogVisible = false
@@ -274,7 +308,7 @@
                     }
                 })
             },
-            deleteProjectData(row){
+            deleteProjectData(row) {
                 this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {// 弹出确认框
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -285,109 +319,109 @@
                             id: row
                         }
                     }).then(res => {
-                        this.listQuery.offset=1;
+                        this.listQuery.offset = 1;
                         this.getProjectList()
                     })
                 }).catch(() => {
                     this.$message.info('已取消删除');
                 })
             },
-            updateProject(row){
-                this.projectTemp=row
-                this.addUpdateDialogVisible=true;
-                this.addUpdateDialogTitle="修改"
+            updateProject(row) {
+                this.projectTemp = row
+                this.addUpdateDialogVisible = true;
+                this.addUpdateDialogTitle = "修改"
                 this.$nextTick(() => {
                     this.$refs['projectDataForm'].clearValidate()
                 })
             },
-            updateProjectData(){
+            updateProjectData() {
                 this.$refs['projectDataForm'].validate((valid) => {
                     if (valid) {
                         axios.get('http://10.197.41.100:8080/xxmgl/updata', {
                             params: {
-                                id:this.projectTemp.id,
-                                xmbh:this.projectTemp.xmbh,
-                                xmmc:this.projectTemp.xmmc,
-                                lxbm:this.projectTemp.lxbm,
-                                sqr:this.projectTemp.sqr,
-                                y1:this.projectTemp.y1
+                                id: this.projectTemp.id,
+                                xmbh: this.projectTemp.xmbh,
+                                xmmc: this.projectTemp.xmmc,
+                                lxbm: this.projectTemp.lxbm,
+                                sqr: this.projectTemp.sqr,
+                                y1: this.projectTemp.y1
                             }
                         }).then(res => {
-                            this.addUpdateDialogVisible=false
+                            this.addUpdateDialogVisible = false
                             this.getProjectList()
                         })
                     }
                 })
             },
             handleCurrentChange(val) {
-                this.listQuery.offset=val;
+                this.listQuery.offset = val;
                 this.getProjectList()
             },
-            xmbhSelectChange(item){
-                this.projectTemp.xmbh=item.xmbh
-                this.projectTemp.xmmc=item.xmmc
-                this.projectTemp.lxbm=item.lxbm
-                this.projectTemp.sqr=item.sqr
-                this.projectTemp.y1=item.y1
+            xmbhSelectChange(item) {
+                this.projectTemp.xmbh = item.xmbh
+                this.projectTemp.xmmc = item.xmmc
+                this.projectTemp.lxbm = item.lxbm
+                this.projectTemp.sqr = item.sqr
+                this.projectTemp.y1 = item.y1
             },
-            xmmcSelectChange(item){
-                this.projectTemp.xmbh=item.xmbh
-                this.projectTemp.xmmc=item.xmmc
-                this.projectTemp.lxbm=item.lxbm
-                this.projectTemp.sqr=item.sqr
-                this.projectTemp.y1=item.y1
+            xmmcSelectChange(item) {
+                this.projectTemp.xmbh = item.xmbh
+                this.projectTemp.xmmc = item.xmmc
+                this.projectTemp.lxbm = item.lxbm
+                this.projectTemp.sqr = item.sqr
+                this.projectTemp.y1 = item.y1
             },
 
-            openSmallProject(row){
-                this.smallProjectTemp.xxmid=row.id
-                this.smallProjectDialogVisible=true
+            openSmallProject(row) {
+                this.sqr = row.sqr
+                this.smallProjectTemp.xxmid = row.id
+                this.smallProjectDialogVisible = true
                 this.getSmallProjectList()
             },
-            closeSmallProject(){
-                this.smallProjectTemp.xxmid=''
-                this.smallProjectDialogVisible=false
+            closeSmallProject() {
+                this.smallProjectTemp.xxmid = ''
+                this.smallProjectDialogVisible = false
             },
-            getSmallProjectList(){
-                var _this=this
+            getSmallProjectList() {
+                var _this = this
                 axios.get('http://10.197.41.100:8080/xxmcb/select', {
                     params: {
                         xxmid: _this.smallProjectTemp.xxmid
                     }
                 }).then(res => {
-                    this.smallProjectList=res.data
+                    this.smallProjectList = res.data
                 })
             },
-            addSmallProject(){
-                this.smallProjectTemp={
-                    id:'',
-                    xxmid:this.smallProjectTemp.xxmid,// 不需要重置
-                    xh:'',
-                    xxmbh:'',
-                    gzbzmc:'',
-                    sgdw:'',
-                    htje:'',
-                    htqdsj:'',
-                    bz:''
+            addSmallProject() {
+                this.smallProjectTemp = {
+                    id: '',
+                    xxmid: this.smallProjectTemp.xxmid,// 不需要重置
+                    xh: '',
+                    xxmbh: '',
+                    gzbzmc: '',
+                    sgdw: '',
+                    htje: '',
+                    htqdsj: '',
+                    bz: ''
                 }
-                this.addUpdateSmallProjectDialogVisible=true;// 对话框可见
-                this.addUpdateSmallProjectDialogTitle="增加"// 修改标题
+                this.addUpdateSmallProjectDialogVisible = true;// 对话框可见
+                this.addUpdateSmallProjectDialogTitle = "增加"// 修改标题
                 this.$nextTick(() => {
                     this.$refs['smallProjectDataForm'].clearValidate()
                 })
             },
-            addSmallProjectData(){
+            addSmallProjectData() {
                 this.$refs['smallProjectDataForm'].validate((valid) => {
                     if (valid) {
-                        console.log(this.smallProjectTemp.xxmid)
                         axios.get('http://10.197.41.100:8080/xxmcb/insert', {
                             params: {
-                                xxmid:this.smallProjectTemp.xxmid,
-                                xxmbh:this.smallProjectTemp.xxmbh,
-                                gzbzmc:this.smallProjectTemp.gzbzmc,
-                                sgdw:this.smallProjectTemp.sgdw,
-                                htje:this.smallProjectTemp.htje,
-                                htqdsj:this.smallProjectTemp.htqdsj,
-                                bz:this.smallProjectTemp.bz
+                                xxmid: this.smallProjectTemp.xxmid,
+                                xxmbh: this.smallProjectTemp.xxmbh,
+                                gzbzmc: this.smallProjectTemp.gzbzmc,
+                                sgdw: this.smallProjectTemp.sgdw,
+                                htje: this.smallProjectTemp.htje,
+                                htqdsj: this.smallProjectTemp.htqdsj,
+                                bz: this.smallProjectTemp.bz
                             }
                         }).then(res => {
                             this.addUpdateSmallProjectDialogVisible = false
@@ -396,7 +430,7 @@
                     }
                 })
             },
-            deleteSmallProjectData(row){
+            deleteSmallProjectData(row) {
                 this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {// 弹出确认框
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -413,39 +447,39 @@
                     this.$message.info('已取消删除');
                 })
             },
-            updateSmallProject(row){
-                this.smallProjectTemp=row
-                this.addUpdateSmallProjectDialogVisible=true;
-                this.addUpdateSmallProjectDialogTitle="修改"
+            updateSmallProject(row) {
+                this.smallProjectTemp = row
+                this.addUpdateSmallProjectDialogVisible = true;
+                this.addUpdateSmallProjectDialogTitle = "修改"
                 this.$nextTick(() => {
                     this.$refs['smallProjectDataForm'].clearValidate()
                 })
             },
-            updateSmallProjectData(){
+            updateSmallProjectData() {
                 this.$refs['smallProjectDataForm'].validate((valid) => {
                     if (valid) {
                         axios.get('http://10.197.41.100:8080/xxmcb/updata', {
                             params: {
-                                id:this.smallProjectTemp.id,
-                                xh:this.smallProjectTemp.xh,// 非必填
-                                xxmbh:this.smallProjectTemp.xxmbh,
-                                gzbzmc:this.smallProjectTemp.gzbzmc,
-                                sgdw:this.smallProjectTemp.sgdw,
-                                htje:this.smallProjectTemp.htje,
-                                htqdsj:this.smallProjectTemp.htqdsj,
-                                bz:this.smallProjectTemp.bz
+                                id: this.smallProjectTemp.id,
+                                xh: this.smallProjectTemp.xh,// 非必填
+                                xxmbh: this.smallProjectTemp.xxmbh,
+                                gzbzmc: this.smallProjectTemp.gzbzmc,
+                                sgdw: this.smallProjectTemp.sgdw,
+                                htje: this.smallProjectTemp.htje,
+                                htqdsj: this.smallProjectTemp.htqdsj,
+                                bz: this.smallProjectTemp.bz
                             }
                         }).then(res => {
-                            this.addUpdateSmallProjectDialogVisible=false
+                            this.addUpdateSmallProjectDialogVisible = false
                             this.getSmallProjectList()
                         })
                     }
                 })
             },
-            attachment(row){
-                this.smallProjectTemp=row
-                this.attachmentVisiable=true
-                this.attachmentUrl='http://10.197.41.100:8080/contract/uploadHtfj?id='+this.smallProjectTemp.id
+            attachment(row) {
+                this.smallProjectTemp = row
+                this.attachmentVisiable = true
+                this.attachmentUrl = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + this.smallProjectTemp.id
 
                 axios.get('http://10.197.41.100:8080/contract/getFjs', {
                     params: {
@@ -462,7 +496,7 @@
                 })
             },
             handlePreview(file) {
-                window.open('http://10.197.41.100:8080/contract/getFj?fid='+file.id+'&fname='+file.name)
+                window.open('http://10.197.41.100:8080/contract/getFj?fid=' + file.id + '&fname=' + file.name)
             },
             handleBeforeRemove(file, fileList) {
                 this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
@@ -482,13 +516,13 @@
                     this.attachment(this.smallProjectTemp)
                 })
             },
-            handleSuccess(response, file, fileList){
+            handleSuccess(response, file, fileList) {
                 this.attachment(this.smallProjectTemp)
             },
         },
         watch: {
             addUpdateDialogVisible(newValue, oldValue) {
-                if (newValue==true) {
+                if (newValue == true) {
                     axios.get('http://10.197.41.100:8080/xxmgl/getProjects', {
                         params: {
                             userName: localStorage.getItem('userName')
@@ -497,17 +531,17 @@
                         if (res.data != null) {
                             for (let i = 0; i < res.data.length; i++) {
                                 this.projects.push({
-                                    xmbh:res.data[i].xmbh,
-                                    xmmc:res.data[i].xmmc,
-                                    lxbm:res.data[i].lxbm,
-                                    sqr:res.data[i].sqr,
-                                    y1:res.data[i].y1
+                                    xmbh: res.data[i].xmbh,
+                                    xmmc: res.data[i].xmmc,
+                                    lxbm: res.data[i].lxbm,
+                                    sqr: res.data[i].sqr,
+                                    y1: res.data[i].y1
                                 })
                             }
                         }
                     })
-                }else{
-                    this.projects=[]
+                } else {
+                    this.projects = []
                 }
             }
         },
