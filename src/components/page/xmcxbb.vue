@@ -450,9 +450,16 @@
         },
         methods:{
             getList(){
+                const loading = this.$loading({
+                    lock: true,
+                    text: '加载中……',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 axios.post('http://10.197.41.100:8080/xmcxb/select',this.selectObject)
                     .then(res => {
                         this.list=res.data
+                        loading.close()
                     })
             },
             download(){
