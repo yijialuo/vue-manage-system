@@ -91,7 +91,6 @@
                     this.$router.push('/login');
                 }else {
                     this.show_xgmm=true
-                    console.log("xgmm!")
                 }
             },
             // 侧边栏折叠

@@ -175,8 +175,6 @@
                 })
             },
             deleteData(row){
-                console.log(row)
-                console.log(typeof row)
                 this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {// 弹出确认框
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

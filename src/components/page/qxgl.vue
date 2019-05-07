@@ -400,7 +400,6 @@
                     })
             },
             editUser(index, row) {
-                console.log(row)
                 this.idx = index;
                 const item = this.users[index];
                 this.form = {

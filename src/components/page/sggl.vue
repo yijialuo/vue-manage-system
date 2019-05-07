@@ -551,7 +551,6 @@
                         departmentName:localStorage.getItem('departmentName')
                     }
                 }).then(res=>{
-                    console.log(res.data)
                     this.projects = res.data
                     //请求项目施工状态
                     for(let i=0;i<res.data.length;i++){

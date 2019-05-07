@@ -362,7 +362,6 @@
             },
             //状态
             zt(row){
-                console.log(row.dqjd)
                 if(row.dqjd==='未申请'){
                     this.src=require('@/assets/img/htwsq.png')
                 }else if(row.dqjd==='填写合同表单'){
@@ -545,7 +544,6 @@
                             }
                         })
                             .then(xxx => {
-                                console.log(xxx.data.length==0)
                                 if (xxx.data.length == 0) {
                                     this.$message.error("该记录还未上传附件！禁止归档！")
                                     return
