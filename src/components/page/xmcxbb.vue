@@ -6,10 +6,211 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="handle-box">
-                <el-input v-model="getObject.projectCode" placeholder="项目编号" style="" class="handle-input mr10">
+            <div>
+                <el-input clearable v-model="selectObject.xmbh" class="search-item" placeholder="项目编号">
                 </el-input>
-                <el-button type="primary" icon="el-icon-circle-plus" class="handle-del mr10" @click="download">下载
+                <el-input clearable v-model="selectObject.xmmc" class="search-item" placeholder="项目名称">
+                </el-input>
+                <el-date-picker
+                        v-model="selectObject.lxsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="立项时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.lxbm"
+                        placeholder="立项部门">
+                    <el-option
+                            v-for="item in bms"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.xmdl"
+                        placeholder="项目大类">
+                    <el-option
+                            v-for="item in xmdl"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.lxlb"
+                        placeholder="立项类别">
+                    <el-option
+                            v-for="item in lxlb"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.xmlb"
+                        placeholder="项目类别">
+                    <el-option
+                            v-for="item in xmlb"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select
+                        clearable
+                        class="search-item"
+                        v-model="selectObject.spzt"
+                        placeholder="审批状态">
+                    <el-option
+                            v-for="item in spzt"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+            <div>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.htzt"
+                        placeholder="合同状态">
+                    <el-option
+                            v-for="item in htzt"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.sgzt"
+                        placeholder="施工状态">
+                    <el-option
+                            v-for="item in sgzt"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.jszt"
+                        placeholder="结算状态">
+                    <el-option
+                            v-for="item in jszt"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-date-picker
+                        v-model="selectObject.kgsj"
+                        class="search-item"
+                        type="datetime"
+                        placeholder="开工时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.wgsj"
+                        class="search-item"
+                        type="datetime"
+                        placeholder="完工时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
+                </el-date-picker>
+                <el-input clearable v-model="selectObject.zjsjd" class="search-item" placeholder="总结算进度">
+                </el-input>
+                <el-input clearable v-model="selectObject.jnjsjd" class="search-item" placeholder="今年结算进度">
+                </el-input>
+                <el-date-picker
+                        v-model="selectObject.xmghsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="项目过会时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+            </div>
+            <div>
+                <el-date-picker
+                        v-model="selectObject.lhzbwjsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="两会招标时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.dbsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="定标时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.htqdsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="合同签订时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.jssj"
+                        class="search-item"
+                        type="date"
+                        placeholder="结算时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-input clearable v-model="selectObject.cbdw" class="search-item" placeholder="承包单位">
+                </el-input>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.xmfqr"
+                        placeholder="项目发起人">
+                    <el-option
+                            v-for="item in xmfqr"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.xmjbr"
+                        placeholder="项目经办人">
+                    <el-option
+                            v-for="item in xmjbr"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+            <div>
+                <el-button type="primary" icon="el-icon-circle-plus" class="search-item" @click="getList">查询
+                </el-button>
+                <el-button type="primary" icon="el-icon-circle-plus" class="search-item" @click="download">下载
                 </el-button>
             </div>
             <h3 style="text-align: center">项目查询报表</h3>
@@ -20,7 +221,7 @@
                     border
                     stripe
                     class="table">
-                    <el-table-column label="项目编号"  fixed align="center" sortable prop="xmbh" min-width="150">
+                    <el-table-column label="项目编号"  fixed align="center" sortable prop="xmbh" min-width="120">
                     </el-table-column>
                     <el-table-column label="项目名称" fixed   align="center" sortable prop="xmmc" min-width="250">
                     </el-table-column>
@@ -34,9 +235,9 @@
                     </el-table-column>
                     <el-table-column label="项目类别" align="center" prop="xmlb" width="120">
                     </el-table-column>
-                    <el-table-column label="计划金额（万元）" align="center" prop="jhje" width="120">
+                    <el-table-column label="计划金额（万元）" align="center" prop="jhje" width="140">
                     </el-table-column>
-                    <el-table-column label="合同金额" align="center" prop="htje" width="120">
+                    <el-table-column label="合同金额（万元）" align="center" prop="htje" width="140">
                     </el-table-column>
                     <el-table-column label="审批状态" align="center" prop="spzt" width="160">
                     </el-table-column>
@@ -83,22 +284,220 @@
             return{
                 list:[],
                 ip:'http://10.197.41.100:8080',
+                selectObject:{
+                    xmbh:'',
+                    xmmc:'',
+                    lxsj:'',
+                    lxbm:[],
+                    xmdl:[],
+                    lxlb:[],
+                    xmlb:[],
+                    jhje:'',
+                    htje:'',
+                    spzt:[],
+                    htzt:[],
+                    sgzt:[],
+                    jszt:[],
+                    kgsj:'',
+                    wgsj:'',
+                    zjsjd:'',
+                    jnjsjd:'',
+                    xmghsj:'',
+                    lhzbwjsj:'',
+                    dbsj:'',
+                    htqdsj:'',
+                    jssj:'',
+                    cbdw:'',
+                    xmfqr:[],
+                    xmjbr:[],
+                },
+                bms: [],
+                xmdl: [
+                    {
+                        value: '土建',
+                        label: '土建'
+                    }, {
+                        value: '设备',
+                        label: '设备'
+                    }, {
+                        value: '信息',
+                        label: '信息'
+                    }, {
+                        value: '物资',
+                        label: '物资'
+                    }, {
+                        value: '绿化',
+                        label: '绿化'
+                    }
+                ],
+                lxlb: [
+                    {
+                        value: '临时立项',
+                        label: '临时立项'
+                    }, {
+                        value: '年度计划',
+                        label: '年度计划'
+                    }, {
+                        value: '年度维保',
+                        label: '年度维保'
+                    },{
+                        value:'股份项目',
+                        label:'股份项目'
+                    },{
+                        value:'内部项目',
+                        label:'内部项目'
+                    }
+                ],
+                xmlb: [
+                    {
+                        value: '固定资产',
+                        label: '固定资产'
+                    }, {
+                        value: '维修',
+                        label: '维修'
+                    }, {
+                        value: '物资采购',
+                        label: '物资采购'
+                    }
+                ],
+                spzt: [
+                    {
+                        value: '未申请',
+                        label: '未申请'
+                    }, {
+                        value: '填写申请表',
+                        label: '填写申请表'
+                    }, {
+                        value: '主管经理审批',
+                        label: '主管经理审批'
+                    }, {
+                        value: '经理审批',
+                        label: '经理审批'
+                    }, {
+                        value: '经办人',
+                        label: '经办人'
+                    }, {
+                        value: '技术部主管经理',
+                        label: '技术部主管经理'
+                    }, {
+                        value: '技术部经理',
+                        label: '技术部经理'
+                    }, {
+                        value: '两会',
+                        label: '两会'
+                    }, {
+                        value: '总经理办公会',
+                        label: '总经理办公会'
+                    }, {
+                        value: '备案',
+                        label: '备案'
+                    }, {
+                        value: '申请结束',
+                        label: '申请结束'
+                    }
+                ],
+                htzt:[
+                    {
+                        value: '未申请',
+                        label: '未申请'
+                    }, {
+                        value: '填写合同表',
+                        label: '填写合同表'
+                    }, {
+                        value: '技术部经理审批',
+                        label: '技术部经理审批'
+                    }, {
+                        value: '办公室确认',
+                        label: '办公室确认'
+                    }, {
+                        value: '合同审批结束',
+                        label: '合同审批结束'
+                    }
+                ],
+                sgzt:[
+                    {
+                        value: '已完工',
+                        label: '已完工'
+                    }, {
+                        value: '未开工',
+                        label: '未开工'
+                    }, {
+                        value: '施工进行中',
+                        label: '施工进行中'
+                    }
+                ],
+                jszt:[
+                    {
+                        value: '未支付',
+                        label: '未支付'
+                    }, {
+                        value: '支付完成',
+                        label: '支付完成'
+                    }, {
+                        value: '支付进行中',
+                        label: '支付进行中'
+                    }
+                ],
+                xmfqr:[],
+                xmjbr:[]
             }
         },
         created() {
             this.getList()
+            this.getAllDptName()
+            this.getAllJBRS()
+            this.getAllFQRS()
         },
         methods:{
             getList(){
-                axios.get(this.ip+'/xmcxb/selectAll')
-                    .then(res=>{
+                axios.post('http://10.197.41.100:8080/xmcxb/select',this.selectObject)
+                    .then(res => {
                         this.list=res.data
                     })
             },
-
-            //下载报表
             download(){
+                window.location.href='http://10.197.41.100:8080/Bb/downloadXMCXBB?param='+JSON.stringify(this.selectObject)
+            },
+            getAllDptName() {
+                axios.get('http://10.197.41.100:8080/department/getAllDptName')
+                    .then(res => {
+                        if (res.data != null) {
+                            for (let i = 0; i < res.data.length; i++) {
+                                this.bms.push({
+                                    value: res.data[i],
+                                    label: res.data[i],
+                                })
+                            }
+                        }
+                    })
+            },
+            getAllJBRS() {
+                axios.get('http://10.197.41.100:8080/user/jsbjbr', {
 
+                }).then(res => {
+                    if (res.data != null) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.xmjbr.push({
+                                value: res.data[i],
+                                label: res.data[i],
+                            })
+                        }
+                    }
+                })
+            },
+            getAllFQRS(){
+                axios.get('http://10.197.41.100:8080/user/fqr', {
+
+                }).then(res => {
+                    if (res.data != null) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.xmfqr.push({
+                                value: res.data[i],
+                                label: res.data[i],
+                            })
+                        }
+                    }
+                })
             }
         }
     }
@@ -109,5 +508,13 @@
         width: 100%;
         font-size: 14px;
         margin-top: 20px;
+    }
+    .search-item:first-child{
+        width: 150px;
+    }
+    .search-item:nth-child(n+2){
+        width: 180px;
+        margin-left: 20px;
+        margin-bottom: 10px;
     }
 </style>

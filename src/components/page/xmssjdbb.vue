@@ -7,9 +7,9 @@
         </div>
         <div class="container">
             <div>
-                <el-input v-model="selectObject.projectNo" class="search-item" placeholder="项目计划号">
+                <el-input clearable v-model="selectObject.projectNo" class="search-item" placeholder="项目计划号">
                 </el-input>
-                <el-input v-model="selectObject.projectNam" class="search-item" placeholder="项目名称">
+                <el-input clearable v-model="selectObject.projectNam" class="search-item" placeholder="项目名称">
                 </el-input>
                 <el-select
                         clearable
@@ -107,7 +107,7 @@
                         placeholder="合同签订时间"
                         value-format="yyyy-MM-dd HH:mm:ss">
                 </el-date-picker>
-                <el-input v-model="selectObject.htje" class="search-item" placeholder="合同金额（万元）">
+                <el-input clearable v-model="selectObject.htje" class="search-item" placeholder="合同金额（万元）">
                 </el-input>
                 <el-date-picker
                         v-model="selectObject.kgsj"
@@ -123,10 +123,6 @@
                         placeholder="验收时间"
                         value-format="yyyy-MM-dd HH:mm:ss">
                 </el-date-picker>
-                <el-input v-model="selectObject.zjsjd" class="search-item" placeholder="总结算进度（万元）">
-                </el-input>
-            </div>
-            <div>
                 <el-date-picker
                         v-model="selectObject.wcjsjs"
                         class="search-item"
@@ -134,11 +130,24 @@
                         placeholder="完成结算时间"
                         value-format="yyyy-MM-dd">
                 </el-date-picker>
-                <el-input v-model="selectObject.jsbjbr" class="search-item" placeholder="技术部经办人">
+            </div>
+            <div>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.jsbjbr"
+                        placeholder="技术部经办人">
+                    <el-option
+                            v-for="item in jsbjbr"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-input clearable v-model="selectObject.sgdw" class="search-item" placeholder="施工单位">
                 </el-input>
-                <el-input v-model="selectObject.sgdw" class="search-item" placeholder="施工单位">
-                </el-input>
-                <el-button type="primary" icon="el-icon-circle-plus" class="search-item" @click="download">查询
+                <el-button type="primary" icon="el-icon-circle-plus" class="search-item" @click="getList">查询
                 </el-button>
                 <el-button type="primary" icon="el-icon-circle-plus" class="search-item" @click="download">下载
                 </el-button>
@@ -281,23 +290,23 @@
                         label: '绿化'
                     }
                 ],
+                jsbjbr: [],
             }
         },
         created() {
             this.getList()
             this.getAllDptName()
+            this.getAllJSBJBRS()
         },
         methods:{
             getList(){
-                axios.get('http://10.197.41.100:8080/sgjdb/getAllSgjdb', {
-
-                }).then(res => {
-                    console.log(res.data[0])
-                    this.list=res.data
-                })
+                axios.post('http://10.197.41.100:8080/sgjdb/select',this.selectObject)
+                    .then(res => {
+                        this.list=res.data
+                    })
             },
-            download(row){
-                window.location.href='http://10.197.41.100:8080/Bb/downloadXMSSJDB'
+            download(){
+                window.location.href='http://10.197.41.100:8080/Bb/downloadXMSSJDB?param='+JSON.stringify(this.selectObject)
             },
             getAllDptName() {
                 axios.get('http://10.197.41.100:8080/department/getAllDptName')
@@ -311,6 +320,20 @@
                             }
                         }
                     })
+            },
+            getAllJSBJBRS() {
+                axios.get('http://10.197.41.100:8080/user/jsbjbr', {
+
+                }).then(res => {
+                    if (res.data != null) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.jsbjbr.push({
+                                value: res.data[i],
+                                label: res.data[i],
+                            })
+                        }
+                    }
+                })
             },
         }
     }
@@ -326,7 +349,7 @@
         width: 150px;
     }
     .search-item:nth-child(n+2){
-        width: 170px;
+        width: 180px;
         margin-left: 20px;
         margin-bottom: 10px;
     }
