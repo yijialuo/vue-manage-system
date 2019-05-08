@@ -11,13 +11,6 @@
                 </el-input>
                 <el-input clearable v-model="selectObject.xmmc" class="search-item" placeholder="项目名称">
                 </el-input>
-                <el-date-picker
-                        v-model="selectObject.lxsj"
-                        class="search-item"
-                        type="date"
-                        placeholder="立项时间"
-                        value-format="yyyy-MM-dd">
-                </el-date-picker>
                 <el-select
                         clearable
                         multiple
@@ -82,8 +75,6 @@
                             :value="item.value">
                     </el-option>
                 </el-select>
-            </div>
-            <div>
                 <el-select
                         clearable
                         multiple
@@ -97,6 +88,8 @@
                             :value="item.value">
                     </el-option>
                 </el-select>
+            </div>
+            <div>
                 <el-select
                         clearable
                         multiple
@@ -123,61 +116,10 @@
                             :value="item.value">
                     </el-option>
                 </el-select>
-                <el-date-picker
-                        v-model="selectObject.kgsj"
-                        class="search-item"
-                        type="datetime"
-                        placeholder="开工时间"
-                        value-format="yyyy-MM-dd HH:mm:ss">
-                </el-date-picker>
-                <el-date-picker
-                        v-model="selectObject.wgsj"
-                        class="search-item"
-                        type="datetime"
-                        placeholder="完工时间"
-                        value-format="yyyy-MM-dd HH:mm:ss">
-                </el-date-picker>
                 <el-input clearable v-model="selectObject.zjsjd" class="search-item" placeholder="总结算进度">
                 </el-input>
                 <el-input clearable v-model="selectObject.jnjsjd" class="search-item" placeholder="今年结算进度">
                 </el-input>
-                <el-date-picker
-                        v-model="selectObject.xmghsj"
-                        class="search-item"
-                        type="date"
-                        placeholder="项目过会时间"
-                        value-format="yyyy-MM-dd">
-                </el-date-picker>
-            </div>
-            <div>
-                <el-date-picker
-                        v-model="selectObject.lhzbwjsj"
-                        class="search-item"
-                        type="date"
-                        placeholder="两会招标时间"
-                        value-format="yyyy-MM-dd">
-                </el-date-picker>
-                <el-date-picker
-                        v-model="selectObject.dbsj"
-                        class="search-item"
-                        type="date"
-                        placeholder="定标时间"
-                        value-format="yyyy-MM-dd">
-                </el-date-picker>
-                <el-date-picker
-                        v-model="selectObject.htqdsj"
-                        class="search-item"
-                        type="date"
-                        placeholder="合同签订时间"
-                        value-format="yyyy-MM-dd">
-                </el-date-picker>
-                <el-date-picker
-                        v-model="selectObject.jssj"
-                        class="search-item"
-                        type="date"
-                        placeholder="结算时间"
-                        value-format="yyyy-MM-dd">
-                </el-date-picker>
                 <el-input clearable v-model="selectObject.cbdw" class="search-item" placeholder="承包单位">
                 </el-input>
                 <el-select
@@ -206,6 +148,122 @@
                             :value="item.value">
                     </el-option>
                 </el-select>
+            </div>
+            <div>
+                <el-date-picker
+                        v-model="selectObject.kslxsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="开始立项时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.kskgsj"
+                        class="search-item"
+                        type="datetime"
+                        placeholder="开始开工时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.kswgsj"
+                        class="search-item"
+                        type="datetime"
+                        placeholder="开始完工时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.ksxmghsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="开始项目过会时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.kslhzbwjsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="开始两会招标时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.ksdbsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="开始定标时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.kshtqdsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="开始合同签订时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.ksjssj"
+                        class="search-item"
+                        type="date"
+                        placeholder="开始结算时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+            </div>
+            <div>
+                <el-date-picker
+                        v-model="selectObject.jslxsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="结束立项时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.jskgsj"
+                        class="search-item"
+                        type="datetime"
+                        placeholder="结束开工时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.jswgsj"
+                        class="search-item"
+                        type="datetime"
+                        placeholder="结束完工时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.jsxmghsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="结束项目过会时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.jslhzbwjsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="结束两会招标时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.jsdbsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="结束定标时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.jsjshtqdsj"
+                        class="search-item"
+                        type="date"
+                        placeholder="结束合同签订时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
+                <el-date-picker
+                        v-model="selectObject.jsjssj"
+                        class="search-item"
+                        type="date"
+                        placeholder="结束结算时间"
+                        value-format="yyyy-MM-dd">
+                </el-date-picker>
             </div>
             <div>
                 <el-button type="primary" icon="el-icon-circle-plus" class="search-item" @click="getList">查询
@@ -272,6 +330,16 @@
                     <el-table-column label="项目经办人" align="center" prop="xmjbr" width="120">
                     </el-table-column>
             </el-table>
+            <el-pagination
+                    v-show="total>0"
+                    @current-change="handleCurrentChange"
+                    :current-page="listQuery.offset"
+                    :page-size="listQuery.limit"
+                    layout="total,prev,pager,next"
+                    :total="total"
+                    background
+                    style="text-align: center">
+            </el-pagination>
         </div>
     </div>
 </template>
@@ -283,11 +351,17 @@
         data(){
             return{
                 list:[],
+                total:0,
+                listQuery: {
+                    offset: 1,
+                    limit: 10
+                },
                 ip:'http://10.197.41.100:8080',
                 selectObject:{
                     xmbh:'',
                     xmmc:'',
-                    lxsj:'',
+                    kslxsj:'',
+                    jslxsj:'',
                     lxbm:[],
                     xmdl:[],
                     lxlb:[],
@@ -298,15 +372,22 @@
                     htzt:[],
                     sgzt:[],
                     jszt:[],
-                    kgsj:'',
-                    wgsj:'',
+                    kskgsj:'',
+                    jskgsj:'',
+                    kswgsj:'',
+                    jswgsj:'',
                     zjsjd:'',
                     jnjsjd:'',
-                    xmghsj:'',
-                    lhzbwjsj:'',
-                    dbsj:'',
-                    htqdsj:'',
-                    jssj:'',
+                    ksxmghsj:'',
+                    jsxmghsj:'',
+                    kslhzbwjsj:'',
+                    jslhzbwjsj:'',
+                    ksdbsj:'',
+                    jsdbsj:'',
+                    kshtqdsj:'',
+                    jshtqdsj:'',
+                    ksjssj:'',
+                    jsjssj:'',
                     cbdw:'',
                     xmfqr:[],
                     xmjbr:[],
@@ -456,9 +537,13 @@
                     spinner: 'el-icon-loading',
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
-                axios.post('http://10.197.41.100:8080/xmcxb/select',this.selectObject)
+
+                this.formatSelecrObject()
+
+                axios.post('http://10.197.41.100:8080/xmcxb/select?pageNum='+this.listQuery.offset,this.selectObject)
                     .then(res => {
                         this.list=res.data
+                        this.total=parseInt(res.headers.allcount)
                         loading.close()
                     })
             },
@@ -505,6 +590,61 @@
                         }
                     }
                 })
+            },
+            handleCurrentChange(val) {
+                this.listQuery.offset=val;
+                this.getList()
+            },
+            formatSelecrObject(){
+                if(this.selectObject.kslxsj==null){
+                    this.selectObject.kslxsj=''
+                }
+                if(this.selectObject.kskgsj==null){
+                    this.selectObject.kskgsj=''
+                }
+                if(this.selectObject.kswgsj==null){
+                    this.selectObject.kswgsj=''
+                }
+                if(this.selectObject.ksxmghsj==null){
+                    this.selectObject.ksxmghsj=''
+                }
+                if(this.selectObject.kslhzbwjsj==null){
+                    this.selectObject.kslhzbwjsj=''
+                }
+                if(this.selectObject.ksdbsj==null){
+                    this.selectObject.ksdbsj=''
+                }
+                if(this.selectObject.kshtqdsj==null){
+                    this.selectObject.kshtqdsj=''
+                }
+                if(this.selectObject.ksjssj==null){
+                    this.selectObject.ksjssj=''
+                }
+
+                if(this.selectObject.jslxsj==null){
+                    this.selectObject.jslxsj=''
+                }
+                if(this.selectObject.jskgsj==null){
+                    this.selectObject.jskgsj=''
+                }
+                if(this.selectObject.jswgsj==null){
+                    this.selectObject.jswgsj=''
+                }
+                if(this.selectObject.jsxmghsj==null){
+                    this.selectObject.jsxmghsj=''
+                }
+                if(this.selectObject.jslhzbwjsj==null){
+                    this.selectObject.jslhzbwjsj=''
+                }
+                if(this.selectObject.jsdbsj==null){
+                    this.selectObject.jsdbsj=''
+                }
+                if(this.selectObject.jshtqdsj==null){
+                    this.selectObject.jshtqdsj=''
+                }
+                if(this.selectObject.jsjssj==null){
+                    this.selectObject.jsjssj=''
+                }
             }
         }
     }

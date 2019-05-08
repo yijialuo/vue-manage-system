@@ -205,6 +205,16 @@
                     <el-table-column label="施工单位" align="center" prop="sgdw" width="120">
                     </el-table-column>
             </el-table>
+            <el-pagination
+                    v-show="total>0"
+                    @current-change="handleCurrentChange"
+                    :current-page="listQuery.offset"
+                    :page-size="listQuery.limit"
+                    layout="total,prev,pager,next"
+                    :total="total"
+                    background
+                    style="text-align: center">
+            </el-pagination>
         </div>
     </div>
 </template>
@@ -217,6 +227,11 @@
         data(){
             return{
                 list:[],
+                total:0,
+                listQuery: {
+                    offset: 1,
+                    limit: 10
+                },
                 selectObject:{
                     projectNo:'',
                     projectNam:'',
@@ -306,9 +321,10 @@
                     spinner: 'el-icon-loading',
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
-                axios.post('http://10.197.41.100:8080/sgjdb/select',this.selectObject)
+                axios.post('http://10.197.41.100:8080/sgjdb/select?pageNum='+this.listQuery.offset,this.selectObject)
                     .then(res => {
                         this.list=res.data
+                        this.total=parseInt(res.headers.allcount)
                         loading.close()
                     })
             },
@@ -341,6 +357,10 @@
                         }
                     }
                 })
+            },
+            handleCurrentChange(val) {
+                this.listQuery.offset=val;
+                this.getList()
             },
         }
     }
