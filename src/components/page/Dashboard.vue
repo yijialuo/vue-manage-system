@@ -1212,7 +1212,7 @@
             },
 
             //技术部自己的项目弹窗
-            show_xqgcjsb(newValue,oldValue){
+            show_xqgcjsb(newValue, oldValue) {
                 if (newValue == true) {
                     this.getjbrOrZgjlList();// 获取经办人或主管经理列表
                 }
@@ -1223,7 +1223,7 @@
                 return this.zhongbiao.zhongbiaojg
             },
             isTjzbs() {
-                return this.zhongbiaos.length === 1
+                return this.zhongbiaos.length > 0
             },
             role() {
                 return this.user.groupName
@@ -1279,12 +1279,12 @@
         },
         methods: {
             //技术部自己的项目，驳回再申请
-            jsbsq(){
-                if(this.jbrOrZgjlValue==null||this.jbrOrZgjlValue.length==0){
+            jsbsq() {
+                if (this.jbrOrZgjlValue == null || this.jbrOrZgjlValue.length == 0) {
                     this.$message.error("请选择技术部主管经理！")
                     return
                 }
-                this.cl('jbr',true)
+                this.cl('jbr', true)
             },
 
             //办公室确认合同已接受
@@ -1527,7 +1527,7 @@
             },
             //完工招标
             wczb() {
-                if (this.zhaobiao.fbsj != "" && this.zhaobiao.fbsj != null && this.zhaobiao.dbsj != "" && this.zhaobiao.dbsj != null && this.zhongbiaos.length != 0) {
+                if (this.zhaobiao.fbsj != "" && this.zhaobiao.fbsj != null && this.zhaobiao.dbsj != "" && this.zhaobiao.dbsj != null && this.zhaobiao.tbjzsj != null && this.zhaobiao.tbjzsj != '' && this.zhongbiaos.length != 0) {
                     axios.get(this.ip + '/zhaobiao/wczb', {
                         params: {
                             userId: localStorage.getItem('userId'),
@@ -1675,12 +1675,19 @@
             },
             //拿到中标单位
             getZhongbiaodw() {
+                const loading = this.$loading({
+                    lock: true,
+                    text: '处理中……',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 axios.get(this.ip + '/zhongbiao/getZhongbiaoByZbid', {
                     params: {
                         zbid: this.zhaobiao.id
                     }
                 }).then(res => {
                     this.zhongbiaos = res.data
+                    loading.close()
                 })
             },
 
@@ -1838,7 +1845,7 @@
                     } else if (this.user.groupId == 'bgs') {
                         this.cl('lh', 2)
                     } else {//doman的驳回的话，只能是邓博、和李泽恩的总经会的驳回
-                        this.cl('zjl',1)
+                        this.cl('zjl', 1)
                     }
                 }
             },
@@ -2321,7 +2328,7 @@
 
             //状态
             zt(row) {
-                if(row.depAuditOpinion=='股份项目'){
+                if (row.depAuditOpinion == '股份项目') {
                     if (row.pid != null && row.pid != '') {
                         if (row.dqjd === '填写申请表') {
                             this.src = require('@/assets/img/g_txsqb.png')
@@ -2342,10 +2349,10 @@
                         } else if (row.dqjd === '申请结束') {
                             this.src = require('@/assets/img/g_js.png')
                         }
-                    }else {
+                    } else {
                         this.src = require('@/assets/img/g_wsq.png')
                     }
-                }else {
+                } else {
                     if (Number(row.investmentEstimate) > 10) {
                         if (row.dqjd === '填写申请表') {
                             this.src = require('@/assets/img/s_txsqb.png')
