@@ -275,7 +275,7 @@
             <el-table
                     max-height="780"
                     ref="multipleTable"
-                    :data="list"
+                    :data="list.slice((currentPage-1)*10,currentPage*10)"
                     border
                     stripe
                     class="table">
@@ -331,12 +331,10 @@
                     </el-table-column>
             </el-table>
             <el-pagination
-                    v-show="total>0"
+                    v-show="list.length>0"
                     @current-change="handleCurrentChange"
-                    :current-page="listQuery.offset"
-                    :page-size="listQuery.limit"
                     layout="total,prev,pager,next"
-                    :total="total"
+                    :total="list.length"
                     background
                     style="text-align: center">
             </el-pagination>
@@ -351,6 +349,7 @@
         data(){
             return{
                 list:[],
+                currentPage:1,
                 total:0,
                 listQuery: {
                     offset: 1,
@@ -591,9 +590,8 @@
                     }
                 })
             },
-            handleCurrentChange(val) {
-                this.listQuery.offset=val;
-                this.getList()
+            handleCurrentChange(currentPage) {
+                this.currentPage = currentPage;
             },
             formatSelecrObject(){
                 if(this.selectObject.kslxsj==null){
