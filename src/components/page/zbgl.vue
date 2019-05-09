@@ -662,20 +662,41 @@
                     this.$message.info("当前项目还未招标申请！无状态！")
                     return
                 }
-                if(row.dqjd==='立项部门提出技术要求'){
-                    this.src=require('@/assets/img/lxbmtcjsyq.png')
-                }else if(row.dqjd==='技术部经办人'){
-                    this.src=require('@/assets/img/jsbjbr.png')
-                }else if(row.dqjd==='主管经理'){
-                    this.src=require('@/assets/img/zgjl.png')
-                }else if(row.dqjd==='经理'){
-                    this.src=require('@/assets/img/jl.png')
-                }else if(row.dqjd==='定标'){
-                    this.src=require('@/assets/img/db.png')
-                }else if(row.dqjd==='招标结束'){
-                    this.src=require('@/assets/img/zbjs.png')
-                }
-                this.show_zt = true
+                //请求是否工程技术部项目
+                axios.get(this.ip+'/user/isJsb',{
+                    params:{
+                        userId:row.sqr
+                    }
+                }).then(res=>{
+                    if(res.data){//是工程技术部
+                       if(row.dqjd==='技术部经办人'){
+                            this.src=require('@/assets/img/j_jsbjbr.png')
+                        }else if(row.dqjd==='主管经理'){
+                            this.src=require('@/assets/img/j_zgjl.png')
+                        }else if(row.dqjd==='经理'){
+                            this.src=require('@/assets/img/j_jl.png')
+                        }else if(row.dqjd==='定标'){
+                            this.src=require('@/assets/img/j_db.png')
+                        }else if(row.dqjd==='招标结束'){
+                            this.src=require('@/assets/img/j_zbjs.png')
+                        }
+                    }else {
+                        if(row.dqjd==='立项部门提出技术要求'){
+                            this.src=require('@/assets/img/lxbmtcjsyq.png')
+                        }else if(row.dqjd==='技术部经办人'){
+                            this.src=require('@/assets/img/jsbjbr.png')
+                        }else if(row.dqjd==='主管经理'){
+                            this.src=require('@/assets/img/zgjl.png')
+                        }else if(row.dqjd==='经理'){
+                            this.src=require('@/assets/img/jl.png')
+                        }else if(row.dqjd==='定标'){
+                            this.src=require('@/assets/img/db.png')
+                        }else if(row.dqjd==='招标结束'){
+                            this.src=require('@/assets/img/zbjs.png')
+                        }
+                    }
+                    this.show_zt = true
+                })
             },
             //领取附件
             lqfj(zbpId) {

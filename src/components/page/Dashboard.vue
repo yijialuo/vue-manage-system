@@ -285,7 +285,7 @@
                                   v-model="xm.reviser"></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算">
-                        <el-input style="width: 215px;padding-right: 55px"
+                        <el-input  type="number" style="width: 215px;padding-right: 55px"
                                   v-model="xm.investmentEstimate"></el-input>
                         项目负责人
                         <el-input style="width: 215px"
@@ -855,11 +855,11 @@
                     </el-form-item>
                     <el-form-item v-if="groupId!='bgs'" label="项目编号">
                         <el-input
-                                :readonly="user.groupId!='doman'||NodeId==='总经理办公会'"
+                                :readonly="user.groupId!='doman'&&NodeId!='总经理办公会'"
                                 v-model="xm.projectNo"></el-input>
                     </el-form-item>
                     <el-form-item label="项目名称">
-                        <el-input :readonly="user.groupId!='doman'"
+                        <el-input :readonly="user.groupId!='doman'&&NodeId!='两会'"
                                   v-model="xm.projectNam"></el-input>
                     </el-form-item>
                     <el-form-item label="申报部门">
@@ -881,28 +881,28 @@
                     </el-form-item>
                     <el-form-item label="投资概算">
                         <el-input style="width: 215px;padding-right: 55px"
-                                  :readonly="user.groupId!='doman'"
+                                  :readonly="user.groupId!='doman'&&NodeId!='两会'&&NodeId!='总经理办公会'"
                                   v-model="xm.investmentEstimate"></el-input>
                         项目负责人
-                        <el-input style="width: 215px" :readonly="user.groupId!='doman'"
+                        <el-input style="width: 215px" :readonly="user.groupId!='doman'&&NodeId!='两会'&&NodeId!='总经理办公会'"
                                   v-model="xm.personInCharge"></el-input>
                     </el-form-item>
                     <el-form-item label="立项背景理由">
-                        <el-input :readonly="user.groupId!='doman'"
+                        <el-input :readonly="user.groupId!='doman'&&NodeId!='两会'&&NodeId!='总经理办公会'"
                                   v-model="xm.establishReason" type="textarea"
                                   placeholder="立项背景理由"
                                   :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="立项内容规模">
-                        <el-input :readonly="user.groupId!='doman'" v-model="xm.scale"
+                        <el-input :readonly="user.groupId!='doman'&&NodeId!='两会'&&NodeId!='总经理办公会'" v-model="xm.scale"
                                   type="textarea"
                                   placeholder="立项内容规模"
                                   :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算说明">
-                        <el-input :readonly="user.groupId!='doman'" v-model="xm.illustration"
+                        <el-input :readonly="user.groupId!='doman'&&NodeId!='两会'&&NodeId!='总经理办公会'" v-model="xm.illustration"
                                   type="textarea"
                                   placeholder="投资概算说明"
                                   :autosize="{ minRows: 4, maxRows: 10}"
@@ -1852,13 +1852,7 @@
             //确定同意
             qd_ty() {
                 if (this.groupId === 'bgs') {
-                    axios.get(this.ip + '/projectApplication/xgxmbhAndlhsj', {//添加项目编号和两会时间
-                        params: {
-                            xmid: this.xm.id,
-                            xmbh: this.xm.projectNo,
-                            lhsj: this.xm.lhsj
-                        }
-                    }).then(res => {
+                    axios.post(this.ip + '/projectApplication/updataXm', this.xm).then(res => {
                         //两会节点
                         if (Number(this.xm.investmentEstimate) >= 10) {
                             //大于10万，总经理办公会
@@ -1872,12 +1866,7 @@
 
                 //邓博，李泽恩处理总经会
                 if ((this.user.userId === 'db' || this.user.userId === 'lze') && this.NodeId === '总经理办公会') {
-                    axios.get(this.ip + '/projectApplication/xgzjhsj', {
-                        params: {
-                            xmid: this.xm.id,
-                            zjhsj: this.xm.zjhsj
-                        }
-                    }).then(res => {
+                    axios.post(this.ip + '/projectApplication/updataXm',this.xm ).then(res => {
                         if (this.xm.depAuditOpinion != '股份项目') {
                             this.$confirm('是否备案', '提示', {
                                 confirmButtonText: '是',

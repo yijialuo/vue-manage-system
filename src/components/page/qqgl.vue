@@ -1042,7 +1042,7 @@
 
             //确定新建
             qdxj() {
-                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep)) {
+                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep)||this.isnull(this.project.investmentEstimate)) {
                     this.$message.error("请填写详细信息！")
                     return
                 }
