@@ -34,6 +34,8 @@
                         <el-button type="text" style="color: #ff0000;" v-if="groupId!='ld'" size="mini"
                                    @click="deleteProjectData(scope.row.id)">删除
                         </el-button>
+                        <el-button type="text" @click="lxxq(scope.row)">立项详情
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -196,6 +198,91 @@
                 <el-button type="primary" @click="attachmentVisiable=false">确 定</el-button>
             </span>
             </el-dialog>
+
+            <!--立项详情-->
+            <el-dialog title="立项详情" :visible.sync="lxxqShow" width="50%" >
+                <el-form :model="project" label-position="left" label-width="120px">
+                    <el-form-item label="项目编号">
+                        <el-input v-model="project.projectNo" readonly/>
+                    </el-form-item>
+                    <el-form-item label="项目名称">
+                        <el-input v-model="project.projectNam" readonly/>
+                    </el-form-item>
+                    <el-form-item style="margin-left: -120px;">
+                        <el-col :span="11">
+                            <el-form-item label="立项时间">
+                                <el-input v-model="project.applicationDte" readonly/>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="2">
+                            <el-form-item label="立项部门">
+                                <el-input v-model="project.declarationDep" readonly/>
+                            </el-form-item>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item style="margin-left: -120px;">
+                        <el-col :span="11">
+                            <el-form-item label="立项类别">
+                                <el-input v-model="project.depAuditOpinion" readonly/>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="2">
+                            <el-form-item label="项目类别">
+                                <el-input v-model="project.projectType" readonly/>
+                            </el-form-item>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item style="margin-left: -120px;">
+                        <el-col :span="11">
+                            <el-form-item label="投资预算">
+                                <el-input v-model="project.investmentEstimate" readonly/>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="2">
+                            <el-form-item label="项目负责人">
+                                <el-input v-model="project.personInCharge" readonly/>
+                            </el-form-item>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item style="margin-left: -120px;">
+                        <el-col :span="11">
+                            <el-form-item label="预计工期">
+                                <el-input v-model="project.techAuditOpinion" readonly/>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="2">
+                            <el-form-item label="项目大类">
+                                <el-input v-model="project.reviser" readonly/>
+                            </el-form-item>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item style="margin-left: -120px;">
+                        <el-col :span="11">
+                            <el-form-item label="两会时间">
+                                <el-input v-model="project.lhsj" readonly/>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="2">
+                            <el-form-item label="总经会时间">
+                                <el-input v-model="project.zjhsj" readonly/>
+                            </el-form-item>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item label="立项背景理由">
+                        <el-input v-model="project.establishReason" readonly type="textarea" :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="立项内容规模">
+                        <el-input v-model="project.scale" readonly type="textarea" :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                    </el-form-item>
+                    <el-form-item label="投资概算说明">
+                        <el-input v-model="project.illustration" readonly type="textarea" :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="lxxqShow = false">取消</el-button>
+                </div>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -256,7 +343,32 @@
                     gzbzmc: [{required: true, message: '不可为空', trigger: 'blur'}],
                     sgdw: [{required: true, message: '不可为空', trigger: 'blur'}],
                     htje: [{required: true, message: '不可为空', trigger: 'blur'}],
-                }
+                },
+                project: {
+                    id: '',
+                    projectNo: '',
+                    projectType: '',
+                    projectNam: '',
+                    declarationDep: '',
+                    personInCharge: '',
+                    investmentEstimate: '',
+                    establishReason: '',
+                    scale: '',
+                    depAuditOpinion: '',
+                    techAuditOpinion: '',
+                    engTechAuditOpinion: '',
+                    bider: '',
+                    finishDte: '',
+                    proposer: '',
+                    applicationDte: '',
+                    reviser: '',
+                    reviseDte: '',
+                    illustration: '',
+                    lhsj: '',
+                    zjhsj: '',
+                    pid: ''
+                },
+                lxxqShow:false,
             }
         },
         created() {
@@ -518,6 +630,16 @@
             },
             handleSuccess(response, file, fileList) {
                 this.attachment(this.smallProjectTemp)
+            },
+            lxxq(row){// 立项详情
+                this.lxxqShow=true
+                axios.get('http://10.197.41.100:8080/projectApplication/getXmById', {
+                    params: {
+                        xmid: row.y1
+                    }
+                }).then(res => {
+                    this.project=res.data
+                })
             },
         },
         watch: {
