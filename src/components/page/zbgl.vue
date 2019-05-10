@@ -299,18 +299,53 @@
         methods: {
             //删除事件
             sc(row){
-                axios.get(this.ip+'/zhaobiao/delete',{
-                    params:{
-                        id:row.id
-                    }
-                }).then(res=>{
-                    if(res.data){
-                        this.$message.success("删除成功！")
-                        this.reload()
+                if(row.dqjd=='未申请'||row.dqjd=='立项部门提出技术要求'){
+                    axios.get(this.ip+'/zhaobiao/delete',{
+                        params:{
+                            id:row.id
+                        }
+                    }).then(res=>{
+                        if(res.data){
+                            this.$message.success("删除成功！")
+                            this.reload()
+                            return
+                        }else {
+                            this.$message.error("删除失败！")
+                            return
+                        }
+                    })
+                }else {
+                    if(row.dqjd=='技术部经办人'){
+                        axios.get(this.ip+'/user/isJsb',{
+                            params:{
+                                userId:row.sqr
+                            }
+                        }).then(res=>{
+                            if(res.data){
+                                axios.get(this.ip+'/zhaobiao/delete',{
+                                    params:{
+                                        id:row.id
+                                    }
+                                }).then(res=>{
+                                    if(res.data){
+                                        this.$message.success("删除成功！")
+                                        this.reload()
+                                        return
+                                    }else {
+                                        this.$message.error("删除失败！")
+                                        return
+                                    }
+                                })
+                            }else {
+                                this.$message.error("正在审批！无法删除！")
+                                return
+                            }
+                        })
                     }else {
-                        this.$message.error("改招标正在申请中!无法删除！")
+                        this.$message.error("正在审批！无法删除！")
+                        return
                     }
-                })
+                }
             },
 
             //全部按钮
