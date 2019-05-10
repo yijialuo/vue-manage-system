@@ -29,9 +29,9 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" width="240">
                     <template slot-scope="scope">
-                        <el-button type="text" size="mini" @click="updateProject(scope.row)">修改</el-button>
+                        <el-button type="text" size="mini" v-if="groupId!='ld'" @click="updateProject(scope.row)">修改</el-button>
                         <el-button type="text" size="mini" @click="openSmallProject(scope.row)">小项目管理</el-button>
-                        <el-button type="text" style="color: #ff0000;" size="mini"
+                        <el-button type="text" style="color: #ff0000;" v-if="groupId!='ld'" size="mini"
                                    @click="deleteProjectData(scope.row.id)">删除
                         </el-button>
                     </template>
@@ -128,9 +128,9 @@
                     </el-table-column>
                     <el-table-column fixed="right" label="操作" align="center" width="160">
                         <template slot-scope="scope">
-                            <el-button type="text" size="mini" @click="updateSmallProject(scope.row)">修改</el-button>
+                            <el-button type="text" size="mini" v-if="groupId!='ld'" @click="updateSmallProject(scope.row)">修改</el-button>
                             <el-button type="text" size="mini" @click="attachment(scope.row)">附件</el-button>
-                            <el-button type="text" style="color: #ff0000;" size="mini"
+                            <el-button type="text" style="color: #ff0000;" v-if="groupId!='ld'" size="mini"
                                        @click="deleteSmallProjectData(scope.row.id)">删除
                             </el-button>
                         </template>

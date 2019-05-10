@@ -9,7 +9,7 @@
                                 <div class="user-info-name" style="margin-top: 0px">{{user.userName}}</div>
                             </div>
                         </div>
-                        <div class="user-info-list">
+                        <div class="user-info-list" v-if="user.userId!='lqb'">
                             {{user.groupName}}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{user.departmentName}}
                         </div>
                     </el-card>

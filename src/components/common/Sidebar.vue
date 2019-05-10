@@ -268,7 +268,7 @@
                             title: '操作手册'
                         },
                     ]
-                } else if (groupId === 'jsb_doman' || groupId === 'jsb_jl' || groupId === 'jsb_zgjl' || departmentName === '办公室.') {
+                } else if (groupId === 'jsb_doman' || groupId === 'jsb_jl' || groupId === 'jsb_zgjl' || departmentName === '办公室.'||groupId==='ld') {
                     this.items = [
                         {
                             icon: 'el-icon-lx-home',
