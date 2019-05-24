@@ -404,6 +404,25 @@
                         },
                         {
                             icon: 'el-icon-lx-calendar',
+                            index: '3',
+                            title: '统计报表',
+                            subs: [
+                                {
+                                    index: '/xmssjdbb',
+                                    title: '项目实施进度报表'
+                                },
+                                {
+                                    index: '/xmtjbb',
+                                    title: '项目统计报表'
+                                },
+                                {
+                                    index: '/xmcxbb',
+                                    title: '项目查询报表'
+                                }
+                            ]
+                        },
+                        {
+                            icon: 'el-icon-lx-calendar',
                             index: '/operateManual',
                             title: '操作手册'
                         },
@@ -430,6 +449,25 @@
                                 }, {
                                     index: '/sggl',
                                     title: '施工管理'
+                                }
+                            ]
+                        },
+                        {
+                            icon: 'el-icon-lx-calendar',
+                            index: '3',
+                            title: '统计报表',
+                            subs: [
+                                {
+                                    index: '/xmssjdbb',
+                                    title: '项目实施进度报表'
+                                },
+                                {
+                                    index: '/xmtjbb',
+                                    title: '项目统计报表'
+                                },
+                                {
+                                    index: '/xmcxbb',
+                                    title: '项目查询报表'
                                 }
                             ]
                         },

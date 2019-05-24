@@ -78,6 +78,7 @@
                             })
                                 .then(res=>{
                                     localStorage.setItem('groupId',res.data.groupId)
+                                    localStorage.setItem('groupName',res.data.groupName)
                                     localStorage.setItem('userName',res.data.userName)
                                     localStorage.setItem('departmentName',res.data.departmentName)
                                     localStorage.setItem('departmentId',res.data.departmentId)

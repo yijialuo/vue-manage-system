@@ -625,7 +625,8 @@
                             this.$message.info("删除成功！")
                         })
                 }).catch(() => {
-                    this.attachment(this.smallProjectTemp)
+                    //this.attachment(this.smallProjectTemp)
+                    fileList.push(file)
                 })
             },
             handleSuccess(response, file, fileList) {

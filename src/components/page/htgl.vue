@@ -109,21 +109,41 @@
 
         <!--上传附件弹窗 -->
         <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="40%">
-            <el-upload
-                    :disabled="isgd=='1'"
-                    class="upload-demo"
-                    drag
-                    :action="url"
-                    :on-preview="handlePreview"
-                    :before-remove="handleBeforeRemove"
-                    :on-success="handleSuccess"
-                    multiple
-                    :file-list="fileList"
-                    style="width: 100%;"
-            >
-                <i class="el-icon-upload" ></i>
-                <div class="el-upload__text" >将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
+            <el-table :data="bcwjs" border style="margin-top: 20px">
+                <el-table-column prop="jd" label="节点" width="130px">
+                </el-table-column>
+                <el-table-column prop="wjmc" label="文件名称" width="180px">
+                </el-table-column>
+                <el-table-column label="操作" >
+                    <template slot-scope="scope">
+                        <el-upload
+                                class="upload-demo"
+                                :action="url"
+                                :on-preview="handlePreview"
+                                :before-remove="handleBeforeRemove"
+                                :on-success="handleSuccess"
+                                multiple
+                                :file-list="fileList[scope.$index]">
+                            <el-button size="small" type="primary" @click="recordCurrentRow(scope.row)">点击上传</el-button>
+                        </el-upload>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!--<el-upload-->
+                    <!--:disabled="isgd=='1'"-->
+                    <!--class="upload-demo"-->
+                    <!--drag-->
+                    <!--:action="url"-->
+                    <!--:on-preview="handlePreview"-->
+                    <!--:before-remove="handleBeforeRemove"-->
+                    <!--:on-success="handleSuccess"-->
+                    <!--multiple-->
+                    <!--:file-list="fileList"-->
+                    <!--style="width: 100%;"-->
+            <!--&gt;-->
+                <!--<i class="el-icon-upload" ></i>-->
+                <!--<div class="el-upload__text" >将文件拖到此处，或<em>点击上传</em></div>-->
+            <!--</el-upload>-->
         </el-dialog>
 
         <!--添加合同弹窗 -->
@@ -203,11 +223,8 @@
                             :readonly="true"
                             v-model="contract.projectId"
                             filterable
-                            remote
-                            reserve-keyword
                             placeholder="请输入关键词"
-                            :remote-method="remoteMethod"
-                            :loading="loading">
+                         >
                         <el-option
                                 v-for="item in xms"
                                 :key="item.value"
@@ -229,9 +246,6 @@
                     &nbsp&nbsp&nbsp&nbsp&nbsp合同经办人&nbsp&nbsp&nbsp&nbsp
                     <el-input v-model="contract.jbr" style="width: 210px"></el-input>
                 </el-form-item>
-                <!--<el-form-item label="主办单位意见">-->
-                    <!--<el-input v-model="contract.zbdwyj" type="textarea"></el-input>-->
-                <!--</el-form-item>-->
                 <el-form-item label="对方资质审查">
                     <el-checkbox-group v-model="zzsc">
                         <el-checkbox label="营业执照" ></el-checkbox><br/>
@@ -248,18 +262,6 @@
                         <el-radio style="margin-top: 10px" label="评审不合格，不能签订此合同"></el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <!--<el-form-item label="单位意见">-->
-                    <!--<el-input type="textarea" v-model="contract.dwyj"></el-input>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="财务部门意见">-->
-                    <!--<el-input type="textarea" v-model="contract.cwbmyj"></el-input>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="分管领导意见">-->
-                    <!--<el-input type="textarea" v-model="contract.fgldyj"></el-input>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="总经理意见">-->
-                    <!--<el-input type="textarea" v-model="contract.zjlyj"></el-input>-->
-                <!--</el-form-item>-->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="qxbj">取 消</el-button>
@@ -369,6 +371,7 @@
         name: 'htgl',
         data() {
             return {
+                bcwjs:[],
                 src:'',
                 show_zt:false,
                 fileList:[],
@@ -466,8 +469,31 @@
             this.getXms()
             //合同总条数
             this.AllCounts()
+            //拿必传文件列表
+            this.getBcwjs()
         },
         methods: {
+            recordCurrentRow(row){
+                this.currentRow=row;
+                var index=this.url.indexOf("&bcwjid=")
+                if(index!=-1){
+                    this.url=this.url.substring(0,index+8)+this.currentRow.id;
+                }else{
+                    this.url=this.url+"&bcwjid="+this.currentRow.id
+                }
+            },
+            //拿前期必传文件列表
+            getBcwjs(){
+                axios.get(this.ip+'/bcwj/select',{
+                    params:{
+                        lc:'合同'
+                    }
+                }).then(res=>{
+                    this.bcwjs=res.data
+                    // this.bcwjs.push()
+                })
+            },
+
             //合同下载
             xz(row){
                 window.open('http://10.197.41.100:8080/print/ht?id='+row.id)
@@ -495,19 +521,47 @@
                     spinner: 'el-icon-loading',
                     background: 'rgba(0, 0, 0, 0.7)'
                 })
-                axios.get(this.ip+'/contract/startHtsp',{
+                axios.get(this.ip+"/bcwj/jcwj",{
                     params:{
-                        htid:id
+                        id:id,
+                        lc:'合同',
+                        dqjd:'填写合同表单'
                     }
                 }).then(res=>{
-                    loading.close()
                     if(res.data){
-                        this.$message.success("申请成功！")
-                        this.reload()
+                        axios.get(this.ip+'/contract/startHtsp',{
+                            params:{
+                                htid:id
+                            }
+                        }).then(res=>{
+                            loading.close()
+                            if(res.data){
+                                this.$message.success("申请成功！")
+                                this.reload()
+                            }else {
+                                this.$message.error("申请失败！")
+                            }
+                        })
                     }else {
-                        this.$message.error("申请失败！")
+                        axios.get(this.ip+'/bcwj/bcwjm',{
+                            params:{
+                                lc:'合同',
+                                dqjd:'填写合同表单'
+                            }
+                        }).then(res=>{
+                            loading.close()
+                            let filenames=''
+                            for(let i=0;i<res.data.length;i++){
+                                filenames=filenames+res.data[i].wjmc+","
+                            }
+                            //去后面,
+                            filenames=filenames.substring(0,filenames.length-1)
+                            this.$message.error("申请前，请上传文件："+filenames)
+                        })
                     }
                 })
+
+
             },
             currentChange(pageNum){
                 this.getAllht(pageNum)
@@ -548,6 +602,7 @@
                     }
                 })
             },
+
             //合同搜索
             htSearch(){
                 axios.get(this.ip+'/contract/contractNoss',{
@@ -587,6 +642,7 @@
 
                     })
             },
+
             handleSearch(){
                 var params={
                     contractNo:this.contractNo,
@@ -626,6 +682,7 @@
                     }
                 })
             },
+
             //拿总条数
             AllCounts(){
                 axios.get(this.ip+'/contract/AllCounts')
@@ -633,6 +690,7 @@
                         this.hts=res.data
                     })
             },
+
             //归档，不能操作此记录
             gd(row){
                 if(row.dwyj==null||row.dwyj===''){
@@ -680,11 +738,11 @@
                     }
                 })
             },
+
             //取消编辑
             qxbj(){
                     this.show_bjht = false,
                     this.contract={}
-                  //  this.reload()
             },
 
             //删除合同
@@ -736,7 +794,8 @@
                     })
                         .catch(() => {
                             //重新请求
-                            this.djfj(this.contract)
+                            //this.djfj(this.contract)
+                            fileList.push(file)
                         })
                 } else {
                     this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
@@ -754,7 +813,8 @@
                             })
                     }).catch(() => {
                         //重新请求
-                        this.djfj(this.contract)
+                        //this.djfj(this.contract)
+                        fileList.push(file)
                     })
                 }
 
@@ -784,7 +844,6 @@
 
             //编辑合同
             bjht(row){
-                this.remoteMethod(row.projectName)
                 this.contract=row
                 this.zzsc=row.zzsc.split('、')
                 this.show_bjht=true
@@ -857,25 +916,13 @@
                         this.djfj(this.contract)
                     })
                 }
-                // this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                //     confirmButtonText: '确定',
-                //     cancelButtonText: '取消',
-                //     type: 'warning'
-                // }).then(() => {
-                //     axios.get(this.ip + '/contract/deletFj', {
-                //         params: {
-                //             fid: file.id
-                //         }
-                //     })
-                //         .then(res => {
-                //             this.$message.info("删除成功！")
-                //         })
-                // })
             },
+
             //上传成功，重新请求
             handleSuccess() {
                 this.djfj(this.contract)
             },
+
             //点击文件下载
             handlePreview(file){
                 if (this.contract.dwyj == '' || this.contract.dwyj == null) {//未申请
@@ -884,42 +931,33 @@
                     window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
                 }
             },
+
             //点击附件
             djfj(row){
                 this.contract=row
                 this.cid=row.id
-                //this.getFileList()
-               // this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
                 if (row.dwyj == '' || row.dwyj == null) {//未申请
                     this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
-                    //拿附件信息
-                    axios.get(this.ip + '/contract/getFjs', {
-                        params: {
-                            cid: row.id
-                        }
-                    }).then(res => {
-                        this.fileList = []
-                        for (let i = 0; i < res.data.length; i++) {
-                            this.fileList.push({
-                                name: res.data[i].fname,
-                                id: res.data[i].fid
-                            })
-                        }
-                    })
                 } else {//已经申请、拿附件信息
                     this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
-                    axios.get(this.ip + '/Attachment/getattachment', {
+                }
+                //拿附件信息
+                for(let i=0;i<this.bcwjs.length;i++){
+                    axios.get(this.ip + '/Attachment/getattachment2', {
                         params: {
-                            pid: row.dwyj
+                            id: row.id,
+                            bcwjid:this.bcwjs[i].id
                         }
                     })
                         .then(res => {
+                            // items.splice(indexOfItem, 1, newValue)
+                            // this.fileList[i] = []
+                            this.fileList.splice(i,1,[])
                             if (res.data) {
-                                this.fileList = []
-                                for (let i = 0; i < res.data.length; i++) {
-                                    this.fileList.push({
-                                        name: res.data[i].attachment_nam,
-                                        id: res.data[i].attachment_id
+                                for (let j = 0; j < res.data.length; j++) {
+                                    this.fileList[i].push({
+                                        name: res.data[j].attachment_nam,
+                                        id: res.data[j].attachment_id
                                     })
                                 }
                             }
@@ -927,6 +965,7 @@
                 }
                 this.show_scfj=true
             },
+
             //填充附件列表
             getFileList(){
                 //请求附件名
@@ -945,6 +984,7 @@
                         }
                     })
             },
+
             //确定新建合同
             qdxjht(){
                 if(this.contract.projectId==''||this.contract.projectId==null||this.contract.price<=0||this.contract.price==null)
@@ -970,6 +1010,7 @@
                     })
                 this.show_xjht = false
             },
+
             //新建合同
             xjht(){
                 this.getXms()
@@ -977,6 +1018,7 @@
                 this.zzsc=[]
                 this.show_xjht=true
             },
+
             //拿到项目下拉框数据
             getXms(){
               axios.get(this.ip+'/projectApplication/getCanHtXmIdAndXmname')
@@ -984,6 +1026,7 @@
                       this.xms=res.data
                   })
             },
+
             //拿到所有合同
             getAllht(pageNum) {
                 this.zzsc=[]
@@ -1034,8 +1077,8 @@
                     this.xms = [];
                 }
             },
+
             lxxq(row){// 立项详情
-                console.log(row)
                 this.lxxqShow=true
                 axios.get('http://10.197.41.100:8080/projectApplication/getXmById', {
                     params: {

@@ -360,7 +360,7 @@
                 })
                     .then(res=>{
                         if(res.data.length==0){
-                            this.$message.error("改记录还未上传附件！禁止归档！")
+                            this.$message.error("该记录还未上传验收单（扫描版）！禁止归档！")
                             return;
                         }else {
                             this.$confirm("归档后，将不能操作此记录，是否继续","提示",{
@@ -491,7 +491,7 @@
                         })
                 })
                     .catch(()=>{
-                        this.getFileList()
+                        fileList.push(file)
                     })
             },
             //编辑合同

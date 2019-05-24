@@ -12,6 +12,7 @@
                 <el-input clearable v-model="selectObject.projectNam" class="search-item" placeholder="项目名称">
                 </el-input>
                 <el-select
+                        v-if="departmentName=='工程技术部'||departmentName=='办公室'||departmentName=='办公室.'"
                         clearable
                         multiple
                         class="search-item"
@@ -217,56 +218,56 @@
             </div>
             <h3 style="text-align: center">项目实施进度报表</h3>
             <el-table
-                    max-height="780"
+
                     ref="multipleTable"
                     :data="list.slice((currentPage-1)*10,currentPage*10)"
                     border
                     stripe
                     class="table">
-                    <el-table-column fixed label="序号" align="center" sortable prop="id" min-width="80">
-                    </el-table-column>
-                    <el-table-column fixed label="项目计划号" align="center" prop="projectNo" width="120">
-                    </el-table-column>
-                    <el-table-column fixed label="项目名称" align="center" prop="projectNam" min-width="320">
-                    </el-table-column>
-                    <el-table-column label="计划金额(万元)" align="center" prop="investmentEstimate" width="120">
-                    </el-table-column>
-                    <el-table-column label="立项部门" align="center" prop="declarationDep" width="120">
-                    </el-table-column>
-                    <el-table-column label="立项类别" align="center" prop="lxlb" width="120">
-                    </el-table-column>
-                    <el-table-column label="项目类别" align="center" prop="xmlb" width="120">
-                    </el-table-column>
-                    <el-table-column label="项目大类" align="center" prop="xmdl" width="120">
-                    </el-table-column>
-                    <el-table-column label="技术部经理审批时间" align="center" prop="jsbjlsj" width="160">
-                    </el-table-column>
-                    <el-table-column label="过会时间" align="center" prop="lhsj" width="120">
-                    </el-table-column>
-                    <el-table-column label="过总经办时间" align="center" prop="zjhsj" width="120">
-                    </el-table-column>
-                    <el-table-column label="定标时间" align="center" prop="dbsj" width="120">
-                    </el-table-column>
-                    <el-table-column label="合同提交评审时间" align="center" prop="httjpssj" width="160">
-                    </el-table-column>
-                    <el-table-column label="合同签订时间" align="center" prop="htqdsj" width="120">
-                    </el-table-column>
-                    <el-table-column label="合同金额（万元）" align="center" prop="htje" width="140">
-                    </el-table-column>
-                    <el-table-column label="开工时间" align="center" prop="kgsj" width="160">
-                    </el-table-column>
-                    <el-table-column label="验收时间" align="center" prop="ysrq" width="120">
-                    </el-table-column>
-                    <el-table-column label="本年度结算进度（万元）" align="center" prop="bndjsjd" width="180">
-                    </el-table-column>
-                    <el-table-column label="总结算进度（万元）" align="center" prop="zjsjd" width="180">
-                    </el-table-column>
-                    <el-table-column label="完成结算时间" align="center" prop="wcjsjs" width="120">
-                    </el-table-column>
-                    <el-table-column label="技术部经办人" align="center" prop="jsbjbr" width="120">
-                    </el-table-column>
-                    <el-table-column label="施工单位" align="center" prop="sgdw" width="120">
-                    </el-table-column>
+                <el-table-column fixed label="序号" align="center" sortable prop="id" min-width="80">
+                </el-table-column>
+                <el-table-column fixed label="项目计划号" align="center" prop="projectNo" width="120">
+                </el-table-column>
+                <el-table-column fixed label="项目名称" align="center" prop="projectNam" min-width="320">
+                </el-table-column>
+                <el-table-column label="计划金额(万元)" align="center" prop="investmentEstimate" width="120">
+                </el-table-column>
+                <el-table-column label="立项部门" align="center" prop="declarationDep" width="120">
+                </el-table-column>
+                <el-table-column label="立项类别" align="center" prop="lxlb" width="120">
+                </el-table-column>
+                <el-table-column label="项目类别" align="center" prop="xmlb" width="120">
+                </el-table-column>
+                <el-table-column label="项目大类" align="center" prop="xmdl" width="120">
+                </el-table-column>
+                <el-table-column label="技术部经理审批时间" align="center" prop="jsbjlsj" width="160">
+                </el-table-column>
+                <el-table-column label="定标时间" align="center" prop="dbsj" width="120">
+                </el-table-column>
+                <el-table-column label="过会时间" align="center" prop="lhsj" width="120">
+                </el-table-column>
+                <el-table-column label="过总经办时间" align="center" prop="zjhsj" width="120">
+                </el-table-column>
+                <el-table-column label="合同提交评审时间" align="center" prop="httjpssj" width="160">
+                </el-table-column>
+                <el-table-column label="合同签订时间" align="center" prop="htqdsj" width="120">
+                </el-table-column>
+                <el-table-column label="合同金额（万元）" align="center" prop="htje" width="140">
+                </el-table-column>
+                <el-table-column label="开工时间" align="center" prop="kgsj" width="160">
+                </el-table-column>
+                <el-table-column label="验收时间" align="center" prop="ysrq" width="120">
+                </el-table-column>
+                <el-table-column label="本年度结算进度（万元）" align="center" prop="bndjsjd" width="180">
+                </el-table-column>
+                <el-table-column label="总结算进度（万元）" align="center" prop="zjsjd" width="180">
+                </el-table-column>
+                <el-table-column label="完成结算时间" align="center" prop="wcjsjs" width="120">
+                </el-table-column>
+                <el-table-column label="技术部经办人" align="center" prop="jsbjbr" width="120">
+                </el-table-column>
+                <el-table-column label="施工单位" align="center" prop="sgdw" width="120">
+                </el-table-column>
             </el-table>
             <el-pagination
                     v-show="list.length>0"
@@ -282,41 +283,43 @@
 
 <script>
     import axios from 'axios'
+
     export default {
         name: "operateManual",
         inject: ['reload'],
-        data(){
-            return{
-                list:[],
-                currentPage:1,
-                total:0,
+        data() {
+            return {
+                departmentName:localStorage.getItem('departmentName'),
+                list: [],
+                currentPage: 1,
+                total: 0,
                 listQuery: {
                     offset: 1,
                     limit: 10
                 },
-                selectObject:{
-                    projectNo:'',
-                    projectNam:'',
-                    investmentEstimate:'',
-                    declarationDep:[],
-                    lxlb:[],
-                    xmlb:[],
-                    xmdl:[],
-                    ksjsbjlsj:'', jsjsbjlsj:'',
-                    kslhsj:'', jslhsj:'',
-                    kszjhsj:'',jszjhsj:'',
-                    ksdbsj:'',jsdbsj:'',
-                    kshttjpssj:'',jshttjpssj:'',
-                    kshtqdsj:'',jshtqdsj:'',
-                    htje:'',
-                    kskgsj:'',jskgsj:'',
-                    ksysrq:'',jsysrq:'',
-                    bndjsjd:'',
-                    zjsjd:'',
-                    kswcjsjs:'',jswcjsjs:'',
-                    jsbzgjl:'',
-                    jsbjbr:[],
-                    sgdw:'',
+                selectObject: {
+                    projectNo: '',
+                    projectNam: '',
+                    investmentEstimate: '',
+                    declarationDep: [],
+                    lxlb: [],
+                    xmlb: [],
+                    xmdl: [],
+                    ksjsbjlsj: '', jsjsbjlsj: '',
+                    kslhsj: '', jslhsj: '',
+                    kszjhsj: '', jszjhsj: '',
+                    ksdbsj: '', jsdbsj: '',
+                    kshttjpssj: '', jshttjpssj: '',
+                    kshtqdsj: '', jshtqdsj: '',
+                    htje: '',
+                    kskgsj: '', jskgsj: '',
+                    ksysrq: '', jsysrq: '',
+                    bndjsjd: '',
+                    zjsjd: '',
+                    kswcjsjs: '', jswcjsjs: '',
+                    jsbzgjl: '',
+                    jsbjbr: [],
+                    sgdw: '',
                 },
                 bms: [],
                 lxlb: [
@@ -329,12 +332,12 @@
                     }, {
                         value: '年度维保',
                         label: '年度维保'
-                    },{
-                        value:'股份项目',
-                        label:'股份项目'
-                    },{
-                        value:'内部项目',
-                        label:'内部项目'
+                    }, {
+                        value: '股份项目',
+                        label: '股份项目'
+                    }, {
+                        value: '内部项目',
+                        label: '内部项目'
                     }
                 ],
                 xmlb: [
@@ -375,8 +378,8 @@
             this.getAllDptName()
             this.getAllJSBJBRS()
         },
-        methods:{
-            getList(){
+        methods: {
+            getList() {
                 const loading = this.$loading({
                     lock: true,
                     text: '加载中……',
@@ -386,15 +389,15 @@
 
                 this.formatSelecrObject()
 
-                axios.post('http://10.197.41.100:8080/sgjdb/select?pageNum='+this.listQuery.offset,this.selectObject)
+                axios.post('http://10.197.41.100:8080/sgjdb/select?pageNum=' + this.listQuery.offset, this.selectObject)
                     .then(res => {
-                        this.list=res.data
-                        this.total=parseInt(res.headers.allcount)
+                        this.list = res.data
+                        this.total = parseInt(res.headers.allcount)
                         loading.close()
                     })
             },
-            download(){
-                window.location.href='http://10.197.41.100:8080/Bb/downloadXMSSJDB?param='+JSON.stringify(this.selectObject)
+            download() {
+                window.location.href = 'http://10.197.41.100:8080/Bb/downloadXMSSJDB?param=' + JSON.stringify(this.selectObject)
             },
             getAllDptName() {
                 axios.get('http://10.197.41.100:8080/department/getAllDptName')
@@ -410,9 +413,7 @@
                     })
             },
             getAllJSBJBRS() {
-                axios.get('http://10.197.41.100:8080/user/jsbjbr', {
-
-                }).then(res => {
+                axios.get('http://10.197.41.100:8080/user/jsbjbr', {}).then(res => {
                     if (res.data != null) {
                         for (let i = 0; i < res.data.length; i++) {
                             this.jsbjbr.push({
@@ -426,61 +427,66 @@
             handleCurrentChange(currentPage) {
                 this.currentPage = currentPage;
             },
-            formatSelecrObject(){
-                if(this.selectObject.ksjsbjlsj==null){
-                    this.selectObject.ksjsbjlsj=''
+            formatSelecrObject() {
+                if (this.selectObject.ksjsbjlsj == null) {
+                    this.selectObject.ksjsbjlsj = ''
                 }
-                if(this.selectObject.jsjsbjlsj==null){
-                    this.selectObject.jsjsbjlsj=''
+                if (this.selectObject.jsjsbjlsj == null) {
+                    this.selectObject.jsjsbjlsj = ''
                 }
-                if(this.selectObject.kslhsj==null){
-                    this.selectObject.kslhsj=''
+                if (this.selectObject.kslhsj == null) {
+                    this.selectObject.kslhsj = ''
                 }
-                if(this.selectObject.jslhsj==null){
-                    this.selectObject.jslhsj=''
+                if (this.selectObject.jslhsj == null) {
+                    this.selectObject.jslhsj = ''
                 }
-                if(this.selectObject.kszjhsj==null){
-                    this.selectObject.kszjhsj=''
+                if (this.selectObject.kszjhsj == null) {
+                    this.selectObject.kszjhsj = ''
                 }
-                if(this.selectObject.jszjhsj==null){
-                    this.selectObject.jszjhsj=''
+                if (this.selectObject.jszjhsj == null) {
+                    this.selectObject.jszjhsj = ''
                 }
-                if(this.selectObject.ksdbsj==null){
-                    this.selectObject.ksdbsj=''
+                if (this.selectObject.ksdbsj == null) {
+                    this.selectObject.ksdbsj = ''
                 }
-                if(this.selectObject.jsdbsj==null){
-                    this.selectObject.jsdbsj=''
+                if (this.selectObject.jsdbsj == null) {
+                    this.selectObject.jsdbsj = ''
                 }
-                if(this.selectObject.kshttjpssj==null){
-                    this.selectObject.kshttjpssj==''
+                if (this.selectObject.kshttjpssj == null) {
+                    this.selectObject.kshttjpssj == ''
                 }
-                if(this.selectObject.jshttjpssj==null){
-                    this.selectObject.jshttjpssj==''
+                if (this.selectObject.jshttjpssj == null) {
+                    this.selectObject.jshttjpssj == ''
                 }
-                if(this.selectObject.kshtqdsj==null){
-                    this.selectObject.kshtqdsj=''
+                if (this.selectObject.kshtqdsj == null) {
+                    this.selectObject.kshtqdsj = ''
                 }
-                if(this.selectObject.jshtqdsj==null){
-                    this.selectObject.jshtqdsj=''
+                if (this.selectObject.jshtqdsj == null) {
+                    this.selectObject.jshtqdsj = ''
                 }
-                if(this.selectObject.kskgsj==null){
-                    this.selectObject.kskgsj=''
+                if (this.selectObject.kskgsj == null) {
+                    this.selectObject.kskgsj = ''
                 }
-                if(this.selectObject.jskgsj==null){
-                    this.selectObject.jskgsj=''
+                if (this.selectObject.jskgsj == null) {
+                    this.selectObject.jskgsj = ''
                 }
 
-                if(this.selectObject.ksysrq==null){
-                    this.selectObject.ksysrq=''
+                if (this.selectObject.ksysrq == null) {
+                    this.selectObject.ksysrq = ''
                 }
-                if(this.selectObject.jsysrq==null){
-                    this.selectObject.jsysrq=''
+                if (this.selectObject.jsysrq == null) {
+                    this.selectObject.jsysrq = ''
                 }
-                if(this.selectObject.kswcjsjs==null){
-                    this.selectObject.kswcjsjs=''
+                if (this.selectObject.kswcjsjs == null) {
+                    this.selectObject.kswcjsjs = ''
                 }
-                if(this.selectObject.jswcjsjs==null){
-                    this.selectObject.jswcjsjs=''
+                if (this.selectObject.jswcjsjs == null) {
+                    this.selectObject.jswcjsjs = ''
+                }
+
+                if(this.departmentName!='工程技术部'&&this.departmentName!='办公室'&&this.departmentName!='办公室.'){
+                    this.selectObject.declarationDep.splice(0,this.selectObject.declarationDep.length)
+                    this.selectObject.declarationDep.push(this.departmentName)
                 }
             }
         }
@@ -493,45 +499,54 @@
         font-size: 14px;
         margin-top: 20px;
     }
-    .search-item:first-child{
+
+    .search-item:first-child {
         width: 210px;
     }
-    .search-item:nth-child(2){
+
+    .search-item:nth-child(2) {
         width: 140px;
         margin-left: 20px;
         margin-bottom: 10px;
     }
-    .search-item:nth-child(3){
+
+    .search-item:nth-child(3) {
         width: 170px;
         margin-left: 20px;
         margin-bottom: 10px;
     }
-    .search-item:nth-child(4){
+
+    .search-item:nth-child(4) {
         width: 140px;
         margin-left: 20px;
         margin-bottom: 10px;
     }
-    .search-item:nth-child(5){
+
+    .search-item:nth-child(5) {
         width: 200px;
         margin-left: 20px;
         margin-bottom: 10px;
     }
-    .search-item:nth-child(6){
+
+    .search-item:nth-child(6) {
         width: 170px;
         margin-left: 20px;
         margin-bottom: 10px;
     }
-    .search-item:nth-child(7){
+
+    .search-item:nth-child(7) {
         width: 140px;
         margin-left: 20px;
         margin-bottom: 10px;
     }
-    .search-item:nth-child(8){
+
+    .search-item:nth-child(8) {
         width: 140px;
         margin-left: 20px;
         margin-bottom: 10px;
     }
-    .search-item:nth-child(n+9){
+
+    .search-item:nth-child(n+9) {
         width: 170px;
         margin-left: 20px;
         margin-bottom: 10px;

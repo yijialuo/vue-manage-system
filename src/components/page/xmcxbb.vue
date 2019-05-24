@@ -13,6 +13,7 @@
                 </el-input>
                 <el-select
                         clearable
+                        v-if="departmentName=='工程技术部'||departmentName=='办公室'||departmentName=='办公室.'"
                         multiple
                         class="search-item"
                         v-model="selectObject.lxbm"
@@ -273,62 +274,61 @@
             </div>
             <h3 style="text-align: center">项目查询报表</h3>
             <el-table
-                    max-height="780"
                     ref="multipleTable"
                     :data="list.slice((currentPage-1)*10,currentPage*10)"
                     border
                     stripe
                     class="table">
-                    <el-table-column label="项目编号"  fixed align="center" sortable prop="xmbh" min-width="120">
-                    </el-table-column>
-                    <el-table-column label="项目名称" fixed   align="center" sortable prop="xmmc" min-width="250">
-                    </el-table-column>
-                    <el-table-column label="立项时间" align="center" prop="lxsj" width="120">
-                    </el-table-column>
-                    <el-table-column label="立项部门" align="center" prop="lxbm" min-width="120">
-                    </el-table-column>
-                    <el-table-column label="项目大类" align="center" prop="xmdl" width="120">
-                    </el-table-column>
-                    <el-table-column label="立项类别" align="center" prop="lxlb" width="120">
-                    </el-table-column>
-                    <el-table-column label="项目类别" align="center" prop="xmlb" width="120">
-                    </el-table-column>
-                    <el-table-column label="计划金额（万元）" align="center" prop="jhje" width="140">
-                    </el-table-column>
-                    <el-table-column label="合同金额（万元）" align="center" prop="htje" width="140">
-                    </el-table-column>
-                    <el-table-column label="审批状态" align="center" prop="spzt" width="160">
-                    </el-table-column>
-                    <el-table-column label="合同状态" align="center" prop="htzt" width="120">
-                    </el-table-column>
-                    <el-table-column label="施工状态" align="center" prop="sgzt" width="120">
-                    </el-table-column>
-                    <el-table-column label="结算状态" align="center" prop="jszt" width="120">
-                    </el-table-column>
-                    <el-table-column label="开工时间" align="center" prop="kgsj" width="160">
-                    </el-table-column>
-                    <el-table-column label="完工时间" align="center" prop="wgsj" width="120">
-                    </el-table-column>
-                    <el-table-column label="总结算进度" align="center" prop="zjsjd" width="140">
-                    </el-table-column>
-                    <el-table-column label="今年结算进度" align="center" prop="jnjsjd" width="160">
-                    </el-table-column>
-                    <el-table-column label="项目过会时间" align="center" prop="xmghsj" width="120">
-                    </el-table-column>
-                    <el-table-column label="两会招标文件时间" align="center" prop="lhzbwjsj" width="180">
-                    </el-table-column>
-                    <el-table-column label="定标时间" align="center" prop="dbsj" width="180">
-                    </el-table-column>
-                    <el-table-column label="合同签订时间" align="center" prop="htqdsj" width="120">
-                    </el-table-column>
-                    <el-table-column label="结算时间" align="center" prop="jssj" width="120">
-                    </el-table-column>
-                    <el-table-column label="承包单位" align="center" prop="cbdw" width="120">
-                    </el-table-column>
-                    <el-table-column label="项目发起人"  align="center" prop="xmfqr" width="120">
-                    </el-table-column>
-                    <el-table-column label="项目经办人" align="center" prop="xmjbr" width="120">
-                    </el-table-column>
+                <el-table-column label="项目编号" fixed align="center" sortable prop="xmbh" min-width="120">
+                </el-table-column>
+                <el-table-column label="项目名称" fixed align="center" sortable prop="xmmc" min-width="250">
+                </el-table-column>
+                <el-table-column label="立项时间" align="center" prop="lxsj" width="120">
+                </el-table-column>
+                <el-table-column label="立项部门" align="center" prop="lxbm" min-width="120">
+                </el-table-column>
+                <el-table-column label="项目大类" align="center" prop="xmdl" width="120">
+                </el-table-column>
+                <el-table-column label="立项类别" align="center" prop="lxlb" width="120">
+                </el-table-column>
+                <el-table-column label="项目类别" align="center" prop="xmlb" width="120">
+                </el-table-column>
+                <el-table-column label="计划金额（万元）" align="center" prop="jhje" width="140">
+                </el-table-column>
+                <el-table-column label="合同金额（万元）" align="center" prop="htje" width="140">
+                </el-table-column>
+                <el-table-column label="审批状态" align="center" prop="spzt" width="160">
+                </el-table-column>
+                <el-table-column label="合同状态" align="center" prop="htzt" width="120">
+                </el-table-column>
+                <el-table-column label="施工状态" align="center" prop="sgzt" width="120">
+                </el-table-column>
+                <el-table-column label="结算状态" align="center" prop="jszt" width="120">
+                </el-table-column>
+                <el-table-column label="开工时间" align="center" prop="kgsj" width="160">
+                </el-table-column>
+                <el-table-column label="完工时间" align="center" prop="wgsj" width="120">
+                </el-table-column>
+                <el-table-column label="总结算进度" align="center" prop="zjsjd" width="140">
+                </el-table-column>
+                <el-table-column label="今年结算进度" align="center" prop="jnjsjd" width="160">
+                </el-table-column>
+                <el-table-column label="定标时间" align="center" prop="dbsj" width="180">
+                </el-table-column>
+                <el-table-column label="项目过会时间" align="center" prop="xmghsj" width="120">
+                </el-table-column>
+                <el-table-column label="两会招标文件时间" align="center" prop="lhzbwjsj" width="180">
+                </el-table-column>
+                <el-table-column label="合同签订时间" align="center" prop="htqdsj" width="120">
+                </el-table-column>
+                <el-table-column label="结算时间" align="center" prop="jssj" width="120">
+                </el-table-column>
+                <el-table-column label="承包单位" align="center" prop="cbdw" width="120">
+                </el-table-column>
+                <el-table-column label="项目发起人" align="center" prop="xmfqr" width="120">
+                </el-table-column>
+                <el-table-column label="项目经办人" align="center" prop="xmjbr" width="120">
+                </el-table-column>
             </el-table>
             <el-pagination
                     v-show="list.length>0"
@@ -344,52 +344,54 @@
 
 <script>
     import axios from 'axios'
+
     export default {
         name: "xmcxbb",
-        data(){
-            return{
-                list:[],
-                currentPage:1,
-                total:0,
+        data() {
+            return {
+                departmentName:localStorage.getItem('departmentName'),
+                list: [],
+                currentPage: 1,
+                total: 0,
                 listQuery: {
                     offset: 1,
                     limit: 10
                 },
-                ip:'http://10.197.41.100:8080',
-                selectObject:{
-                    xmbh:'',
-                    xmmc:'',
-                    kslxsj:'',
-                    jslxsj:'',
-                    lxbm:[],
-                    xmdl:[],
-                    lxlb:[],
-                    xmlb:[],
-                    jhje:'',
-                    htje:'',
-                    spzt:[],
-                    htzt:[],
-                    sgzt:[],
-                    jszt:[],
-                    kskgsj:'',
-                    jskgsj:'',
-                    kswgsj:'',
-                    jswgsj:'',
-                    zjsjd:'',
-                    jnjsjd:'',
-                    ksxmghsj:'',
-                    jsxmghsj:'',
-                    kslhzbwjsj:'',
-                    jslhzbwjsj:'',
-                    ksdbsj:'',
-                    jsdbsj:'',
-                    kshtqdsj:'',
-                    jshtqdsj:'',
-                    ksjssj:'',
-                    jsjssj:'',
-                    cbdw:'',
-                    xmfqr:[],
-                    xmjbr:[],
+                ip: 'http://10.197.41.100:8080',
+                selectObject: {
+                    xmbh: '',
+                    xmmc: '',
+                    kslxsj: '',
+                    jslxsj: '',
+                    lxbm: [],
+                    xmdl: [],
+                    lxlb: [],
+                    xmlb: [],
+                    jhje: '',
+                    htje: '',
+                    spzt: [],
+                    htzt: [],
+                    sgzt: [],
+                    jszt: [],
+                    kskgsj: '',
+                    jskgsj: '',
+                    kswgsj: '',
+                    jswgsj: '',
+                    zjsjd: '',
+                    jnjsjd: '',
+                    ksxmghsj: '',
+                    jsxmghsj: '',
+                    kslhzbwjsj: '',
+                    jslhzbwjsj: '',
+                    ksdbsj: '',
+                    jsdbsj: '',
+                    kshtqdsj: '',
+                    jshtqdsj: '',
+                    ksjssj: '',
+                    jsjssj: '',
+                    cbdw: '',
+                    xmfqr: [],
+                    xmjbr: [],
                 },
                 bms: [],
                 xmdl: [
@@ -420,12 +422,12 @@
                     }, {
                         value: '年度维保',
                         label: '年度维保'
-                    },{
-                        value:'股份项目',
-                        label:'股份项目'
-                    },{
-                        value:'内部项目',
-                        label:'内部项目'
+                    }, {
+                        value: '股份项目',
+                        label: '股份项目'
+                    }, {
+                        value: '内部项目',
+                        label: '内部项目'
                     }
                 ],
                 xmlb: [
@@ -476,7 +478,7 @@
                         label: '申请结束'
                     }
                 ],
-                htzt:[
+                htzt: [
                     {
                         value: '未申请',
                         label: '未申请'
@@ -494,7 +496,7 @@
                         label: '合同审批结束'
                     }
                 ],
-                sgzt:[
+                sgzt: [
                     {
                         value: '已完工',
                         label: '已完工'
@@ -506,7 +508,7 @@
                         label: '施工进行中'
                     }
                 ],
-                jszt:[
+                jszt: [
                     {
                         value: '未支付',
                         label: '未支付'
@@ -518,8 +520,8 @@
                         label: '支付进行中'
                     }
                 ],
-                xmfqr:[],
-                xmjbr:[]
+                xmfqr: [],
+                xmjbr: []
             }
         },
         created() {
@@ -528,8 +530,8 @@
             this.getAllJBRS()
             this.getAllFQRS()
         },
-        methods:{
-            getList(){
+        methods: {
+            getList() {
                 const loading = this.$loading({
                     lock: true,
                     text: '加载中……',
@@ -539,15 +541,15 @@
 
                 this.formatSelecrObject()
 
-                axios.post('http://10.197.41.100:8080/xmcxb/select?pageNum='+this.listQuery.offset,this.selectObject)
+                axios.post('http://10.197.41.100:8080/xmcxb/select?pageNum=' + this.listQuery.offset, this.selectObject)
                     .then(res => {
-                        this.list=res.data
-                        this.total=parseInt(res.headers.allcount)
+                        this.list = res.data
+                        this.total = parseInt(res.headers.allcount)
                         loading.close()
                     })
             },
-            download(){
-                window.location.href='http://10.197.41.100:8080/Bb/downloadXMCXBB?param='+JSON.stringify(this.selectObject)
+            download() {
+                window.location.href = 'http://10.197.41.100:8080/Bb/downloadXMCXBB?param=' + JSON.stringify(this.selectObject)
             },
             getAllDptName() {
                 axios.get('http://10.197.41.100:8080/department/getAllDptName')
@@ -563,9 +565,7 @@
                     })
             },
             getAllJBRS() {
-                axios.get('http://10.197.41.100:8080/user/jsbjbr', {
-
-                }).then(res => {
+                axios.get('http://10.197.41.100:8080/user/jsbjbr', {}).then(res => {
                     if (res.data != null) {
                         for (let i = 0; i < res.data.length; i++) {
                             this.xmjbr.push({
@@ -576,10 +576,8 @@
                     }
                 })
             },
-            getAllFQRS(){
-                axios.get('http://10.197.41.100:8080/user/fqr', {
-
-                }).then(res => {
+            getAllFQRS() {
+                axios.get('http://10.197.41.100:8080/user/fqr', {}).then(res => {
                     if (res.data != null) {
                         for (let i = 0; i < res.data.length; i++) {
                             this.xmfqr.push({
@@ -593,55 +591,60 @@
             handleCurrentChange(currentPage) {
                 this.currentPage = currentPage;
             },
-            formatSelecrObject(){
-                if(this.selectObject.kslxsj==null){
-                    this.selectObject.kslxsj=''
+            formatSelecrObject() {
+                if (this.selectObject.kslxsj == null) {
+                    this.selectObject.kslxsj = ''
                 }
-                if(this.selectObject.kskgsj==null){
-                    this.selectObject.kskgsj=''
+                if (this.selectObject.kskgsj == null) {
+                    this.selectObject.kskgsj = ''
                 }
-                if(this.selectObject.kswgsj==null){
-                    this.selectObject.kswgsj=''
+                if (this.selectObject.kswgsj == null) {
+                    this.selectObject.kswgsj = ''
                 }
-                if(this.selectObject.ksxmghsj==null){
-                    this.selectObject.ksxmghsj=''
+                if (this.selectObject.ksxmghsj == null) {
+                    this.selectObject.ksxmghsj = ''
                 }
-                if(this.selectObject.kslhzbwjsj==null){
-                    this.selectObject.kslhzbwjsj=''
+                if (this.selectObject.kslhzbwjsj == null) {
+                    this.selectObject.kslhzbwjsj = ''
                 }
-                if(this.selectObject.ksdbsj==null){
-                    this.selectObject.ksdbsj=''
+                if (this.selectObject.ksdbsj == null) {
+                    this.selectObject.ksdbsj = ''
                 }
-                if(this.selectObject.kshtqdsj==null){
-                    this.selectObject.kshtqdsj=''
+                if (this.selectObject.kshtqdsj == null) {
+                    this.selectObject.kshtqdsj = ''
                 }
-                if(this.selectObject.ksjssj==null){
-                    this.selectObject.ksjssj=''
+                if (this.selectObject.ksjssj == null) {
+                    this.selectObject.ksjssj = ''
                 }
 
-                if(this.selectObject.jslxsj==null){
-                    this.selectObject.jslxsj=''
+                if (this.selectObject.jslxsj == null) {
+                    this.selectObject.jslxsj = ''
                 }
-                if(this.selectObject.jskgsj==null){
-                    this.selectObject.jskgsj=''
+                if (this.selectObject.jskgsj == null) {
+                    this.selectObject.jskgsj = ''
                 }
-                if(this.selectObject.jswgsj==null){
-                    this.selectObject.jswgsj=''
+                if (this.selectObject.jswgsj == null) {
+                    this.selectObject.jswgsj = ''
                 }
-                if(this.selectObject.jsxmghsj==null){
-                    this.selectObject.jsxmghsj=''
+                if (this.selectObject.jsxmghsj == null) {
+                    this.selectObject.jsxmghsj = ''
                 }
-                if(this.selectObject.jslhzbwjsj==null){
-                    this.selectObject.jslhzbwjsj=''
+                if (this.selectObject.jslhzbwjsj == null) {
+                    this.selectObject.jslhzbwjsj = ''
                 }
-                if(this.selectObject.jsdbsj==null){
-                    this.selectObject.jsdbsj=''
+                if (this.selectObject.jsdbsj == null) {
+                    this.selectObject.jsdbsj = ''
                 }
-                if(this.selectObject.jshtqdsj==null){
-                    this.selectObject.jshtqdsj=''
+                if (this.selectObject.jshtqdsj == null) {
+                    this.selectObject.jshtqdsj = ''
                 }
-                if(this.selectObject.jsjssj==null){
-                    this.selectObject.jsjssj=''
+                if (this.selectObject.jsjssj == null) {
+                    this.selectObject.jsjssj = ''
+                }
+
+                if(this.departmentName!='工程技术部'&&this.departmentName!='办公室'&&this.departmentName!='办公室.'){
+                    this.selectObject.lxbm.splice(0,this.selectObject.lxbm.length)
+                    this.selectObject.lxbm.push(this.departmentName)
                 }
             }
         }
@@ -654,10 +657,12 @@
         font-size: 14px;
         margin-top: 20px;
     }
-    .search-item:first-child{
+
+    .search-item:first-child {
         width: 150px;
     }
-    .search-item:nth-child(n+2){
+
+    .search-item:nth-child(n+2) {
         width: 180px;
         margin-left: 20px;
         margin-bottom: 10px;

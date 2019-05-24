@@ -101,6 +101,7 @@
         inject: ['reload'],
         data(){
             return{
+                departmentName:localStorage.getItem('departmentName'),
                 dateSelect:'',
                 list:null,
             }
@@ -114,7 +115,11 @@
                 var dates=this.dateSelect.split('-')
                 var year=dates[0]
                 var month=dates[1]
-                window.location.href='http://10.197.41.100:8080/Bb/downloadXMTJBB?year='+year+'&month='+month
+                var bm=null
+                if(this.departmentName!='工程技术部'&&this.departmentName!='办公室'&&this.departmentName!='办公室.'){
+                    bm=this.departmentName
+                }
+                window.location.href='http://10.197.41.100:8080/Bb/downloadXMTJBB?year='+year+'&month='+month+'&bm='+bm
             },
             dateSelectChange(){
                 if(this.dateSelect==null){
@@ -124,11 +129,16 @@
                 var dates=this.dateSelect.split('-')
                 var year=dates[0]
                 var month=dates[1]
+                var bm=null
+                if(this.departmentName!='工程技术部'&&this.departmentName!='办公室'&&this.departmentName!='办公室.'){
+                    bm=this.departmentName
+                }
                 var _this=this
                 axios.get('http://10.197.41.100:8080/Bb/get', {
                     params: {
                         year: year,
-                        month:month
+                        month:month,
+                        bm:bm
                     }
                 }).then(res => {
                     this.list=res.data

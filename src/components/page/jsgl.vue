@@ -502,7 +502,8 @@
                         })
                 })
                     .catch(() => {
-                        this.getFileList(this.cid)
+                        //this.getFileList(this.cid)
+                        fileList.push(file)
                     })
             },
             //点击附件

@@ -40,7 +40,8 @@
             </div>
 
             <!--新建用户弹窗-->
-            <el-dialog v-dialogDrag title="新建用户" :close-on-click-modal="false" center :visible.sync="visible" width="408px">
+            <el-dialog v-dialogDrag title="新建用户" :close-on-click-modal="false" center :visible.sync="visible"
+                       width="408px">
                 <div class="demo-input-suffix">
                     账号：
                     <el-input v-model="userOV.userId"></el-input>
@@ -76,7 +77,9 @@
                     </el-select>
                 </div>
                 <!--是工程技术部的技术部办事员或技术部主管经理才显示-->
-                <div class="demo-input-suffix" v-if="userOV.departmentId=='20190123022801622'&&(userOV.groupId=='jsb_doman'||userOV.groupId=='jsb_zgjl')" style="margin-top: 10px;width: 100%;">
+                <div class="demo-input-suffix"
+                     v-if="userOV.departmentId=='20190123022801622'&&(userOV.groupId=='jsb_doman'||userOV.groupId=='jsb_zgjl')"
+                     style="margin-top: 10px;width: 100%;">
                     管理类型：
                     <el-select v-model="userOV.manageType" multiple placeholder="请选择">
                         <el-option
@@ -126,7 +129,9 @@
                         </el-select>
                     </el-form-item>
                     <!--有管理类型才显示-->
-                    <div class="demo-input-suffix" v-if="form.departmentId=='20190123022801622'&&(form.groupId=='jsb_doman'||form.groupId=='jsb_zgjl')" style="margin-top: 10px;width: 100%;">
+                    <div class="demo-input-suffix"
+                         v-if="form.departmentId=='20190123022801622'&&(form.groupId=='jsb_doman'||form.groupId=='jsb_zgjl')"
+                         style="margin-top: 10px;width: 100%;">
                         管理类型：
                         <el-select v-model="form.manageType" multiple placeholder="请选择">
                             <el-option
@@ -241,7 +246,6 @@
                 <el-button type="primary" @click="confirm_edit">确 定</el-button>
             </span>
                 </el-dialog>
-
                 <!-- 编辑职位弹出框 -->
                 <el-dialog title="编辑职位" :close-on-click-modal="false" :visible.sync="show_editGroup" width="408px">
                     <el-form ref="form" :model="group" label-width="80px">
@@ -259,6 +263,107 @@
                 </el-dialog>
             </div>
         </div>
+        <div class="table">
+            <div class="crumbs">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item><i class="el-icon-lx-warn"></i>阈值</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div class="container">
+                <el-table :data="zjhfz" border style="margin-top: 20px">
+                    <el-table-column prop="fz" label="总经会阈值" width="150">
+                    </el-table-column>
+                    <el-table-column label="操作" width="180" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-edit"
+                                       @click="edit_zjhfz(scope.row)">
+                                修改
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+
+        <div class="table">
+            <div class="crumbs">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item><i class="el-icon-lx-warn"></i>必传文件</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div class="container">
+                <div class="handle-box">
+                    <el-button type="primary" icon="delete" class="handle-del mr10" @click="show_addbcwj=true">添加必传文件
+                    </el-button>
+                </div>
+                <el-table :data="bcwjs" border style="margin-top: 20px">
+                    <el-table-column prop="lc" sortable label="流程" width="150">
+                    </el-table-column>
+                    <el-table-column prop="jd" label="节点" width="150">
+                    </el-table-column>
+                    <el-table-column prop="wjmc" label="文件名称" width="150">
+                    </el-table-column>
+                    <el-table-column label="操作" width="180" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-edit"
+                                       @click="edit_bcwj(scope.row)">
+                                修改
+                            </el-button>
+                            <el-button type="text" class="red" icon="el-icon-delete"
+                                       @click="delete_bcwj(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+
+        <!-- 添加必传文件弹出框 -->
+        <el-dialog title="添加必传文件记录" :close-on-click-modal="false" :visible.sync="show_addbcwj" width="380px">
+            <el-form label-width="80px" :model="bcwj">
+                <el-form-item label="流程:">
+                    <el-select v-model="bcwj.lc" placeholder="请选择流程">
+                        <el-option
+                                v-for="item in lcs"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="节点:">
+                    <el-select v-model="bcwj.jd" placeholder="请选择节点">
+                        <el-option
+                                v-for="item in jds"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="文件名称:">
+                    <el-input v-model="bcwj.wjmc"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                        <el-button @click="show_addbcwj=false">取 消</el-button>
+                        <el-button type="primary" @click="addBcwj">确 定</el-button>
+                    </span>
+        </el-dialog>
+
+        <!-- 编辑总经会阀值弹出框 -->
+        <el-dialog title="编辑总经会阀值" :close-on-click-modal="false" :visible.sync="show_zjhfz" width="200px">
+            <el-form label-width="80px">
+                <el-form-item label="阀值">
+                    <el-input v-model="fz"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                        <el-button @click="show_zjhfz=false">取 消</el-button>
+                        <el-button type="primary" @click="qdxgzjhfz">确 定</el-button>
+                    </span>
+        </el-dialog>
     </div>
 
 </template>
@@ -271,7 +376,12 @@
         name: 'account',
         data: function () {
             return {
+                fz: '',
+                //总经会阀值
+                zjhfz: [],
                 ip: 'http://10.197.41.100:8080',
+                //添加必传文件
+                show_addbcwj: false,
                 editVisible: false,
                 userOV: {
                     userId: '',
@@ -281,31 +391,48 @@
                     groupName: '',
                     departmentId: '',
                     departmentName: '',
-                    manageType:[]
+                    manageType: []
                 },
                 users: [],
                 //添加用户
                 visible: false,
                 //删除用户
                 delVisible: false,
+                //总经会阀值修改弹窗
+                show_zjhfz: false,
                 group_options: [],
                 department_options: [],
-                manageTypes:[
+                //流程下拉
+                lcs: [
                     {
-                        label:'土建',
-                        value:'土建'
+                        label: '前期',
+                        value: '前期'
+                    }, {
+                        label: '招标',
+                        value: '招标'
+                    }, {
+                        label: '合同',
+                        value: '合同'
+                    }
+                ],
+                //节点下拉
+                jds: [],
+                manageTypes: [
+                    {
+                        label: '土建',
+                        value: '土建'
                     },
                     {
-                        label:'设备',
-                        value:'设备'
+                        label: '设备',
+                        value: '设备'
                     },
                     {
-                        label:'物资',
-                        value:'物资'
+                        label: '物资',
+                        value: '物资'
                     },
                     {
-                        label:'信息',
-                        value:'信息'
+                        label: '信息',
+                        value: '信息'
                     },
 
                 ],
@@ -315,7 +442,7 @@
                     passWord: '',
                     groupId: '',
                     departmentId: '',
-                    manageType:[]
+                    manageType: []
                 },
                 idx: -1,
                 show_addDepartment: false,
@@ -333,7 +460,14 @@
                     name: '',
                     code: ''
                 },
-                groups: []
+                bcwjs: [],
+                groups: [],
+                bcwj: {
+                    id: '',
+                    lc: '',
+                    jd: '',
+                    wjmc: ''
+                }
             }
         },
         created() {
@@ -342,22 +476,192 @@
             this.getDepartment_optins();
             this.getAlldepartment()
             this.getAllgroup()
+            //拿总经会阀值
+            this.getZjhfz()
+            //拿毕传文件
+            this.getBcwjs()
         },
-        watch:{
+        computed: {
+            lc() {
+                return this.bcwj.lc
+            },
+        },
+
+        watch: {
+            lc(newValue, oldValue) {
+                this.bcwj.jd = ''
+                console.log(newValue)
+                if (newValue === '前期') {
+                    this.jds = [{
+                        value: '填写申请表',
+                        label: '填写申请表'
+                    }, {
+                        value: '主管经理审批',
+                        label: '主管经理审批'
+                    }, {
+                        value: '经理审批',
+                        label: '经理审批',
+                    }, {
+                        value: '经办人',
+                        label: '经办人'
+                    }, {
+                        value: '技术部主管经理',
+                        label: '技术部主管经理'
+                    }, {
+                        value: '技术部经理',
+                        label: '技术部经理'
+                    }, {
+                        value: '两会',
+                        label: '两会'
+                    }, {
+                        value: '总经理办公会',
+                        label: '总经理办公会'
+                    }, {
+                        value: '备案',
+                        label: '备案',
+                    }]
+                } else if (newValue === '招标') {
+                    this.jds = [{
+                        value: '立项部门提出技术要求',
+                        label: '立项部门提出技术要求'
+                    }, {
+                        value: '技术部经办人',
+                        label: '技术部经办人'
+                    }, {
+                        value: '主管经理',
+                        label: '主管经理'
+                    }, {
+                        value: '经理',
+                        label: '经理'
+                    }, {
+                        value: '定标',
+                        label: '定标'
+                    }]
+                } else {
+                    this.jds = [{
+                        value: '填写合同表单',
+                        label: '填写合同表单'
+                    }, {
+                        value: '技术部经理审批',
+                        label: '技术部经理审批'
+                    }, {
+                        value: '办公室确认',
+                        label: '办公室确认'
+                    }]
+                }
+            },
+
             visible(newValue, oldValue) {
-                if(newValue==true){
+                if (newValue == true) {
 
                 }
             },
         },
-        filters:{// 过滤、格式化
-            filterManageType:function(value){//时间格式化，"2018-10-21T17:20:16.000+0000"的需要进行格式化
-                if(value!=null)
+        filters: {// 过滤、格式化
+            filterManageType: function (value) {//时间格式化，"2018-10-21T17:20:16.000+0000"的需要进行格式化
+                if (value != null)
                     return value.toString()
                 return null
             }
         },
         methods: {
+            //插入必传文件数据
+            addBcwj() {
+                axios.get(this.ip + '/bcwj/insert', {
+                    params: this.bcwj
+                }).then(res => {
+                    if (res.data) {
+                        this.bcwj.id = res.data
+                        this.bcwjs.push(this.bcwj)
+                        this.bcwj = {
+                            id: '',
+                            lc: '',
+                            jd: '',
+                            wjmc: ''
+                        }
+                        this.show_addbcwj = false
+                    }
+                })
+            },
+
+            //拿所有的毕传文件
+            getBcwjs() {
+                axios.get(this.ip + '/bcwj/select')
+                    .then(res => {
+                        this.bcwjs = res.data;
+                    })
+            },
+
+            //编辑必传文件
+            edit_bcwj() {
+
+            },
+
+            //删除毕传文件
+            delete_bcwj(row) {
+                axios.get(this.ip + '/bcwj/delete', {
+                    params: {
+                        id: row.id
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        this.$message.success("删除成功！")
+                        this.removeByValue(this.bcwjs, row)
+                    } else {
+                        this.$message.error("删除失败！")
+                    }
+                })
+            },
+
+            //删除数组中指定元素
+            removeByValue(arr, val) {
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].id === val.id) {
+                        arr.splice(i, 1);
+                        break;
+                    }
+                }
+            },
+
+            //确定修改总经会阀值
+            qdxgzjhfz() {
+                this.$confirm('此操作将修改总经会阀值,是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.get(this.ip + '/zjhfz/updata', {
+                        params: {
+                            fz: this.fz
+                        }
+                    }).then(res => {
+                        if (res.data) {
+                            this.$message.success("修改成功！")
+                            this.show_zjhfz = false
+                            this.zjhfz[0].fz = this.fz
+                            this.$set(this.zjhfz, 0, this.zjhfz[0]);
+                        } else {
+                            this.$message.error("修改失败！")
+                        }
+                    })
+                })
+                    .catch(() => {
+                    })
+            },
+
+            getZjhfz() {
+                axios.get(this.ip + '/zjhfz/get')
+                    .then(res => {
+                        this.zjhfz = res.data
+                    })
+            },
+
+            //总经会阀值修改
+            edit_zjhfz(row) {
+                this.fz = row.fz
+                this.show_zjhfz = true
+            },
+
             getDepartment_optins() {
                 axios.get(this.ip + '/department/getAllDepartment')
                     .then(res => {
@@ -408,7 +712,7 @@
                     passWord: item.passWord,
                     groupId: item.groupId,
                     departmentId: item.departmentId,
-                    manageType: item.manageType?item.manageType:[]
+                    manageType: item.manageType ? item.manageType : []
                 }
                 this.editVisible = true;
             },
