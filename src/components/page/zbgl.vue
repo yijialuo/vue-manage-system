@@ -16,8 +16,26 @@
 
                     <el-input style="margin-top: 10px" required v-model="select_xmmc" placeholder="项目名称"
                               class="handle-input mr10"></el-input>
-                    <el-button style="margin-left: 10px" type="primary" icon="el-icon-search" @click="xmmcSearch">搜索
+                    <el-select
+                            clearable
+                            style="margin-left: 10px;width: 150px"
+                            v-model="select_jd"
+                            placeholder="节点">
+                        <el-option
+                                clearable
+                                v-for="item in jds"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-input style="margin-left: 10px;margin-top: 10px" required v-model="select_sqr" placeholder="申请人"
+                              class="handle-input mr10"></el-input>
+                    <el-input style="margin-left: 10px;margin-top: 10px" required v-model="select_zbr" placeholder="中标人"
+                              class="handle-input mr10"></el-input>
+                    <el-button style="margin-left: 10px" type="primary" icon="el-icon-search" @click="Search">搜索
                     </el-button>
+
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="qb">全部</el-button>
                 </div>
                 <el-table stripe :data="clzhaobiaos.slice((currentPage-1)*10,currentPage*10)" border
@@ -30,7 +48,7 @@
                     </el-table-column>
                     <el-table-column prop="zbr" align="center" label="中标人" width="140">
                     </el-table-column>
-                    <el-table-column prop="zbje" align="center" label="中标金额" width="140">
+                    <el-table-column prop="zbje" align="center" label="中标金额(元)" width="140">
                     </el-table-column>
                     <el-table-column prop="fbsj" align="center" label="发标时间" width="140">
                     </el-table-column>
@@ -46,7 +64,7 @@
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-star-on"
                                        v-if="scope.row.sqr===userId&&(scope.row.dqjd==='立项部门提出技术要求'||scope.row.dqjd==='未申请')"
-                                       @click="sq(scope.row)">申请
+                                       @click="sq(scope.$index,scope.row)">申请
                             </el-button>
                             <el-button type="text" icon="el-icon-upload" @click="fj(scope.row)">附件
                             </el-button>
@@ -55,7 +73,7 @@
                             <el-button type="text" icon="el-icon-tickets" @click="xq(scope.row)">详情
                             </el-button>
                             <el-button type="text" icon="el-icon-edit" v-if="scope.row.sqr===userId"
-                                       @click="bj(scope.row)">编辑
+                                       @click="bj(scope.$index,scope.row)">编辑
                             </el-button>
                             <el-button type="text" class="red" icon="el-icon-delete" v-if="scope.row.sqr===userId"
                                        @click="sc(scope.row)">删除
@@ -67,6 +85,7 @@
                 <div style="text-align: center">
                     <el-pagination
                             background
+                            :current-page="currentPage"
                             layout="total,prev, pager, next"
                             @current-change="currentChange"
                             :total="clzhaobiaos.length">
@@ -76,14 +95,14 @@
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog :close-on-click-modal="false" title="上传附件" :visible.sync="showfj" width="40%">
+        <el-dialog :close-on-click-modal="false" title="上传附件" :visible.sync="showfj" width="1000px">
 
             <el-table :data="bcwjs" border style="margin-top: 20px">
-                <el-table-column prop="jd" label="节点" width="130px">
+                <el-table-column prop="jd" label="节点" width="110px">
                 </el-table-column>
-                <el-table-column prop="wjmc" label="文件名称" width="180px">
+                <el-table-column prop="wjmc" label="文件名称" width="100px">
                 </el-table-column>
-                <el-table-column label="操作" >
+                <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-upload
                                 class="upload-demo"
@@ -98,24 +117,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-
-            <!--<el-upload-->
-                    <!--class="upload-demo"-->
-                    <!--drag-->
-                    <!--:action="url"-->
-                    <!--:on-preview="handlePreview"-->
-                    <!--:before-remove="handleBeforeRemove"-->
-                    <!--:on-success="handleSuccess"-->
-                    <!--multiple-->
-                    <!--:file-list="fileList"-->
-                    <!--style="width: 100%;"-->
-            <!--&gt;-->
-                <!--<i class="el-icon-upload"></i>-->
-                <!--<div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>-->
-            <!--</el-upload>-->
-            <!--<span slot="footer" class="dialog-footer">-->
-                <!--<el-button type="primary" @click="showfj=false">确 定</el-button>-->
-            <!--</span>-->
         </el-dialog>
 
         <el-dialog :close-on-click-modal="false" title="状态" :visible.sync="show_zt" width="750px">
@@ -126,7 +127,7 @@
         </el-dialog>
 
         <!--新建招标流程弹窗 -->
-        <el-dialog :close-on-click-modal="false" title="新建招标流程" :visible.sync="show_xjzblc" width="680px">
+        <el-dialog :close-on-click-modal="false" title="新建招标流程" :visible.sync="show_xjzblc" width="690px">
             <el-form ref="form" :rules="zbRules" :model="zhaobiao" label-width="100px">
                 <el-form-item label="项目">
                     <el-select
@@ -156,7 +157,7 @@
         </el-dialog>
 
         <!--编辑招标流程弹窗 -->
-        <el-dialog :close-on-click-modal="false" title="编辑招标流程" :visible.sync="show_bj" width="680px">
+        <el-dialog :close-on-click-modal="false" title="编辑招标流程" :visible.sync="show_bj" width="690px">
             <el-form ref="form" :rules="zbRules" :model="zhaobiao" label-width="100px">
                 <el-form-item label="项目">
                     <el-select
@@ -186,7 +187,7 @@
         </el-dialog>
 
         <!--点击详情弹窗 -->
-        <el-dialog :close-on-click-modal="false" title="招标流程审批" :visible.sync="show_xq" width="680px">
+        <el-dialog :close-on-click-modal="false" title="招标流程审批" :visible.sync="show_xq" width="690px">
             <el-form ref="form" label-width="100px">
                 <el-form-item label="项目">
                     <el-input readonly style="color:#FF0000;" v-model="zhaobiao.xmName" rows="6"></el-input>
@@ -206,7 +207,7 @@
                 <el-form-item label="中标单位">
                     <el-input readonly v-model="zhaobiao.zbr"></el-input>
                 </el-form-item>
-                <el-form-item label="中标金额">
+                <el-form-item label="中标金额(元)">
                     <el-input readonly v-model="zhaobiao.zbje"></el-input>
                 </el-form-item>
                 <el-form-item label="工期">
@@ -234,7 +235,7 @@
                     </el-table>
                 </el-form-item>
                 <el-form-item>
-                    <el-button  type="primary" @click="lxxq(zhaobiao.xmid)">立项详情
+                    <el-button type="primary" @click="lxxq(zhaobiao.xmid)">立项详情
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -336,50 +337,41 @@
     export default {
         inject: ['reload'],
         name: 'zbgl',
-        watch: {
-            select_dptnm() {
-                if (this.bmssdyc) {
-                    this.zjzhaobiaos2 = this.clzhaobiaos
-                    this.bmssdyc = false
-                }
-                this.clzhaobiaos = this.zjzhaobiaos2
-                //部门的搜索
-                if (this.select_dptnm != null && this.select_dptnm != '') {
-                    let qq = []
-                    let ssZhaobiaos = []
-                    for (let i = 0; i < this.clzhaobiaos.length; i++) {
-                        qq.push(axios.get(this.ip + '/projectApplication/xmidTosqbm', {
-                            params: {
-                                xmid: this.clzhaobiaos[i].xmid
-                            }
-                        }).then(res => {
-                            if (res.data === this.select_dptnm)
-                                ssZhaobiaos.push(this.clzhaobiaos[i])
-                        }))
-                    }
-
-                    axios.all(qq)
-                        .then(axios.spread((acct, perms) => {
-                            if (ssZhaobiaos.length === 0) {
-                                this.$message.error("没搜索到相关信息")
-                                return
-                            }
-                            this.clzhaobiaos = ssZhaobiaos;
-                        }))
-                }
-            }
-        },
         data() {
             return {
+                jds: [{
+                    value: '未申请',
+                    label: '未申请'
+                },
+                    {
+                        value: '技术部经办人',
+                        label: '技术部经办人',
+                    }, {
+                        value: '主管经理',
+                        label: '技术部主管经理'
+                    }, {
+                        value: '经理',
+                        label: '技术部经理'
+                    }, {
+                        value: '定标',
+                        label: '定标'
+                    }, {
+                        value: '招标结束',
+                        label: '招标结束'
+                    }],
+                select_jd: '',
                 //编辑弹窗
                 show_bj: false,
                 //部门搜索第一次
                 bmssdyc: true,
-                zjzhaobiaos2: [],
                 bms: [],
                 select_dptnm: '',
                 //项目名称搜索
                 select_xmmc: '',
+                //申请人搜索
+                select_sqr: '',
+                //中标人搜索
+                select_zbr: '',
                 //默认当前页
                 currentPage: 1,
                 bzs: [],
@@ -468,7 +460,8 @@
                     pid: ''
                 },
                 lxxqShow: false,
-                bcwjs:[]
+                bcwjs: [],
+                idx:-1,
             }
         },
         created() {
@@ -479,55 +472,68 @@
             this.getBcwjs()
         },
         methods: {
-            recordCurrentRow(row){
-                this.currentRow=row;
-                var index=this.url.indexOf("&bcwjid=")
-                if(index!=-1){
-                    this.url=this.url.substring(0,index+8)+this.currentRow.id;
-                }else{
-                    this.url=this.url+"&bcwjid="+this.currentRow.id
+            recordCurrentRow(row) {
+                this.currentRow = row;
+                var index = this.url.indexOf("&bcwjid=")
+                if (index != -1) {
+                    this.url = this.url.substring(0, index + 8) + this.currentRow.id;
+                } else {
+                    this.url = this.url + "&bcwjid=" + this.currentRow.id
                 }
             },
 
             //拿前期必传文件列表
-            getBcwjs(){
-                axios.get(this.ip+'/bcwj/select',{
-                    params:{
-                        lc:'招标'
+            getBcwjs() {
+                axios.get(this.ip + '/bcwj/select', {
+                    params: {
+                        lc: '招标'
                     }
-                }).then(res=>{
-                    this.bcwjs=res.data
+                }).then(res => {
+                    this.bcwjs = res.data
                     // this.bcwjs.push()
                 })
             },
 
             //确定编辑
             qd_bj() {
-                axios.get(this.ip+'/zhaobiao/updata',{
-                    params:{
-                        id:this.zhaobiao.id,
-                        xmid:this.zhaobiao.xmid,
-                        jsyq:this.zhaobiao.jsyq
+                axios.get(this.ip + '/zhaobiao/updata', {
+                    params: {
+                        id: this.zhaobiao.id,
+                        xmid: this.zhaobiao.xmid,
+                        jsyq: this.zhaobiao.jsyq
                     }
-                }).then(res=>{
-                    if(res.data){
+                }).then(res => {
+                    if (res.data) {
                         this.$message.success("修改成功！")
-                        this.reload()
-                    }else {
+                        //项目编号和项目名称
+                        axios.get(this.ip + '/projectApplication/selectNameAndNo', {
+                            params: {
+                                xmid: this.zhaobiao.xmid
+                            }
+                        }).then(res => {
+                            this.zhaobiao.xmNo = res.data.project_no
+                            this.zhaobiao.xmName = res.data.project_nam
+                            //更新数组
+                            this.clzhaobiaos.splice(this.idx,1,this.zhaobiao)
+                        })
+                        this.show_bj = false
+                       // this.reload()
+                    } else {
                         this.$message.error("修改失败！")
                     }
                 })
             },
 
             //点击编辑事件
-            bj(row) {
+            bj(index,row) {
+                this.idx=index
                 //判断是否可以编辑
                 if (row.dqjd == '未申请' || row.dqjd == '立项部门提出技术要求') {
                     //可以编辑
                     this.zhaobiao = row
                     axios.get(this.ip + '/projectApplication/getSelfWzzXmidAndXmname', {
                         params: {
-                            userName:localStorage.getItem('userName')
+                            userName: localStorage.getItem('userName')
                         }
                     })
                         .then(res => {
@@ -551,7 +557,7 @@
                                 this.zhaobiao = row
                                 axios.get(this.ip + '/projectApplication/getSelfWzzXmidAndXmname', {
                                     params: {
-                                        userName:localStorage.getItem('userName')
+                                        userName: localStorage.getItem('userName')
                                     }
                                 })
                                     .then(res => {
@@ -590,7 +596,7 @@
                         }).then(res => {
                             if (res.data) {
                                 this.$message.success("删除成功！")
-                                this.reload()
+                                this.removeByValue(this.clzhaobiaos, row)
                                 return
                             } else {
                                 this.$message.error("删除失败！")
@@ -612,7 +618,7 @@
                                     }).then(res => {
                                         if (res.data) {
                                             this.$message.success("删除成功！")
-                                            this.reload()
+                                            this.removeByValue(this.clzhaobiaos, row)
                                             return
                                         } else {
                                             this.$message.error("删除失败！")
@@ -636,30 +642,58 @@
 
             //全部按钮
             qb() {
-                this.getAllzhaobiao()
+                if (this.zjzhaobiaos.length == 0) {
+                    this.getAllzhaobiao()
+                } else {
+                    this.clzhaobiaos = this.zjzhaobiaos
+                }
                 this.dycss = true
             },
 
-            xmmcSearch() {
-                //名称的搜索
+            Search() {
+                if (this.dycss) {//第一次搜索
+                    this.zjzhaobiaos = this.clzhaobiaos.concat()
+                    this.dycss = false
+                } else {
+                    this.clzhaobiaos = this.zjzhaobiaos.concat()
+                }
+                //名称的过滤
                 if (this.select_xmmc != null && this.select_xmmc != '') {
-                    if (this.dycss) {//第一次搜索
-                        this.zjzhaobiaos = this.clzhaobiaos
-                        this.dycss = false
-                    }
-                    this.clzhaobiaos = this.zjzhaobiaos
-                    let ssZhaobiaos = []
                     for (let i = 0; i < this.clzhaobiaos.length; i++) {
-                        if (String(this.clzhaobiaos[i].xmName).indexOf(this.select_xmmc) != -1) {//包含
-                            ssZhaobiaos.push(this.clzhaobiaos[i])
+                        if (String(this.clzhaobiaos[i].xmName).indexOf(this.select_xmmc) == -1) {//不包含删除
+                            this.clzhaobiaos.splice(i, 1)
+                            i--;
                         }
                     }
-                    if (ssZhaobiaos.length == 0) {
-                        this.$message.error("没找到相关数据！")
-                        return;
-                    }
-                    this.clzhaobiaos = ssZhaobiaos
                 }
+                //节点的过滤
+                if (this.select_jd != null && this.select_jd != '') {
+                    for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                        if (String(this.clzhaobiaos[i].dqjd) != this.select_jd) {
+                            this.clzhaobiaos.splice(i, 1)
+                            i--;
+                        }
+                    }
+                }
+                //申请人的过滤
+                if (this.select_sqr != null && this.select_sqr != '') {
+                    for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                        if (String(this.clzhaobiaos[i].userName).indexOf(this.select_sqr) == -1) {
+                            this.clzhaobiaos.splice(i, 1)
+                            i--;
+                        }
+                    }
+                }
+                //中标人的过滤
+                if (this.select_zbr != null && this.select_zbr != '') {
+                    for (let i = 0; i < this.clzhaobiaos.length; i++) {
+                        if (String(this.clzhaobiaos[i].zbr).indexOf(this.select_zbr) == -1) {
+                            this.clzhaobiaos.splice(i, 1)
+                            i--;
+                        }
+                    }
+                }
+                this.currentPage = 1
             },
 
             //拿到搜索部门的名称
@@ -675,46 +709,6 @@
                             }
                         }
                     })
-            },
-
-            //搜索
-            Search() {
-                if (this.dycss) {//第一次搜索
-                    this.zjzhaobiaos = this.clzhaobiaos
-                    this.dycss = false
-                }
-                this.clzhaobiaos = this.zjzhaobiaos
-                let ssZhaobiaos = []
-                //名称的搜索
-                if (this.select_xmmc != null && this.select_xmmc != '') {
-                    for (let i = 0; i < this.clzhaobiaos.length; i++) {
-                        if (String(this.clzhaobiaos[i].xmName).indexOf(this.select_xmmc) != -1) {//包含
-                            ssZhaobiaos.push(this.clzhaobiaos[i])
-                        }
-                    }
-                }
-                //部门的搜索
-                let qq = []
-                if (this.groupId != 'doman' && this.groupId != 'zgjl' && this.groupId != 'jl' && this.select_dptnm != null && this.select_dptnm != '') {
-                    for (let i = 0; i < this.clzhaobiaos.length; i++) {
-                        qq.push(axios.get(this.ip + '/projectApplication/xmidTosqbm', {
-                            params: {
-                                xmid: this.clzhaobiaos[i].xmid
-                            }
-                        }).then(res => {
-                            if (res.data === this.select_dptnm)
-                                ssZhaobiaos.push(this.clzhaobiaos[i])
-                        }))
-                    }
-                }
-                axios.all(qq)
-                    .then(axios.spread((acct, perms) => {
-                        if (ssZhaobiaos.length === 0) {
-                            this.$message.error("没搜索到相关信息")
-                            return
-                        }
-                        this.clzhaobiaos = ssZhaobiaos;
-                    }))
             },
 
             //上一页下一页事件
@@ -769,74 +763,59 @@
                 })
             },
 
-            //附件
+            //点击附件事件
             fj(row) {
-                this.zhaobiao = row
-
-                if (row.zbpid == '' || row.zbpid == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id+'&userId='+localStorage.getItem('userId')
-                } else {//已经申请
-                    this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid +  '&userId=' + localStorage.getItem('userId')
-                }
-                //拿附件信息
-                for(let i=0;i<this.bcwjs.length;i++){
-                    axios.get(this.ip + '/Attachment/getattachment2', {
-                        params: {
-                            id: row.id,
-                            bcwjid:this.bcwjs[i].id
+                //判定当前账号是否为改项目的处理人之一
+                axios.get(this.ip + '/user/isClr', {
+                    params: {
+                        xmid: row.xmid,
+                        userId: localStorage.getItem('userId')
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        this.zhaobiao = row
+                        if (row.zbpid == '' || row.zbpid == null) {//未申请
+                            this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
+                        } else {//已经申请
+                            this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                         }
-                    })
-                        .then(res => {
-                            this.fileList.splice(i,1,[])
-                            if (res.data) {
-                                for (let j = 0; j < res.data.length; j++) {
-                                    this.fileList[i].push({
-                                        name: res.data[j].attachment_nam,
-                                        id: res.data[j].attachment_id
-                                    })
+                        //拿附件信息
+                        for (let i = 0; i < this.bcwjs.length; i++) {
+                            axios.get(this.ip + '/Attachment/getattachment2', {
+                                params: {
+                                    id: row.id,
+                                    bcwjid: this.bcwjs[i].id
                                 }
-                            }
-                        })
-                }
-                this.showfj=true
+                            })
+                                .then(res => {
+                                    this.fileList.splice(i, 1, [])
+                                    if (res.data) {
+                                        for (let j = 0; j < res.data.length; j++) {
+                                            this.fileList[i].push({
+                                                name: res.data[j].attachment_nam,
+                                                id: res.data[j].attachment_id,
+                                                scr: res.data[j].scr,
+                                                scsj: res.data[j].scsj
+                                            })
+                                        }
+                                    }
+                                })
+                        }
+                        this.showfj = true
+                    } else {
+                        this.$message.error("您没权限！")
+                    }
+                })
+            },
 
-                //
-                // if (row.zbpid == '' || row.zbpid == null) {//未申请
-                //     this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
-                //     //拿附件信息
-                //     axios.get(this.ip + '/contract/getFjs', {
-                //         params: {
-                //             cid: row.id
-                //         }
-                //     }).then(res => {
-                //         this.fileList = []
-                //         for (let i = 0; i < res.data.length; i++) {
-                //             this.fileList.push({
-                //                 name: res.data[i].fname,
-                //                 id: res.data[i].fid
-                //             })
-                //         }
-                //     })
-                // } else {//已经申请、拿附件信息
-                //     this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
-                //     axios.get(this.ip + '/Attachment/getattachment', {
-                //         params: {
-                //             pid: row.zbpid
-                //         }
-                //     })
-                //         .then(res => {
-                //             if (res.data) {
-                //                 this.fileList = []
-                //                 for (let i = 0; i < res.data.length; i++) {
-                //                     this.fileList.push({
-                //                         name: res.data[i].attachment_nam,
-                //                         id: res.data[i].attachment_id
-                //                     })
-                //                 }
-                //             }
-                //         })
-                // }
-                // this.showfj = true
+            //删除数组中指定元素
+            removeByValue(arr, val) {
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].id === val.id) {
+                        arr.splice(i, 1);
+                        break;
+                    }
+                }
             },
 
             //详情
@@ -892,28 +871,31 @@
             //删除请求
             handleBeforeRemove(file, fileList) {
                 if (this.zhaobiao.zbpid != '' && this.zhaobiao.zbpid != null) {
-                    this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        axios.get(this.ip + '/Attachment/deletAttachment', {
-                            params: {
-                                userId: localStorage.getItem('userId'),
-                                attachment_id: file.id
-                            }
-                        }).then(res => {
-                            if (res.data) {
-                                this.$message.success("删除成功！")
-                            } else {
-                                this.$message.error("你没有权限！")
-                            }
-                            this.fj(this.zhaobiao)
-                        })
-                    }).catch(() => {
-                        //this.fj(this.zhaobiao)
-                        fileList.push(file)
-                    })
+                    fileList.push(file)
+                    this.$message.error("删除失败！附件只能在处理节点删除！")
+                    // this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                    //     confirmButtonText: '确定',
+                    //     cancelButtonText: '取消',
+                    //     type: 'warning'
+                    // }).then(() => {
+                    //     axios.get(this.ip + '/Attachment/deletAttachment', {
+                    //         params: {
+                    //             userId: localStorage.getItem('userId'),
+                    //             attachment_id: file.id
+                    //         }
+                    //     }).then(res => {
+                    //         if (res.data) {
+                    //             this.$message.success("删除成功！")
+                    //         } else {
+                    //             this.$message.error("你没有权限！")
+                    //             fileList.push(file)
+                    //         }
+                    //         //this.fj(this.zhaobiao)
+                    //     })
+                    // }).catch(() => {
+                    //     //this.fj(this.zhaobiao)
+                    //     fileList.push(file)
+                    // })
                 } else {
                     this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -922,11 +904,13 @@
                     }).then(() => {
                         axios.get(this.ip + '/contract/deletFj', {
                             params: {
-                                fid: file.id
+                                fid: file.id,
+                                fname: file.name,
+                                jlid: this.zhaobiao.id
                             }
                         })
                             .then(res => {
-                                this.$message.info("删除成功！")
+                                this.$message.success("删除成功！")
                             })
                     }).catch(() => {
                         //this.fj(this.zhaobiao)
@@ -948,14 +932,7 @@
                             this.clzhaobiaos = res.data
                             //填充项目名称、用户名、中标人、中标金额
                             for (let i = 0; i < this.clzhaobiaos.length; i++) {
-                                axios.get(this.ip + '/projectApplication/xmIdToxmNo', {
-                                    params: {
-                                        xmId: this.clzhaobiaos[i].xmid
-                                    }
-                                }).then(res => {
-                                    this.clzhaobiaos[i].xmNo = res.data
-                                    this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
-                                })
+
                                 //填充节点
                                 if (this.clzhaobiaos[i].zbpid == null || this.clzhaobiaos[i].zbpid == '') {
                                     this.clzhaobiaos[i].dqjd = '未申请'
@@ -984,13 +961,14 @@
                                     }
                                 })
 
-                                //填充项目名
-                                axios.get(this.ip + '/projectApplication/xmIdToxmName', {
+                                //项目编号和项目名称
+                                axios.get(this.ip + '/projectApplication/selectNameAndNo', {
                                     params: {
-                                        xmId: this.clzhaobiaos[i].xmid
+                                        xmid: this.clzhaobiaos[i].xmid
                                     }
                                 }).then(res => {
-                                    this.clzhaobiaos[i].xmName = res.data
+                                    this.clzhaobiaos[i].xmNo = res.data.project_no
+                                    this.clzhaobiaos[i].xmName = res.data.project_nam
                                     this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
                                 })
                                 //填充申请人
@@ -1014,14 +992,7 @@
                                 this.clzhaobiaos = res.data
                                 //填充项目名称、用户名、中标人、中标金额
                                 for (let i = 0; i < this.clzhaobiaos.length; i++) {
-                                    axios.get(this.ip + '/projectApplication/xmIdToxmNo', {
-                                        params: {
-                                            xmId: this.clzhaobiaos[i].xmid
-                                        }
-                                    }).then(res => {
-                                        this.clzhaobiaos[i].xmNo = res.data
-                                        this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
-                                    })
+
                                     //填充节点
                                     if (this.clzhaobiaos[i].zbpid == null || this.clzhaobiaos[i].zbpid == '') {
                                         this.clzhaobiaos[i].dqjd = '未申请'
@@ -1049,16 +1020,21 @@
                                         }
                                     })
 
-                                    //填充项目名
-                                    axios.get(this.ip + '/projectApplication/xmIdToxmName', {
+                                    //项目编号和项目名称
+                                    axios.get(this.ip + '/projectApplication/selectNameAndNo', {
                                         params: {
-                                            xmId: this.clzhaobiaos[i].xmid
+                                            xmid: this.clzhaobiaos[i].xmid
                                         }
                                     }).then(res => {
-                                        this.clzhaobiaos[i].xmName = res.data
+                                        this.clzhaobiaos[i].xmNo = res.data.project_no
+                                        this.clzhaobiaos[i].xmName = res.data.project_nam
                                         this.$set(this.clzhaobiaos, i, this.clzhaobiaos[i]);
                                     })
-                                    axios.get(this.ip + '/user/userIdTouserName', {//填充申请人
+
+
+
+                                    //填充申请人
+                                    axios.get(this.ip + '/user/userIdTouserName', {
                                         params: {
                                             userId: this.clzhaobiaos[i].sqr
                                         }
@@ -1115,28 +1091,8 @@
                 })
             },
 
-            //领取附件
-            lqfj(zbpId) {
-                axios.get(this.ip + '/Attachment/getattachment', {
-                    params: {
-                        pid: zbpId
-                    }
-                })
-                    .then(res => {
-                        if (res.data) {
-                            this.fileList = []
-                            for (let i = 0; i < res.data.length; i++) {
-                                this.fileList.push({
-                                    name: res.data[i].attachment_nam,
-                                    id: res.data[i].attachment_id
-                                })
-                            }
-                        }
-                    })
-            },
-
             //申请
-            sq(row) {
+            sq(index,row) {
                 const loading = this.$loading({
                     lock: true,
                     text: '处理中……',
@@ -1144,15 +1100,15 @@
                     background: 'rgba(0, 0, 0, 0.7)'
                 })
                 //检查文件
-                axios.get(this.ip+"/bcwj/jcwj",{
-                    params:{
-                        id:row.id,
-                        lc:'招标',
-                        dqjd:'技术部经办人'
+                axios.get(this.ip + "/bcwj/jcwj", {
+                    params: {
+                        id: row.id,
+                        lc: '招标',
+                        dqjd: '技术部经办人'
                     }
-                }).then(res=>{
+                }).then(res => {
                     //有文件
-                    if(res.data){
+                    if (res.data) {
                         //判断该项目是否可进行招标申请
                         axios.get(this.ip + "/zhaobiao/canZhaobiaoSq", {
                             params: {
@@ -1165,9 +1121,11 @@
                                         id: row.id
                                     }
                                 }).then(res => {
-                                    if (res.data) {
+                                    if (res.data!='') {
                                         this.$message.success("申请成功！")
-                                        this.reload()
+                                        row.dqjd='主管经理'
+                                        row.zbpid=res.data
+                                        this.clzhaobiaos.splice(index,1,row)
                                         loading.close()
                                     } else {
                                         this.$message.error("申请失败！")
@@ -1179,21 +1137,21 @@
                                 this.$message.error("该项目还未进行到两会！不能进行招标！")
                             }
                         })
-                    }else {//没文件
-                        axios.get(this.ip+'/bcwj/bcwjm',{
-                            params:{
-                                lc:'招标',
-                                dqjd:'技术部经办人'
+                    } else {//没文件
+                        axios.get(this.ip + '/bcwj/bcwjm', {
+                            params: {
+                                lc: '招标',
+                                dqjd: '技术部经办人'
                             }
-                        }).then(res=>{
-                            let filenames=''
-                            for(let i=0;i<res.data.length;i++){
-                                filenames=filenames+res.data[i].wjmc+","
+                        }).then(res => {
+                            let filenames = ''
+                            for (let i = 0; i < res.data.length; i++) {
+                                filenames = filenames + res.data[i].wjmc + ","
                             }
                             //去后面,
-                            filenames=filenames.substring(0,filenames.length-1)
+                            filenames = filenames.substring(0, filenames.length - 1)
                             loading.close()
-                            this.$message.error("申请前，请上传文件："+filenames)
+                            this.$message.error("申请前，请上传文件：" + filenames)
                         })
                     }
                 })
@@ -1210,8 +1168,24 @@
                         axios.post(this.ip + '/zhaobiao/insertZhaobiao', this.zhaobiao)
                             .then(res => {
                                 if (res.data) {
-                                    this.$message.success("创建成功！")
-                                    this.reload()
+                                    this.$message.success('创建成功！')
+                                    //this.reload()
+                                    this.zhaobiao.id = res.data.split(':')[0]
+                                    this.zhaobiao.sqr = localStorage.getItem('userId')
+                                    this.zhaobiao.userName = localStorage.getItem('userName')
+                                    this.zhaobiao.dqjd = '未申请'
+                                    this.zhaobiao.cjsj = res.data.split(':')[1]
+                                    //项目编号和项目名称
+                                    axios.get(this.ip + '/projectApplication/selectNameAndNo', {
+                                        params: {
+                                            xmid: this.zhaobiao.xmid
+                                        }
+                                    }).then(res => {
+                                        this.zhaobiao.xmNo = res.data.project_no
+                                        this.zhaobiao.xmName = res.data.project_nam
+                                        this.clzhaobiaos.splice(0, 0, this.zhaobiao);
+                                    })
+                                    this.show_xjzblc = false
                                 } else {
                                     this.$message.error("创建失败！")
                                 }
@@ -1222,39 +1196,9 @@
 
             //点击文件下载
             handlePreview(file) {
-                if (this.zhaobiao.zbpid == '' || this.zhaobiao.zbpid == null) {//未申请
-                    window.open(this.ip + '/contract/getFj?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
-                } else {
-                    window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
-                }
-
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
             },
 
-            //删除请求
-            handleRemove(file, fileList) {
-                this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    axios.get(this.ip + '/Attachment/deletAttachment', {
-                        params: {
-                            userId: localStorage.getItem('userId'),
-                            attachment_id: file.id
-                        }
-                    })
-                        .then(res => {
-                            if (res.data) {
-                                this.$message.success("删除成功！")
-                            } else {
-                                this.$message.error("删除失败！")
-                            }
-                            this.lqfj(this.zhaobiao.zbpid)
-                        })
-                }).catch(() => {
-                    this.lqfj(this.zhaobiao.zbpid)
-                })
-            },
 
             //上传成功，重新请求
             handleSuccess() {
@@ -1275,7 +1219,7 @@
                 axios.get(this.ip + '/projectApplication/getSelfWzzXmidAndXmname', {
                     params: {
                         // dpt: localStorage.getItem('departmentName'),
-                        userName:localStorage.getItem('userName')
+                        userName: localStorage.getItem('userName')
                     }
                 })
                     .then(res => {

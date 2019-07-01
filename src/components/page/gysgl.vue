@@ -88,7 +88,7 @@
         </el-dialog>
 
         <!--编辑供应商弹窗 -->
-        <el-dialog title="编辑供应商" :close-on-click-modal="false" :visible.sync="show_bjgys" width="680px">
+        <el-dialog title="编辑供应商" :close-on-click-modal="false" :visible.sync="show_bjgys" width="690px">
             <el-form ref="form" :model="supplier" label-width="100px">
                 <el-form-item label="供应商名称">
                     <el-input v-model="supplier.name"></el-input>

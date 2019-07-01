@@ -4,7 +4,7 @@
         <div class="collapse-btn" @click="collapseChage">
             <i class="el-icon-menu"></i>
         </div>
-        <div class="logo">新沙工程项目管理系统</div>
+        <div class="logo">新沙工程项目管理系统5-29</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 用户名下拉菜单 -->
@@ -123,7 +123,7 @@
     }
     .header .logo{
         float: left;
-        width:250px;
+        width:280px;
         line-height: 70px;
     }
     .header-right{

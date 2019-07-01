@@ -249,7 +249,7 @@
             </div>
 
             <!-- 项目详情框 技术部自己项目-->
-            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xqgcjsb" width="50%" center>
+            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xqgcjsb" width="1000px" center>
                 <el-form style="margin-top: 20px" label-width="120px">
                     <el-form-item v-if="groupId=='bgs'" label="项目编号">
                         <el-input v-model="xm.projectNo"></el-input>
@@ -337,9 +337,9 @@
                     </el-form-item>
                     <el-form-item label="文件列表">
                         <el-table :data="bcwjs" border style="margin-top: 20px">
-                            <el-table-column prop="jd" label="节点" width="130px">
+                            <el-table-column prop="jd" label="节点" width="100px">
                             </el-table-column>
-                            <el-table-column prop="wjmc" label="文件名称" width="180px">
+                            <el-table-column prop="wjmc" label="文件名称" width="110px">
                             </el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
@@ -387,6 +387,15 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="推荐单位">
+                        <el-input :readonly="groupId!='jsb_doman'&&groupId!='jsb_zgjl'&&groupId!='jsb_jl'"
+                                  :autofocus="groupId=='jsb_doman'||groupId=='jsb_zgjl'||groupId=='jsb_jl'"
+                                  v-model="xm.tjdw"
+                                  type="textarea"
+                                  placeholder="推荐单位"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
+                        ></el-input>
+                    </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                      <el-button @click="show_xqgcjsb = false">取消</el-button>
@@ -399,7 +408,7 @@
             </el-dialog>
 
             <!-- 项目详情框 -->
-            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="50%" center>
+            <el-dialog title="项目详情" :close-on-click-modal="false" :visible.sync="show_xq" width="1000px" center>
 
                 <el-form style="margin-top: 20px" label-width="120px">
                     <el-form-item v-if="groupId=='bgs'&&NodeId=='两会'" label="项目编号">
@@ -419,7 +428,7 @@
                                   style="width: 215px;padding-right: 55px"
                                   v-model="xm.declarationDep"></el-input>
                         立项类型&nbsp&nbsp
-                        <el-select  style="width: 215px;padding-right: 15px"
+                        <el-select style="width: 215px;padding-right: 15px"
                                    v-model="xm.depAuditOpinion"
                                    placeholder="请选择">
                             <el-option
@@ -430,13 +439,13 @@
                             </el-option>
                         </el-select>
                         <!--<el-input readonly-->
-                                  <!--style="width: 215px;padding-right: 15px"-->
-                                  <!--v-model="xm.depAuditOpinion"></el-input>-->
+                        <!--style="width: 215px;padding-right: 15px"-->
+                        <!--v-model="xm.depAuditOpinion"></el-input>-->
                     </el-form-item>
                     <el-form-item label="项目类别">
-                        <el-select  style="width: 215px;padding-right: 55px"
-                                    v-model="xm.projectType"
-                                    placeholder="请选择">
+                        <el-select style="width: 215px;padding-right: 55px"
+                                   v-model="xm.projectType"
+                                   placeholder="请选择">
                             <el-option
                                     v-for="item in xmlb"
                                     :key="item.id"
@@ -445,12 +454,12 @@
                             </el-option>
                         </el-select>
                         <!--<el-input readonly-->
-                                  <!--style="width: 215px;padding-right: 55px"-->
-                                  <!--v-model="xm.projectType"></el-input>-->
+                        <!--style="width: 215px;padding-right: 55px"-->
+                        <!--v-model="xm.projectType"></el-input>-->
                         项目大类&nbsp&nbsp
-                        <el-select  style="width: 215px;padding-right: 15px"
-                                    v-model="xm.reviser"
-                                    placeholder="请选择">
+                        <el-select style="width: 215px;padding-right: 15px"
+                                   v-model="xm.reviser"
+                                   placeholder="请选择">
                             <el-option
                                     v-for="item in xmfl"
                                     :key="item.id"
@@ -459,7 +468,7 @@
                             </el-option>
                         </el-select>
                         <!--<el-input style="width: 215px" readonly-->
-                                  <!--v-model="xm.reviser"></el-input>-->
+                        <!--v-model="xm.reviser"></el-input>-->
                     </el-form-item>
                     <el-form-item label="投资概算">
                         <el-input style="width: 215px;padding-right: 55px"
@@ -519,9 +528,9 @@
                     </el-form-item>
                     <el-form-item label="文件列表">
                         <el-table :data="bcwjs" border style="margin-top: 20px">
-                            <el-table-column prop="jd" label="节点" width="130px">
+                            <el-table-column prop="jd" label="节点" width="100px">
                             </el-table-column>
-                            <el-table-column prop="wjmc" label="文件名称" width="180px">
+                            <el-table-column prop="wjmc" label="文件名称" width="110px">
                             </el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
@@ -584,6 +593,15 @@
                                 value-format="yyyy-MM-dd"
                                 placeholder="选择日期">
                         </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="推荐单位">
+                        <el-input :readonly="groupId!='jsb_doman'&&groupId!='jsb_zgjl'&&groupId!='jsb_jl'"
+                                  :autofocus="groupId=='jsb_doman'||groupId=='jsb_zgjl'||groupId=='jsb_jl'"
+                                  v-model="xm.tjdw"
+                                  type="textarea"
+                                  placeholder="推荐单位"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
+                        ></el-input>
                     </el-form-item>
                 </el-form>
                 <span v-if="!isxq" slot="footer" class="dialog-footer">
@@ -675,9 +693,9 @@
                     </el-form-item>
                     <el-form-item label="文件列表">
                         <el-table :data="bcwjs" border style="margin-top: 20px">
-                            <el-table-column prop="jd" label="节点" width="130px">
+                            <el-table-column prop="jd" label="节点" width="100px">
                             </el-table-column>
-                            <el-table-column prop="wjmc" label="文件名称" width="180px">
+                            <el-table-column prop="wjmc" label="文件名称" width="110px">
                             </el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
@@ -763,9 +781,9 @@
                     </el-form-item>
                     <el-form-item label="文件列表">
                         <el-table :data="bcwjs" border style="margin-top: 20px">
-                            <el-table-column prop="jd" label="节点" width="130px">
+                            <el-table-column prop="jd" label="节点" width="100px">
                             </el-table-column>
-                            <el-table-column prop="wjmc" label="文件名称" width="180px">
+                            <el-table-column prop="wjmc" label="文件名称" width="110px">
                             </el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
@@ -785,17 +803,17 @@
                             </el-table-column>
                         </el-table>
                         <!--<el-upload-->
-                                <!--class="upload-demo"-->
-                                <!--drag-->
-                                <!--:action="url"-->
-                                <!--:on-preview="handlePreview"-->
-                                <!--:on-remove="handleRemove"-->
-                                <!--:on-success="handleSuccess4"-->
-                                <!--multiple-->
-                                <!--:file-list="fileList"-->
+                        <!--class="upload-demo"-->
+                        <!--drag-->
+                        <!--:action="url"-->
+                        <!--:on-preview="handlePreview"-->
+                        <!--:on-remove="handleRemove"-->
+                        <!--:on-success="handleSuccess4"-->
+                        <!--multiple-->
+                        <!--:file-list="fileList"-->
                         <!--&gt;-->
-                            <!--<i class="el-icon-upload"></i>-->
-                            <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+                        <!--<i class="el-icon-upload"></i>-->
+                        <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
                         <!--</el-upload>-->
                     </el-form-item>
                     <!--<el-form-item label="单位意见">-->
@@ -879,9 +897,9 @@
                     </el-form-item>
                     <el-form-item label="文件列表">
                         <el-table :data="bcwjs" border style="margin-top: 20px">
-                            <el-table-column prop="jd" label="节点" width="130px">
+                            <el-table-column prop="jd" label="节点" width="100px">
                             </el-table-column>
-                            <el-table-column prop="wjmc" label="文件名称" width="180px">
+                            <el-table-column prop="wjmc" label="文件名称" width="110px">
                             </el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
@@ -944,7 +962,8 @@
                     <el-form-item label="中标" v-if="groupId==='bgs'">
                         <el-input placeholder="单位" :disabled="isTjzbs" v-model="zhongbiao.zhongbiaodw"
                                   style="width: 200px"></el-input>
-                        <el-input placeholder="中标价格" :disabled="isTjzbs" v-model="zhongbiao.zhongbiaojg" type="number"
+                        <el-input placeholder="中标价格(元)" :disabled="isTjzbs" v-model="zhongbiao.zhongbiaojg"
+                                  type="number"
                                   style="width: 200px;margin-left: 4px"></el-input>
                         <el-button @click="tjzbdw" type="primary" :disabled="isTjzbs" style="margin-left: 10px"
                                    icon="el-icon-circle-plus">
@@ -962,7 +981,7 @@
                             </el-table-column>
                             <el-table-column
                                     prop="zhongbiaojg"
-                                    label="中标价格"
+                                     label="中标价格(元)"
                                     width="180">
                             </el-table-column>
                             <el-table-column label="操作">
@@ -1009,9 +1028,9 @@
                     </el-form-item>
                     <el-form-item>
                         <el-table :data="bcwjs" border style="margin-top: 20px">
-                            <el-table-column prop="jd" label="节点" width="130px">
+                            <el-table-column prop="jd" label="节点" width="100px">
                             </el-table-column>
-                            <el-table-column prop="wjmc" label="文件名称" width="180px">
+                            <el-table-column prop="wjmc" label="文件名称" width="110px">
                             </el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
@@ -1031,17 +1050,17 @@
                             </el-table-column>
                         </el-table>
                         <!--<el-upload-->
-                                <!--class="upload-demo"-->
-                                <!--drag-->
-                                <!--:action="url"-->
-                                <!--:on-preview="handlePreview"-->
-                                <!--:before-remove="handleBeforeRemove"-->
-                                <!--:on-success="handleSuccess2"-->
-                                <!--multiple-->
-                                <!--:file-list="fileList"-->
+                        <!--class="upload-demo"-->
+                        <!--drag-->
+                        <!--:action="url"-->
+                        <!--:on-preview="handlePreview"-->
+                        <!--:before-remove="handleBeforeRemove"-->
+                        <!--:on-success="handleSuccess2"-->
+                        <!--multiple-->
+                        <!--:file-list="fileList"-->
                         <!--&gt;-->
-                            <!--<i class="el-icon-upload"></i>-->
-                            <!--<div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>-->
+                        <!--<i class="el-icon-upload"></i>-->
+                        <!--<div class="el-upload__text">将文件拖到此处，或<em>上传文件</em></div>-->
                         <!--</el-upload>-->
                     </el-form-item>
                 </el-form>
@@ -1080,7 +1099,8 @@
                     <el-form-item label="中标单位" v-if="groupId==='bgs'">
                         <el-input placeholder="单位" :disabled="isTjzbs" v-model="zhongbiao.zhongbiaodw"
                                   style="width: 200px"></el-input>
-                        <el-input placeholder="中标价格" :disabled="isTjzbs" v-model="zhongbiao.zhongbiaojg" type="number"
+                        <el-input placeholder="中标价格(元)" :disabled="isTjzbs" v-model="zhongbiao.zhongbiaojg"
+                                  type="number"
                                   style="width: 200px"></el-input>
                         <el-button @click="tjzbdw" type="primary" :disabled="isTjzbs" style="margin-left: 10px"
                                    icon="el-icon-circle-plus">
@@ -1098,7 +1118,7 @@
                             </el-table-column>
                             <el-table-column
                                     prop="zhongbiaojg"
-                                    label="中标价格"
+                                    label="中标价格(元)"
                                     width="180">
                             </el-table-column>
                             <el-table-column label="操作">
@@ -1145,9 +1165,9 @@
                     </el-form-item>
                     <el-form-item>
                         <el-table :data="bcwjs" border style="margin-top: 20px">
-                            <el-table-column prop="jd" label="节点" width="130px">
+                            <el-table-column prop="jd" label="节点" width="100px">
                             </el-table-column>
-                            <el-table-column prop="wjmc" label="文件名称" width="180px">
+                            <el-table-column prop="wjmc" label="文件名称" width="110px">
                             </el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
@@ -1515,6 +1535,16 @@
             bus.$off('collapse', this.handleBus);
         },
         methods: {
+            //推荐单位修改
+            xgtjdw(xmid,tjdw){
+                axios.get(this.ip+'/projectApplication/updataTjdw',{
+                    params:{
+                        xmid:xmid,
+                        tjdw:tjdw
+                    }
+                })
+            },
+
             //技术部自己的项目，驳回再申请
             jsbsq() {
                 if (this.jbrOrZgjlValue == null || this.jbrOrZgjlValue.length == 0) {
@@ -1526,14 +1556,14 @@
 
             //办公室确认合同已接受
             qrhtjs() {
-                axios.get(this.ip+"/bcwj/jcwj",{
-                    params:{
-                        id:this.contract.id,
-                        lc:'合同',
-                        dqjd:'办公室确认'
+                axios.get(this.ip + "/bcwj/jcwj", {
+                    params: {
+                        id: this.contract.id,
+                        lc: '合同',
+                        dqjd: '办公室确认'
                     }
-                }).then(res=>{
-                    if(res.data){
+                }).then(res => {
+                    if (res.data) {
                         if (this.contract.contractNo === null || this.contract.contractNo === '') {
                             this.$message.error('请填写合同编号！')
                             return
@@ -1551,11 +1581,57 @@
                                     this.$message.error("处理失败！")
                                 this.reload()
                             })
-                    }else {
+                    } else {
+                        axios.get(this.ip + '/bcwj/bcwjm', {
+                            params: {
+                                lc: '合同',
+                                dqjd: '办公室确认'
+                            }
+                        }).then(res => {
+                            let filenames = ''
+                            for (let i = 0; i < res.data.length; i++) {
+                                filenames = filenames + res.data[i].wjmc + ","
+                            }
+                            //去后面,
+                            filenames = filenames.substring(0, filenames.length - 1)
+                            this.$message.error("申请前，请上传文件：" + filenames)
+                        })
+                    }
+                })
+
+            },
+
+            //合同再次审批
+            htzcsp() {
+                axios.get(this.ip + "/bcwj/jcwj", {
+                    params: {
+                        id: this.contract.id,
+                        lc: '合同',
+                        dqjd: '填写合同表单'
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        this.contract.zzsc = ''
+                        for (let i = 0; i < this.zzsc.length; i++) {
+                            if (i < this.zzsc.length - 1)
+                                this.contract.zzsc = this.contract.zzsc + this.zzsc[i] + '、'
+                            else
+                                this.contract.zzsc = this.contract.zzsc + this.zzsc[i]
+                        }
+                        delete this.contract.projectName
+                        axios.post(this.ip + '/contract/htzcsp', this.contract).then(res => {
+                            if (res.data) {
+                                this.$message.success("已发往技术部经理审批")
+                            } else {
+                                this.$message.error("处理失败！")
+                            }
+                            this.reload()
+                        })
+                    } else {//没有文件
                         axios.get(this.ip+'/bcwj/bcwjm',{
                             params:{
                                 lc:'合同',
-                                dqjd:'办公室确认'
+                                dqjd:'填写合同表单'
                             }
                         }).then(res=>{
                             let filenames=''
@@ -1567,27 +1643,6 @@
                             this.$message.error("申请前，请上传文件："+filenames)
                         })
                     }
-                })
-
-            },
-
-            //合同再次审批
-            htzcsp() {
-                this.contract.zzsc = ''
-                for (let i = 0; i < this.zzsc.length; i++) {
-                    if (i < this.zzsc.length - 1)
-                        this.contract.zzsc = this.contract.zzsc + this.zzsc[i] + '、'
-                    else
-                        this.contract.zzsc = this.contract.zzsc + this.zzsc[i]
-                }
-                delete this.contract.projectName
-                axios.post(this.ip + '/contract/htzcsp', this.contract).then(res => {
-                    if (res.data) {
-                        this.$message.success("已发往技术部经理审批")
-                    } else {
-                        this.$message.error("处理失败！")
-                    }
-                    this.reload()
                 })
             },
 
@@ -1793,14 +1848,14 @@
             },
             //完成招标
             wczb() {
-                axios.get(this.ip+"/bcwj/jcwj",{
-                    params:{
-                        id:this.zhaobiao.id,
-                        lc:'招标',
-                        dqjd:'定标'
+                axios.get(this.ip + "/bcwj/jcwj", {
+                    params: {
+                        id: this.zhaobiao.id,
+                        lc: '招标',
+                        dqjd: '定标'
                     }
-                }).then(res=>{
-                    if(res.data){
+                }).then(res => {
+                    if (res.data) {
                         if (this.zhaobiao.fbsj != "" && this.zhaobiao.fbsj != null && this.zhaobiao.dbsj != "" && this.zhaobiao.dbsj != null && this.zhaobiao.tbjzsj != null && this.zhaobiao.tbjzsj != '' && this.zhongbiaos.length != 0) {
                             axios.get(this.ip + '/zhaobiao/wczb', {
                                 params: {
@@ -1813,7 +1868,7 @@
                                 }
                             }).then(res => {
                                 if (res.data) {
-                                    this.$message.success("完成备案!")
+                                    this.$message.success("完成定标!")
                                     this.reload()
                                 } else
                                     this.$message.error("失败！")
@@ -1821,20 +1876,20 @@
                         } else {
                             this.$message.error("请完成该表单填写！")
                         }
-                    }else {
-                        axios.get(this.ip+'/bcwj/bcwjm',{
-                            params:{
-                                lc:'招标',
-                                dqjd:'定标'
+                    } else {
+                        axios.get(this.ip + '/bcwj/bcwjm', {
+                            params: {
+                                lc: '招标',
+                                dqjd: '定标'
                             }
-                        }).then(res=>{
-                            let filenames=''
-                            for(let i=0;i<res.data.length;i++){
-                                filenames=filenames+res.data[i].wjmc+","
+                        }).then(res => {
+                            let filenames = ''
+                            for (let i = 0; i < res.data.length; i++) {
+                                filenames = filenames + res.data[i].wjmc + ","
                             }
                             //去后面,
-                            filenames=filenames.substring(0,filenames.length-1)
-                            this.$message.error("完成招标前，请上传文件："+filenames)
+                            filenames = filenames.substring(0, filenames.length - 1)
+                            this.$message.error("完成招标前，请上传文件：" + filenames)
                         })
                     }
                 })
@@ -1910,14 +1965,14 @@
             //发起标书
             fqbs() {
                 //检查文件
-                axios.get(this.ip+"/bcwj/jcwj",{
-                    params:{
-                        id:this.zhaobiao.id,
-                        lc:'招标',
-                        dqjd:'技术部经办人'
+                axios.get(this.ip + "/bcwj/jcwj", {
+                    params: {
+                        id: this.zhaobiao.id,
+                        lc: '招标',
+                        dqjd: '技术部经办人'
                     }
-                }).then(res=>{
-                    if(res.data){
+                }).then(res => {
+                    if (res.data) {
                         axios.get(this.ip + '/zhaobiao/bsfq', {
                             params: {
                                 id: this.zhaobiao.id,
@@ -1933,20 +1988,20 @@
                                 this.$message.error("发起失败！")
                             }
                         })
-                    }else {
-                        axios.get(this.ip+'/bcwj/bcwjm',{
-                            params:{
-                                lc:'招标',
-                                dqjd:'技术部经办人'
+                    } else {
+                        axios.get(this.ip + '/bcwj/bcwjm', {
+                            params: {
+                                lc: '招标',
+                                dqjd: '技术部经办人'
                             }
-                        }).then(res=>{
-                            let filenames=''
-                            for(let i=0;i<res.data.length;i++){
-                                filenames=filenames+res.data[i].wjmc+","
+                        }).then(res => {
+                            let filenames = ''
+                            for (let i = 0; i < res.data.length; i++) {
+                                filenames = filenames + res.data[i].wjmc + ","
                             }
                             //去后面 ,
-                            filenames=filenames.substring(0,filenames.length-1)
-                            this.$message.error("申请前，请上传文件："+filenames)
+                            filenames = filenames.substring(0, filenames.length - 1)
+                            this.$message.error("申请前，请上传文件：" + filenames)
                         })
                     }
                 })
@@ -2048,9 +2103,7 @@
             },
             //上传成功，重新新请求合同附件
             handleSuccess4(response, file, fileList) {
-                console.log("合同")
-                console.log(this.contract.id)
-                this.lqfj('合同',this.contract.id)
+                this.lqfj('合同', this.contract.id)
             },
 
             //上传成功，重新请求
@@ -2163,6 +2216,7 @@
 
             //确定前期驳回
             qd_bh() {
+
                 //技术部经理的驳回
                 if (this.groupId === 'jsb_jl' || this.groupId === 'jsb_zgjl') {
                     if (this.comment == '' || this.comment == null || this.bhd == '' || this.bhd == '') {
@@ -2276,7 +2330,7 @@
                     this.cl('zgjl', true)
                 } else if (localStorage.getItem('groupId') == 'jl') {
                     //经理可以修改更新项目
-                    axios.post(this.ip + '/projectApplication/updataXm', this.xm).then(res=>{
+                    axios.post(this.ip + '/projectApplication/updataXm', this.xm).then(res => {
                         this.cl('jl', true)
                     })
                 } else if (localStorage.getItem('groupId') == 'jsb_doman') {
@@ -2290,6 +2344,9 @@
 
             //驳回（前期审批）
             bh() {
+                if(this.groupId=='jsb_doman'||this.groupId=='jsb_zgjl'||this.groupId=='jsb_jl'){
+                    this.xgtjdw(this.xm.id,this.xm.tjdw)
+                }
                 this.comment = ''
                 if (this.xm.declarationDep === '工程技术部') {
                     if (this.groupId === 'jsb_jl') {//技术部经理
@@ -2437,8 +2494,16 @@
                 })
             },
 
+
+
+
             //同意
             ty() {
+                console.log(this.groupId)
+                if(this.groupId=='jsb_doman'||this.groupId=='jsb_zgjl'||this.groupId=='jsb_jl'){
+                    this.xgtjdw(this.xm.id,this.xm.tjdw)
+                }
+
                 if (this.jbrOrZgjl == '技术部主管经理') {
                     if (this.jbrOrZgjlValue.length == 0) {
                         this.$message.error("请选择" + this.jbrOrZgjl)
@@ -2487,6 +2552,7 @@
                         loading.close()
                         //技术部经办人修改项目信息
                         if (this.groupId === 'jsb_doman') {
+                            this.xm.bider=localStorage.getItem('userName')
                             axios.post(this.ip + '/projectApplication/jsbdomanXgxm', this.xm)
                         }
                         this.reload()//刷新
@@ -2518,7 +2584,7 @@
 
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
             },
 
             //领取评论
@@ -2941,7 +3007,7 @@
 
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
             },
 
             //确定申请

@@ -299,9 +299,9 @@
                 <el-table :data="bcwjs" border style="margin-top: 20px">
                     <el-table-column prop="lc" sortable label="流程" width="150">
                     </el-table-column>
-                    <el-table-column prop="jd" label="节点" width="150">
+                    <el-table-column prop="jd" label="节点" width="100">
                     </el-table-column>
-                    <el-table-column prop="wjmc" label="文件名称" width="150">
+                    <el-table-column prop="wjmc" label="文件名称" width="110">
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">

@@ -29,9 +29,9 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" width="240">
                     <template slot-scope="scope">
-                        <el-button type="text" size="mini" v-if="groupId!='ld'" @click="updateProject(scope.row)">修改</el-button>
+                        <el-button type="text" size="mini" v-if="scope.row.y2==userId" @click="updateProject(scope.row)">修改</el-button>
                         <el-button type="text" size="mini" @click="openSmallProject(scope.row)">小项目管理</el-button>
-                        <el-button type="text" style="color: #ff0000;" v-if="groupId!='ld'" size="mini"
+                        <el-button type="text" style="color: #ff0000;" v-if="scope.row.y2==userId" size="mini"
                                    @click="deleteProjectData(scope.row.id)">删除
                         </el-button>
                         <el-button type="text" @click="lxxq(scope.row)">立项详情
@@ -106,7 +106,7 @@
 
             <el-dialog title="小项目管理" :close-on-click-modal="false" :visible.sync="smallProjectDialogVisible"
                        width="80%">
-                <el-button type="primary" icon="el-icon-circle-plus" v-if="groupId=='jsb_doman'"
+                <el-button type="primary" icon="el-icon-circle-plus" v-if="y2==userId"
                            @click="addSmallProject">增加
                 </el-button>
                 <el-table
@@ -130,9 +130,9 @@
                     </el-table-column>
                     <el-table-column fixed="right" label="操作" align="center" width="160">
                         <template slot-scope="scope">
-                            <el-button type="text" size="mini" v-if="groupId!='ld'" @click="updateSmallProject(scope.row)">修改</el-button>
+                            <el-button type="text" size="mini" v-if="y2==userId" @click="updateSmallProject(scope.row)">修改</el-button>
                             <el-button type="text" size="mini" @click="attachment(scope.row)">附件</el-button>
-                            <el-button type="text" style="color: #ff0000;" v-if="groupId!='ld'" size="mini"
+                            <el-button type="text" style="color: #ff0000;" v-if="y2==userId" size="mini"
                                        @click="deleteSmallProjectData(scope.row.id)">删除
                             </el-button>
                         </template>
@@ -180,8 +180,9 @@
                 </div>
             </el-dialog>
 
-            <el-dialog title="附件" :close-on-click-modal="false" :visible.sync="attachmentVisiable" width="50%">
+            <el-dialog title="附件" :close-on-click-modal="false" :visible.sync="attachmentVisiable" width="1000px">
                 <el-upload
+                        :disabled="y2!=userId"
                         class="upload-demo"
                         drag
                         :action="attachmentUrl"
@@ -295,6 +296,7 @@
         inject: ['reload'],
         data() {
             return {
+                userId:localStorage.getItem('userId'),
                 userName: localStorage.getItem('userName'),
                 groupId: localStorage.getItem('groupId'),
                 projectList: null,
@@ -369,6 +371,7 @@
                     pid: ''
                 },
                 lxxqShow:false,
+                y2:'',
             }
         },
         created() {
@@ -394,7 +397,8 @@
                     xmmc: '',
                     lxbm: '',
                     sqr: '',
-                    y1: ''
+                    y1: '',
+                    y2:''
                 }
                 this.addUpdateDialogVisible = true;// 对话框可见
                 this.addUpdateDialogTitle = "增加"// 修改标题
@@ -411,7 +415,8 @@
                                 xmmc: this.projectTemp.xmmc,
                                 lxbm: this.projectTemp.lxbm,
                                 sqr: this.projectTemp.sqr,
-                                y1: this.projectTemp.y1
+                                y1: this.projectTemp.y1,
+                                y2:localStorage.getItem('userId')
                             }
                         }).then(res => {
                             this.addUpdateDialogVisible = false
@@ -485,6 +490,7 @@
             },
 
             openSmallProject(row) {
+                this.y2=row.y2
                 this.sqr = row.sqr
                 this.smallProjectTemp.xxmid = row.id
                 this.smallProjectDialogVisible = true
@@ -591,7 +597,7 @@
             attachment(row) {
                 this.smallProjectTemp = row
                 this.attachmentVisiable = true
-                this.attachmentUrl = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + this.smallProjectTemp.id
+                this.attachmentUrl = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + this.smallProjectTemp.id+'&userId='+localStorage.getItem('userId')
 
                 axios.get('http://10.197.41.100:8080/contract/getFjs', {
                     params: {
@@ -608,7 +614,7 @@
                 })
             },
             handlePreview(file) {
-                window.open('http://10.197.41.100:8080/contract/getFj?fid=' + file.id + '&fname=' + file.name)
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
             },
             handleBeforeRemove(file, fileList) {
                 this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {

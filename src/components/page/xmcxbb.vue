@@ -309,9 +309,9 @@
                 </el-table-column>
                 <el-table-column label="完工时间" align="center" prop="wgsj" width="120">
                 </el-table-column>
-                <el-table-column label="总结算进度" align="center" prop="zjsjd" width="140">
+                <el-table-column label="总结算进度(万元)" align="center" prop="zjsjd" width="140">
                 </el-table-column>
-                <el-table-column label="今年结算进度" align="center" prop="jnjsjd" width="160">
+                <el-table-column label="今年结算进度(万元)" align="center" prop="jnjsjd" width="160">
                 </el-table-column>
                 <el-table-column label="定标时间" align="center" prop="dbsj" width="180">
                 </el-table-column>
@@ -329,6 +329,11 @@
                 </el-table-column>
                 <el-table-column label="项目经办人" align="center" prop="xmjbr" width="120">
                 </el-table-column>
+                <el-table-column label="操作" width="180" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-upload" @click="fj(scope.row)">附件</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
             <el-pagination
                     v-show="list.length>0"
@@ -339,6 +344,26 @@
                     style="text-align: center">
             </el-pagination>
         </div>
+        <el-dialog title="附件" :close-on-click-modal="false" :visible.sync="showfj" width="1000px">
+            <el-table :data="hjs" border style="margin-top: 20px">
+                <el-table-column prop="hj" label="环节" width="100px">
+                </el-table-column>
+                <el-table-column  label="附件" >
+                    <template slot-scope="scope">
+                        <el-upload
+                                action=""
+                                :disabled="true"
+                                class="upload-demo"
+                                :on-preview="handlePreview"
+                                multiple
+                                :file-list="fileList[scope.$index]">
+                            <!--<el-button size="small" type="primary" @click="recordCurrentRow(scope.row)">点击上传-->
+                            <!--</el-button>-->
+                        </el-upload>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
     </div>
 </template>
 
@@ -349,7 +374,20 @@
         name: "xmcxbb",
         data() {
             return {
-                departmentName:localStorage.getItem('departmentName'),
+                hjs:[{
+                    hj:'前期附件'
+                },{
+                    hj:'招标附件'
+                },{
+                    hj:'小项目附件'
+                },{
+                    hj:'合同附件'
+                },{
+                    hj:'验收附件'
+                },{
+                    hj:'结算附件'
+                }],
+                departmentName: localStorage.getItem('departmentName'),
                 list: [],
                 currentPage: 1,
                 total: 0,
@@ -521,7 +559,9 @@
                     }
                 ],
                 xmfqr: [],
-                xmjbr: []
+                xmjbr: [],
+                showfj:false,
+                fileList:[]
             }
         },
         created() {
@@ -531,6 +571,125 @@
             this.getAllFQRS()
         },
         methods: {
+            //点击文件下载
+            handlePreview(file) {
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
+            },
+
+            //点击附件事件
+            fj(row) {
+                axios.get(this.ip+'/user/isClr',{
+                    params:{
+                        xmid:row.xmid,
+                        userId:localStorage.getItem('userId')
+                    }
+                }).then(res=>{
+                    if(res.data){
+                        //拿前期附件
+                        axios.get(this.ip+'/Attachment/getHjFj',{
+                            params:{
+                                xmid:row.xmid,
+                                hj:'前期'
+                            }
+                        }).then(res=>{
+                            this.fileList.splice(0,1,[])
+                            for (let j = 0; j < res.data.length; j++) {
+                                this.fileList[0].push({
+                                    name: res.data[j].attachment_nam,
+                                    id: res.data[j].attachment_id,
+                                    scr: res.data[j].scr,
+                                    scsj: res.data[j].scsj
+                                })
+                            }
+                        })
+                        //拿招标附件
+                        axios.get(this.ip+'/Attachment/getHjFj',{
+                            params:{
+                                xmid:row.xmid,
+                                hj:'招标'
+                            }
+                        }).then(res=>{
+                            this.fileList.splice(1,1,[])
+                            for (let j = 0; j < res.data.length; j++) {
+                                this.fileList[1].push({
+                                    name: res.data[j].attachment_nam,
+                                    id: res.data[j].attachment_id,
+                                    scr: res.data[j].scr,
+                                    scsj: res.data[j].scsj
+                                })
+                            }
+                        })
+                        //拿小项目附件
+                        axios.get(this.ip+'/Attachment/getXxmfj',{
+                            params:{
+                                xmid:row.xmid,
+                            }
+                        }).then(res=>{
+                            this.fileList.splice(2,1,[])
+                            for (let j = 0; j < res.data.length; j++) {
+                                this.fileList[2].push({
+                                    name: res.data[j].attachment_nam,
+                                    id: res.data[j].attachment_id,
+                                    scr: res.data[j].scr,
+                                    scsj: res.data[j].scsj
+                                })
+                            }
+                        })
+                        //拿合同附件
+                        axios.get(this.ip+'/Attachment/getHjFj',{
+                            params:{
+                                xmid:row.xmid,
+                                hj:'合同'
+                            }
+                        }).then(res=>{
+                            this.fileList.splice(3,1,[])
+                            for (let j = 0; j < res.data.length; j++) {
+                                this.fileList[3].push({
+                                    name: res.data[j].attachment_nam,
+                                    id: res.data[j].attachment_id,
+                                    scr: res.data[j].scr,
+                                    scsj: res.data[j].scsj
+                                })
+                            }
+                        })
+                        //拿验收附件
+                        axios.get(this.ip+'/Attachment/getYsfj',{
+                            params:{
+                                xmid:row.xmid,
+                            }
+                        }).then(res=>{
+                            this.fileList.splice(4,1,[])
+                            for (let j = 0; j < res.data.length; j++) {
+                                this.fileList[4].push({
+                                    name: res.data[j].attachment_nam,
+                                    id: res.data[j].attachment_id,
+                                    scr: res.data[j].scr,
+                                    scsj: res.data[j].scsj
+                                })
+                            }
+                        })
+                        //拿结算附件
+                        axios.get(this.ip+'/Attachment/getJsfj',{
+                            params:{
+                                xmid:row.xmid,
+                            }
+                        }).then(res=>{
+                            this.fileList.splice(5,1,[])
+                            for (let j = 0; j < res.data.length; j++) {
+                                this.fileList[5].push({
+                                    name: res.data[j].attachment_nam,
+                                    id: res.data[j].attachment_id,
+                                    scr: res.data[j].scr,
+                                    scsj: res.data[j].scsj
+                                })
+                            }
+                        })
+                        this.showfj=true
+                    }else {
+                        this.$message.error("您没有权限！")
+                    }
+                })
+            },
             getList() {
                 const loading = this.$loading({
                     lock: true,
@@ -642,8 +801,8 @@
                     this.selectObject.jsjssj = ''
                 }
 
-                if(this.departmentName!='工程技术部'&&this.departmentName!='办公室'&&this.departmentName!='办公室.'){
-                    this.selectObject.lxbm.splice(0,this.selectObject.lxbm.length)
+                if (this.departmentName != '工程技术部' && this.departmentName != '办公室' && this.departmentName != '办公室.') {
+                    this.selectObject.lxbm.splice(0, this.selectObject.lxbm.length)
                     this.selectObject.lxbm.push(this.departmentName)
                 }
             }

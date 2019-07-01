@@ -100,11 +100,6 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
-                    path: '/news',
-                    component: resolve => require(['../components/page/News.vue'], resolve),
-                    meta: { title: '消息' }
-                },
-                {
                     // 权限页面
                     path: '/account',
                     component: resolve => require(['../components/page/Account.vue'], resolve),

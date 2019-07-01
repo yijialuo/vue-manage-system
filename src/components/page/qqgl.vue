@@ -139,7 +139,7 @@
                                        @click="kssq(scope.$index, scope.row)">申请
                             </el-button>
                             <el-button type="text" icon="el-icon-download" @click="xz(scope.row)">下载</el-button>
-                            <el-button  v-if="scope.row.proposer===userName" type="text" icon="el-icon-delete"
+                            <el-button v-if="scope.row.proposer===userName" type="text" icon="el-icon-delete"
                                        class="red" @click="handleDelete(scope.$index, scope.row)">删除
                             </el-button>
                         </template>
@@ -168,7 +168,7 @@
             </el-dialog>
 
             <!-- 新建项目项目立项单弹窗 -->
-            <el-dialog title="申请项目" :close-on-click-modal="false" :visible.sync="show_xjxmlxd" width="680px">
+            <el-dialog title="申请项目" :close-on-click-modal="false" :visible.sync="show_xjxmlxd" width="690px">
                 <el-form ref="form" :rules="applyRules" style="margin-top: 10px" :model="project" label-width="100px">
                     <el-form-item label="项目编号">
                         <el-input
@@ -254,7 +254,7 @@
             </el-dialog>
 
             <!-- 项目详情弹窗 -->
-            <el-dialog title="申请项目" :close-on-click-modal="false" :visible.sync="show_xq" width="680px">
+            <el-dialog title="申请项目" :close-on-click-modal="false" :visible.sync="show_xq" width="690px">
                 <el-form ref="form" style="margin-top: 10px" :model="project" label-width="100px">
                     <el-form-item label="项目编号">
                         <el-input
@@ -344,6 +344,11 @@
                                   :autosize="{ minRows: 4, maxRows: 10}"
                         ></el-input>
                     </el-form-item>
+                    <el-form-item label="技术部推荐单位">
+                        <el-input :readonly="true" v-model="project.tjdw" type="textarea"
+                                  :autosize="{ minRows: 4, maxRows: 10}"
+                        ></el-input>
+                    </el-form-item>
                     <el-form-item label="审批列表">
                         <el-table
                                 :data="commentList"
@@ -404,11 +409,11 @@
 
 
                 <el-table :data="bcwjs" border style="margin-top: 20px">
-                    <el-table-column prop="jd" label="节点" width="130px">
+                    <el-table-column prop="jd" label="节点" width="100px">
                     </el-table-column>
-                    <el-table-column prop="wjmc" label="文件名称" width="180px">
+                    <el-table-column prop="wjmc" label="文件名称" width="110px">
                     </el-table-column>
-                    <el-table-column label="操作" >
+                    <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-upload
                                     class="upload-demo"
@@ -418,7 +423,8 @@
                                     :on-success="handleSuccess"
                                     multiple
                                     :file-list="fileList[scope.$index]">
-                                <el-button size="small" type="primary" @click="recordCurrentRow(scope.row)">点击上传</el-button>
+                                <el-button size="small" type="primary" @click="recordCurrentRow(scope.row)">点击上传
+                                </el-button>
                             </el-upload>
                         </template>
                     </el-table-column>
@@ -437,7 +443,7 @@
         name: 'qqgl',
         data() {
             return {
-                userName:localStorage.getItem('userName'),
+                userName: localStorage.getItem('userName'),
                 showfj: false,
                 url: '',
                 fileList: [],
@@ -524,18 +530,18 @@
                 },
                 //立项类别
                 xmdl: [{
-                        id: '临时立项',
-                        name: '临时立项'
-                    }, {
-                        id: '年度计划',
-                        name: '年度计划'
-                    }, {
-                        id: '年度维保',
-                        name: '年度维保'
-                    }, {
-                        id: '股份项目',
-                        name: '股份项目'
-                    }],
+                    id: '临时立项',
+                    name: '临时立项'
+                }, {
+                    id: '年度计划',
+                    name: '年度计划'
+                }, {
+                    id: '年度维保',
+                    name: '年度维保'
+                }, {
+                    id: '股份项目',
+                    name: '股份项目'
+                }],
                 //项目类别
                 xmlb: [{
                     value: '固定资产',
@@ -589,8 +595,8 @@
                     ]
                 },
                 //必传文件
-                bcwjs:[],
-                currentRow:'',
+                bcwjs: [],
+                currentRow: '',
             }
         },
         watch: {
@@ -620,16 +626,15 @@
             this.getBcwjs()
         },
         methods: {
-
             //拿前期必传文件列表
-            getBcwjs(){
-                axios.get(this.ip+'/bcwj/select',{
-                    params:{
-                        lc:'前期'
+            getBcwjs() {
+                axios.get(this.ip + '/bcwj/select', {
+                    params: {
+                        lc: '前期'
                     }
-                }).then(res=>{
-                    this.bcwjs=res.data
-                   // this.bcwjs.push()
+                }).then(res => {
+                    this.bcwjs = res.data
+                    // this.bcwjs.push()
                 })
             },
 
@@ -643,108 +648,118 @@
                 this.fj(this.project)
             },
 
-            recordCurrentRow(row){
-                this.currentRow=row;
-                var index=this.url.indexOf("&bcwjid=")
-                if(index!=-1){
-                    this.url=this.url.substring(0,index+8)+this.currentRow.id;
-                }else{
-                    this.url=this.url+"&bcwjid="+this.currentRow.id
+            recordCurrentRow(row) {
+                this.currentRow = row;
+                var index = this.url.indexOf("&bcwjid=")
+                if (index != -1) {
+                    this.url = this.url.substring(0, index + 8) + this.currentRow.id;
+                } else {
+                    this.url = this.url + "&bcwjid=" + this.currentRow.id
                 }
             },
 
             //删除请求
             handleBeforeRemove(file, fileList) {
-                if (this.project.pid != '' && this.project.pid != null) {
-                    this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        axios.get(this.ip + '/Attachment/deletAttachment', {
-                            params: {
-                                userId: localStorage.getItem('userId'),
-                                attachment_id: file.id
-                            }
-                        })
-                            .then(res => {
-                                if (res.data) {
-                                    this.$message.info("删除成功！")
-                                } else {
-                                    this.$message.info("删除失败！您可能没有权限！")
-                                    //重新请求
-                                    this.fj(this.project)
+                    if (this.project.pid != '' && this.project.pid != null) {
+                        fileList.push(file)
+                        this.$message.error("删除失败！附件只能在处理节点删除！")
+                        // this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                        //     confirmButtonText: '确定',
+                        //     cancelButtonText: '取消',
+                        //     type: 'warning'
+                        // }).then(() => {
+                        //     axios.get(this.ip + '/Attachment/deletAttachment', {
+                        //         params: {
+                        //             userId: localStorage.getItem('userId'),
+                        //             attachment_id: file.id
+                        //         }
+                        //     })
+                        //         .then(res => {
+                        //             if (res.data) {
+                        //                 this.$message.info("删除成功！")
+                        //             } else {
+                        //                 this.$message.info("删除失败！您可能没有权限！")
+                        //                 //重新请求
+                        //                 this.fj(this.project)
+                        //             }
+                        //         })
+                        // })
+                        //     .catch(() => {
+                        //         //重新请求
+                        //         //this.fj(this.project)
+                        //         fileList.push(file)
+                        //     })
+                    } else {
+                        this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+                            axios.get(this.ip + '/contract/deletFj', {
+                                params: {
+                                    fid: file.id,
+                                    fname: file.name,
+                                    jlid: this.project.id
                                 }
                             })
-                    })
-                        .catch(() => {
-                            //重新请求
+                                .then(res => {
+                                    this.$message.info("删除成功！")
+                                })
+                        }).catch(() => {
                             //this.fj(this.project)
                             fileList.push(file)
                         })
-                } else {
-                    this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        axios.get(this.ip + '/contract/deletFj', {
-                            params: {
-                                fid: file.id,
-                                fname:file.name,
-                                jlid:this.project.id
-                            }
-                        })
-                            .then(res => {
-                                this.$message.info("删除成功！")
-                            })
-                    }).catch(() => {
-                        //this.fj(this.project)
-                        fileList.push(file)
-                    })
-                }
+                    }
             },
 
             //点击文件下载
             handlePreview(file) {
-                if (this.project.pid == '' || this.project.pid == null) {//未申请
-                    window.open(this.ip + '/contract/getFj?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
-                } else {
-                    window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
-                }
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
             },
 
             //点击附件事件
             fj(row) {
-                this.project = row
-                if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id+'&userId='+localStorage.getItem('userId')
-                } else {//已经申请
-                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
-                }
-                //拿附件信息
-                for(let i=0;i<this.bcwjs.length;i++){
-                    axios.get(this.ip + '/Attachment/getattachment2', {
-                        params: {
-                            id: row.id,
-                            bcwjid:this.bcwjs[i].id
+                //判定当前账号是否为改项目的处理人之一
+                axios.get(this.ip + '/user/isClr', {
+                    params: {
+                        xmid: row.id,
+                        userId: localStorage.getItem('userId')
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        this.project = row
+                        if (row.pid == '' || row.pid == null) {//未申请
+                            this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
+                        } else {//已经申请
+                            this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                         }
-                    })
-                        .then(res => {
-                            // items.splice(indexOfItem, 1, newValue)
-                            // this.fileList[i] = []
-                            this.fileList.splice(i,1,[])
-                            if (res.data) {
-                                for (let j = 0; j < res.data.length; j++) {
-                                    this.fileList[i].push({
-                                        name: res.data[j].attachment_nam,
-                                        id: res.data[j].attachment_id
-                                    })
+                        //拿附件信息
+                        for (let i = 0; i < this.bcwjs.length; i++) {
+                            axios.get(this.ip + '/Attachment/getattachment2', {
+                                params: {
+                                    id: row.id,
+                                    bcwjid: this.bcwjs[i].id
                                 }
-                            }
-                        })
-                }
-                this.showfj=true
+                            })
+                                .then(res => {
+                                    // items.splice(indexOfItem, 1, newValue)
+                                    // this.fileList[i] = []
+                                    this.fileList.splice(i, 1, [])
+                                    if (res.data) {
+                                        for (let j = 0; j < res.data.length; j++) {
+                                            this.fileList[i].push({
+                                                name: res.data[j].attachment_nam,
+                                                id: res.data[j].attachment_id
+                                            })
+                                        }
+                                    }
+                                })
+                        }
+                        this.showfj = true
+                    } else {
+                        this.$message.error("您没有权限！")
+                    }
+                })
             },
 
             //领取评论
@@ -916,7 +931,7 @@
 
             //状态
             zt(row) {
-                if(row.depAuditOpinion=='股份项目'){
+                if (row.depAuditOpinion == '股份项目') {
                     if (row.pid != null && row.pid != '') {
                         if (row.dqjd === '填写申请表') {
                             this.src = require('@/assets/img/g_txsqb.png')
@@ -937,10 +952,10 @@
                         } else if (row.dqjd === '申请结束') {
                             this.src = require('@/assets/img/g_js.png')
                         }
-                    }else {
+                    } else {
                         this.src = require('@/assets/img/g_wsq.png')
                     }
-                }else {
+                } else {
                     if (row.pid != null && row.pid != '') {
                         if (Number(row.investmentEstimate) > 10) {
                             if (row.dqjd === '填写申请表') {
@@ -1005,76 +1020,103 @@
                 //     this.$message.error("请在相应的文件分类中上传技术要求和可行性报告，再申请！")
                 //     return
                 // }
-
-
-                let loadingInstance = Loading.service({fullscreen: true});
-                axios.get(this.ip+"/bcwj/jcwj",{
-                    params:{
-                        id:row.id,
-                        lc:'前期',
-                        dqjd:'填写申请表'
-                    }
-                }).then(res=>{
-                    if(res.data){
-                        axios.post(this.ip + '/projectApplication/qqglStartSq', row)
-                            .then(res => {
-                                loadingInstance.close()
-                                if (res.data) {
-                                    this.$message.success("申请成功！")
-                                    //申请成功，刷新
-                                    this.reload()
-                                } else {
-                                    this.$message.error("申请失败！")
-                                }
-                            })
-                    }else {//没有，请求需要什么文件
-                        axios.get(this.ip+'/bcwj/bcwjm',{
-                            params:{
-                                lc:'前期',
-                                dqjd:'填写申请表'
+                const loading = this.$loading({
+                    lock: true,
+                    text: '处理中……',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                if (Number(row.investmentEstimate) >= 10) {
+                    axios.get(this.ip + '/bcwj/kxxbg', {
+                        params: {
+                            xmid: row.id
+                        }
+                    }).then(res => {
+                        if (res.data) {
+                            axios.post(this.ip + '/projectApplication/qqglStartSq', row)
+                                .then(res => {
+                                    loading.close()
+                                    if (res.data) {
+                                        this.$message.success("申请成功！")
+                                        //申请成功，刷新
+                                        this.reload()
+                                    } else {
+                                        this.$message.error("申请失败！")
+                                    }
+                                })
+                        } else {
+                            loading.close()
+                            this.$message.error("当前项目预算10万以上，请上传可行性报告后，再申请！")
+                            return
+                        }
+                    })
+                } else {//小于10万，直接申请
+                    axios.post(this.ip + '/projectApplication/qqglStartSq', row)
+                        .then(res => {
+                            loading.close()
+                            if (res.data) {
+                                this.$message.success("申请成功！")
+                                //申请成功，刷新
+                                this.reload()
+                            } else {
+                                this.$message.error("申请失败！")
                             }
-                        }).then(res=>{
-                            let filenames=''
-                            for(let i=0;i<res.data.length;i++){
-                                filenames=filenames+res.data[i].wjmc+","
-                            }
-                            //去后面,
-                            filenames=filenames.substring(0,filenames.length-1)
-                            loadingInstance.close()
-                            this.$message.error("申请前，请上传文件："+filenames)
                         })
-                    }
-                })
+                }
+                // let loadingInstance = Loading.service({fullscreen: true});
+                // axios.get(this.ip + "/bcwj/jcwj", {
+                //     params: {
+                //         id: row.id,
+                //         lc: '前期',
+                //         dqjd: '填写申请表'
+                //     }
+                // }).then(res => {
+                //     if (res.data) {
+                //         axios.post(this.ip + '/projectApplication/qqglStartSq', row)
+                //             .then(res => {
+                //                 loadingInstance.close()
+                //                 if (res.data) {
+                //                     this.$message.success("申请成功！")
+                //                     //申请成功，刷新
+                //                     this.reload()
+                //                 } else {
+                //                     this.$message.error("申请失败！")
+                //                 }
+                //             })
+                //     } else {//没有，请求需要什么文件
+                //         axios.get(this.ip + '/bcwj/bcwjm', {
+                //             params: {
+                //                 lc: '前期',
+                //                 dqjd: '填写申请表'
+                //             }
+                //         }).then(res => {
+                //             let filenames = ''
+                //             for (let i = 0; i < res.data.length; i++) {
+                //                 filenames = filenames + res.data[i].wjmc + ","
+                //             }
+                //             //去后面,
+                //             filenames = filenames.substring(0, filenames.length - 1)
+                //             loadingInstance.close()
+                //             this.$message.error("申请前，请上传文件：" + filenames)
+                //         })
+                //     }
+                // })
 
             },
 
             //确认修改
             qdxg() {
-                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep)||this.isnull(this.project.depAuditOpinion)) {
+                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep) || this.isnull(this.project.depAuditOpinion)) {
                     this.$message.error("请填写详细信息！")
                     return
                 }
-
-                axios.get(this.ip + '/projectApplication/qdsqr', {//确定申请人
-                    params: {
-                        projectId: this.project.id,
-                        userId: localStorage.getItem('userId')
-                    }
-                })
+                axios.post(this.ip + '/projectApplication/updataXm', this.project)
                     .then(res => {
                         if (res.data) {
-                            axios.post(this.ip + '/projectApplication/updataXm', this.project)
-                                .then(res => {
-                                    if (res.data) {
-                                        this.$message.success("修改成功!")
-                                    } else {
-                                        this.$message.error("修改失败!该项目正在申请中！")
-                                        //this.getProjects(1)
-                                        this.reload()
-                                    }
-                                })
+                            this.$message.success("修改成功!")
                         } else {
                             this.$message.error("修改失败!该项目正在申请中！")
+                            //this.getProjects(1)
                             this.reload()
                         }
                     })
@@ -1122,7 +1164,7 @@
 
             //确定新建
             qdxj() {
-                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep)||this.isnull(this.project.investmentEstimate)) {
+                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep) || this.isnull(this.project.investmentEstimate)) {
                     this.$message.error("请填写详细信息！")
                     return
                 }
@@ -1158,9 +1200,8 @@
                     this.lqpl(this.project.pid)
                 }
                 this.show_xq = true
-
-                //判断是否申请人
-                axios.get(this.ip + '/projectApplication/qdsqr', {//确定申请人
+                //判断是否能修改（修改按钮的显示）
+                axios.get(this.ip + '/projectApplication/qdsqr', {
                     params: {
                         projectId: this.project.id,
                         userId: localStorage.getItem('userId')
@@ -1184,28 +1225,34 @@
                     text: '处理中……',
                     spinner: 'el-icon-loading',
                     background: 'rgba(0, 0, 0, 0.7)'
-                });
-                axios.get(this.ip + '/projectApplication/qdsqr', {//确定申请人
+                })
+                //确定是否可以删除
+                axios.get(this.ip + '/projectApplication/qdsqr', {
                     params: {
                         projectId: this.projects[this.idx].id,
                         userId: localStorage.getItem('userId')
                     }
                 })
                     .then(res => {
-                        if (res.data) {
-                            axios.post(this.ip + '/projectApplication/deletXm', this.projects[this.idx])
+                        if(res.data){
+                            axios.get(this.ip + '/projectApplication/deletXm', {
+                                params: {
+                                    xmid: this.projects[this.idx].id
+                                }
+                            })
                                 .then(res => {
                                     loading.close()
                                     if (res.data) {
                                         this.$message.success('删除成功');
                                         this.reload()
+                                        //this.projects.splice(this.idx, 1)
                                     } else {
-                                        this.$message.error('该项目正在进行其他操作,删除失败！');
+                                        this.$message.error('删除失败！');
                                     }
                                 })
-                        } else {
+                        }else {
                             loading.close()
-                            this.$message.error('该项目正在进行其他操作,删除失败！');
+                            this.$message.error('该项目还在进行其他操作！删除失败！');
                         }
                     })
                 this.delVisible = false;

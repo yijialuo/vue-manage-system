@@ -77,7 +77,7 @@
             </div>
         </div>
         <!--进度弹窗 -->
-        <el-dialog :close-on-click-modal="false" title="施工进度" :visible.sync="show_sgjd" width="680px" @close="close">
+        <el-dialog :close-on-click-modal="false" title="施工进度" :visible.sync="show_sgjd" width="690px" @close="close">
             <h2 style="text-align: center"> {{projectName}}</h2>
             <el-form style="margin-top: 20px" label-width="70px" label-position='left'>
                 <el-form-item label="开工时间">

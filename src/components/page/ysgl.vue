@@ -107,6 +107,7 @@
         <!--上传附件弹窗 -->
         <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="40%">
             <el-upload
+                    :disabled="isgd=='1'"
                     class="upload-demo"
                     drag
                     :action="url"
@@ -193,31 +194,16 @@
 
         <!--编辑验收弹窗 -->
         <el-dialog title="验收单" :close-on-click-modal="false" :visible.sync="show_bjys" width="653px">
-            <el-input
-                    placeholder="编号"
-                    v-model="yanshou.ysno"
-                    style="margin-left: 30px;width: 150px"
-                    clearable>
-            </el-input>
             <el-form style="margin-top: 20px" ref="form"  label-width="100px">
+                <el-form-item label="验收单编号">
+                    <el-input
+                            placeholder="验收单编号"
+                            v-model="yanshou.ysno"
+                            clearable>
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="工程名称">
-                    <el-select
-                            :disabled="true"
-                            v-model="yanshou.projectid"
-                            style="width: 200px"
-                            filterable
-                            remote
-                            reserve-keyword
-                            placeholder="请输入关键词"
-                            :remote-method="remoteMethod"
-                            :loading="loading">
-                        <el-option
-                                v-for="item in xms"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <el-input :readonly="true" v-model="yanshou.projectName" style="width: 200px" ></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp建设地点&nbsp&nbsp&nbsp
                     <el-input  v-model="yanshou.jsdd" style="width: 200px" ></el-input>
                 </el-form-item>
@@ -332,6 +318,7 @@
                 counts:0,
                 //可以验收的项目
                 ysxms:[],
+                isgd:'',
             }
         },
         created() {
@@ -410,7 +397,11 @@
             },
             //拿到可以验收的项目
             getYsxms(){
-                axios.get(this.ip+'/projectApplication/selectYsXm')
+                axios.get(this.ip+'/jindu/getCanYanshouXmidAndXmname',{
+                    params:{
+                        userName:localStorage.getItem('userName')
+                    }
+                })
                     .then(res=>{
                         this.ysxms=res.data
                     })
@@ -496,13 +487,12 @@
             },
             //编辑合同
             bjys(row){
-                this.remoteMethod(row.projectName)
+                //this.remoteMethod(row.projectName)
                 this.yanshou=row
                 this.show_bjys=true
             },
             //确定修改
             qdxg(){
-
                 axios.post(this.ip+'/yanshou/updateYanshou',this.yanshou)
                     .then(res=>{
                         if(res.data){
@@ -537,13 +527,13 @@
             },
             //点击文件下载
             handlePreview(file){
-                window.open(this.ip+'/contract/getFj?fid='+file.id+'&fname='+file.name)
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
             },
             //点击附件
             djfj(id){
                 this.cid=id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')
                 this.show_scfj=true
             },
             //填充附件列表
@@ -596,7 +586,7 @@
             },
             //拿到项目下拉框数据
             getXms(){
-                axios.get(this.ip+'/projectApplication/getAllXmIdAndXmname')
+                axios.get(this.ip+'/jindu/getCanYanshouXmidAndXmname')
                     .then(res=>{
                         this.xms=res.data
                     })

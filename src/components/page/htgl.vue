@@ -90,7 +90,7 @@
                         <el-button type="text" :disabled="scope.row.gd=='1'"  @click="bjht(scope.row)">编辑</el-button>
                         <el-button type="text" @click="xz(scope.row)">下载</el-button>
                         <el-button type="text" :disabled="scope.row.gd=='1'"  @click="gd(scope.row)">归档</el-button>
-                        <el-button type="text" :disabled="scope.row.gd=='1'"  @click="scht(scope.row.id)"  v-bind:class="{red:scope.row.gd!='1'}">删除</el-button>
+                        <el-button type="text" :disabled="scope.row.gd=='1'"  @click="scht(scope.row)"  v-bind:class="{red:scope.row.gd!='1'}">删除</el-button>
                         <el-button type="text" @click="lxxq(scope.row)">立项详情
                         </el-button>
                     </template>
@@ -108,16 +108,17 @@
         </div>
 
         <!--上传附件弹窗 -->
-        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="40%">
+        <el-dialog title="上传附件" :close-on-click-modal="false" :visible.sync="show_scfj" width="1000px">
             <el-table :data="bcwjs" border style="margin-top: 20px">
-                <el-table-column prop="jd" label="节点" width="130px">
+                <el-table-column prop="jd" label="节点" width="100px">
                 </el-table-column>
-                <el-table-column prop="wjmc" label="文件名称" width="180px">
+                <el-table-column prop="wjmc" label="文件名称" width="110px">
                 </el-table-column>
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
                         <el-upload
                                 class="upload-demo"
+                                :disabled="isgd=='1'"
                                 :action="url"
                                 :on-preview="handlePreview"
                                 :before-remove="handleBeforeRemove"
@@ -708,13 +709,13 @@
                         return
                     }else {//节点等于合同审批结束
                         //检查附件
-                        axios.get(this.ip + '/Attachment/getattachment', {
+                        axios.get(this.ip + '/Attachment/checkLcFj', {
                             params: {
                                 pid: row.dwyj
                             }
                         })
                             .then(xxx => {
-                                if (xxx.data.length == 0) {
+                                if (!xxx.data) {
                                     this.$message.error("该记录还未上传附件！禁止归档！")
                                     return
                                 }else {//有附件
@@ -746,7 +747,11 @@
             },
 
             //删除合同
-            scht(id){
+            scht(row){
+                if(row.dqjd!='未申请'&&row.dqjd!='填写合同表单'){
+                    this.$message.error("当前合同正在审批！不能删除！")
+                    return
+                }
                 this.$confirm('此操作将永久删除该合同, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -754,7 +759,7 @@
                 }).then(()=>{
                     axios.get(this.ip+'/contract/deleteContract',{
                         params:{
-                            cid:id
+                            cid:row.id
                         }
                     })
                         .then(res=>{
@@ -771,32 +776,33 @@
             //删除附件
             handleBeforeRemove(file, fileList){
                 if (this.contract.dwyj != '' && this.contract.dwyj != null) {
-                    this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        axios.get(this.ip + '/Attachment/deletAttachment', {
-                            params: {
-                                userId: localStorage.getItem('userId'),
-                                attachment_id: file.id
-                            }
-                        })
-                            .then(res => {
-                                if (res.data) {
-                                    this.$message.success("删除成功！")
-                                } else {
-                                    this.$message.error("删除失败！您可能没有权限！")
-                                    //重新请求
-                                    this.djfj(this.contract)
-                                }
-                            })
-                    })
-                        .catch(() => {
-                            //重新请求
-                            //this.djfj(this.contract)
-                            fileList.push(file)
-                        })
+                    fileList.push(file)
+                    this.$message.error("删除失败！附件只能在处理节点删除！")
+                    // this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                    //     confirmButtonText: '确定',
+                    //     cancelButtonText: '取消',
+                    //     type: 'warning'
+                    // }).then(() => {
+                    //     axios.get(this.ip + '/Attachment/deletAttachment', {
+                    //         params: {
+                    //             userId: localStorage.getItem('userId'),
+                    //             attachment_id: file.id
+                    //         }
+                    //     })
+                    //         .then(res => {
+                    //             if (res.data) {
+                    //                 this.$message.success("删除成功！")
+                    //             } else {
+                    //                 this.$message.error("删除失败！您可能没有权限！")
+                    //                 //重新请求
+                    //                 //this.djfj(this.contract)
+                    //                 fileList.push(file)
+                    //             }
+                    //         })
+                    // })
+                    //     .catch(() => {
+                    //         fileList.push(file)
+                    //     })
                 } else {
                     this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -812,8 +818,6 @@
                                 this.$message.success("删除成功！")
                             })
                     }).catch(() => {
-                        //重新请求
-                        //this.djfj(this.contract)
                         fileList.push(file)
                     })
                 }
@@ -890,13 +894,15 @@
                                 } else {
                                     this.$message.info("删除失败！您可能没有权限！")
                                     //重新请求
-                                    this.djfj(this.contract)
+                                    //this.djfj(this.contract)
+                                    fileList.push(file)
                                 }
                             })
                     })
                         .catch(() => {
                             //重新请求
-                            this.djfj(this.contract)
+                            //this.djfj(this.contract)
+                            fileList.push(file)
                         })
                 } else {
                     this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
@@ -913,7 +919,8 @@
                                 this.$message.info("删除成功！")
                             })
                     }).catch(() => {
-                        this.djfj(this.contract)
+                        //this.djfj(this.contract)
+                        fileList.push(file)
                     })
                 }
             },
@@ -925,11 +932,8 @@
 
             //点击文件下载
             handlePreview(file){
-                if (this.contract.dwyj == '' || this.contract.dwyj == null) {//未申请
-                    window.open(this.ip + '/contract/getFj?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
-                } else {
-                    window.open(this.ip + '/Attachment/getattachment1?attachment_id=' + file.id)
-                }
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
+
             },
 
             //点击附件
@@ -937,9 +941,9 @@
                 this.contract=row
                 this.cid=row.id
                 if (row.dwyj == '' || row.dwyj == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id
-                } else {//已经申请、拿附件信息
-                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id+ '&userId=' + localStorage.getItem('userId')
+                } else {//已经申请的上传地址
+                    this.url = 'http://10.197.41.100:8080/contract/uploadFile?dwyj=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                 }
                 //拿附件信息
                 for(let i=0;i<this.bcwjs.length;i++){
@@ -1021,7 +1025,11 @@
 
             //拿到项目下拉框数据
             getXms(){
-              axios.get(this.ip+'/projectApplication/getCanHtXmIdAndXmname')
+              axios.get(this.ip+'/projectApplication/getCanHtXmIdAndXmname',{
+                  params:{
+                      userName:localStorage.getItem('userName')
+                  }
+              })
                   .then(res=>{
                       this.xms=res.data
                   })

@@ -314,27 +314,27 @@
                                 }
                             ]
                         },
-                        {
-                            icon: 'el-icon-lx-cascades',
-                            index: 'table',
-                            title: '系统管理',
-                            subs: [
-                                {
-                                    index: '2',
-                                    title: '工作流管理',
-                                    subs: [
-                                        {
-                                            index: '/lxsp',
-                                            title: '立项审批'
-                                        },
-                                        {
-                                            index: '/zbsp',
-                                            title: '招标审批'
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
+                        // {
+                        //     icon: 'el-icon-lx-cascades',
+                        //     index: 'table',
+                        //     title: '系统管理',
+                        //     subs: [
+                        //         {
+                        //             index: '2',
+                        //             title: '工作流管理',
+                        //             subs: [
+                        //                 {
+                        //                     index: '/lxsp',
+                        //                     title: '立项审批'
+                        //                 },
+                        //                 {
+                        //                     index: '/zbsp',
+                        //                     title: '招标审批'
+                        //                 }
+                        //             ]
+                        //         }
+                        //     ]
+                        // },
                         {
                             icon: 'el-icon-lx-calendar',
                             index: '3',

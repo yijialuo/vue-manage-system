@@ -8,7 +8,8 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button v-if="groupId!='bgs'" type="primary" @click="xzjs" icon="el-icon-circle-plus" class="handle-del mr10">
+                    <el-button v-if="groupId!='bgs'" type="primary" @click="xzjs" icon="el-icon-circle-plus"
+                               class="handle-del mr10">
                         新增结算
                     </el-button>
 
@@ -31,10 +32,11 @@
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getALLJsjl">全部
                     </el-button>
                 </div>
-                <el-table height="600" class="table" border  style="width: 100%" :data="jss.slice((currentPage-1)*10,currentPage*10)">
+                <el-table height="600" class="table" border style="width: 100%"
+                          :data="jss.slice((currentPage-1)*10,currentPage*10)">
                     <el-table-column type="expand" min-width="160">
                         <template slot-scope="props">
-                            <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
+                            <el-form style="color: #99a9bf;" label-position="left" inline class="demo-table-expand">
                                 <el-form-item label="发票号码:">
                                     <span>{{ props.row.invoice_no }}</span>
                                 </el-form-item>
@@ -48,30 +50,30 @@
                                     <span>{{ props.row.jbbmfzr }}</span>
                                 </el-form-item>
                                 <!--<el-form-item label="主管部门负责人:">-->
-                                    <!--<span>{{ props.row.zgbmfzr }}</span>-->
+                                <!--<span>{{ props.row.zgbmfzr }}</span>-->
                                 <!--</el-form-item>-->
                                 <!--<el-form-item label="财务总监:">-->
-                                    <!--<span>{{ props.row.cwzj }}</span>-->
+                                <!--<span>{{ props.row.cwzj }}</span>-->
                                 <!--</el-form-item>-->
                                 <!--<el-form-item label="分管领导:">-->
-                                    <!--<span>{{ props.row.fgld }}</span>-->
+                                <!--<span>{{ props.row.fgld }}</span>-->
                                 <!--</el-form-item>-->
                                 <!--<el-form-item label="公司总经理:">-->
-                                    <!--<span>{{ props.row.gszjl }}</span>-->
+                                <!--<span>{{ props.row.gszjl }}</span>-->
                                 <!--</el-form-item>-->
                                 <!--<el-form-item label="分管领导:">-->
-                                    <!--<span>{{ props.row.fgld }}</span>-->
+                                <!--<span>{{ props.row.fgld }}</span>-->
                                 <!--</el-form-item>-->
                                 <el-form-item label="合同日期:">
                                     <span>{{ props.row.htrq }}</span>
                                 </el-form-item>
-                                <el-form-item label="合同金额:">
+                                <el-form-item label="合同金额(元):">
                                     <span>{{ props.row.htje }}</span>
                                 </el-form-item>
-                                <el-form-item label="未支付金额:">
+                                <el-form-item label="未支付金额（元）:">
                                     <span>{{ props.row.wfje }}</span>
                                 </el-form-item>
-                                <el-form-item label="已支付金额:">
+                                <el-form-item label="已支付金额（元）:">
                                     <span>{{ props.row.yzfje }}</span>
                                 </el-form-item>
                             </el-form>
@@ -87,7 +89,7 @@
                     </el-table-column>
                     <el-table-column prop="rq" align="center" sortable label="创建日期" width="160">
                     </el-table-column>
-                    <el-table-column prop="fgld"  align="center" sortable label="结算类型" width="110" >
+                    <el-table-column prop="fgld" align="center" sortable label="结算类型" width="110">
                     </el-table-column>
                     <el-table-column prop="jbbm" align="center" label="经办部门" width="120">
                     </el-table-column>
@@ -97,7 +99,7 @@
                     </el-table-column>
                     <el-table-column prop="skdw" align="center" label="收款单位" width="180">
                     </el-table-column>
-                    <el-table-column prop="bqyf" align="center" label="本期已付" width="120">
+                    <el-table-column prop="bqyf" align="center" label="本期已付(元)" width="120">
                     </el-table-column>
 
                     <el-table-column label="操作" width="140" align="center">
@@ -121,14 +123,14 @@
         </div>
 
         <!--添加结算弹窗 -->
-        <el-dialog title="新增结算" :close-on-click-modal="false" :visible.sync="show_xzjs" width="680px">
+        <el-dialog title="新增结算" :close-on-click-modal="false" :visible.sync="show_xzjs" width="690px">
             <el-form label-width="100px" label-position='left'>
                 <el-form-item style="margin-top:15px" label="合同号">
                     <el-select
                             v-model="Payable.contract_id"
                             filterable
                             placeholder="请输入或选择合同号"
-                         >
+                    >
                         <el-option
                                 v-for="item in hts"
                                 :key="item.value"
@@ -191,19 +193,19 @@
                     <el-input :readonly="true" style="width: 200px" v-model="Payable.gszjl"></el-input>
                 </el-form-item>
                 <!--<el-form-item style="margin-top: 10px" label="经办部门负责人">-->
-                    <!--<el-input type="textarea" v-model="Payable.jbbmfzr" :rows="2"></el-input>-->
+                <!--<el-input type="textarea" v-model="Payable.jbbmfzr" :rows="2"></el-input>-->
                 <!--</el-form-item>-->
                 <!--<el-form-item label="主管部门负责人">-->
-                    <!--<el-input type="textarea" v-model="Payable.zgbmfzr" :rows="2"></el-input>-->
+                <!--<el-input type="textarea" v-model="Payable.zgbmfzr" :rows="2"></el-input>-->
                 <!--</el-form-item>-->
                 <!--<el-form-item label="财务总监">-->
-                    <!--<el-input type="textarea" v-model="Payable.cwzj" :rows="2"></el-input>-->
+                <!--<el-input type="textarea" v-model="Payable.cwzj" :rows="2"></el-input>-->
                 <!--</el-form-item>-->
                 <!--<el-form-item label="分管领导">-->
-                    <!--<el-input type="textarea" v-model="Payable.fgld" :rows="2"></el-input>-->
+                <!--<el-input type="textarea" v-model="Payable.fgld" :rows="2"></el-input>-->
                 <!--</el-form-item>-->
                 <!--<el-form-item label="公司总经理">-->
-                    <!--<el-input type="textarea" v-model="Payable.gszjl" :rows="2"></el-input>-->
+                <!--<el-input type="textarea" v-model="Payable.gszjl" :rows="2"></el-input>-->
                 <!--</el-form-item>-->
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -236,20 +238,20 @@
     import axios from 'axios'
 
     export default {
-        inject:['reload'],
+        inject: ['reload'],
         name: 'jsgl',
         data() {
             return {
-                groupId:localStorage.getItem('groupId'),
-                currentPage:1,//默认开始页面
+                groupId: localStorage.getItem('groupId'),
+                currentPage: 1,//默认开始页面
                 //合同id
-                contractId:'',
-                jslx:[{
-                    value:'预付款',
-                    lable:'预付款'
-                },{
-                    value:'质保金',
-                    lable:'质保金'
+                contractId: '',
+                jslx: [{
+                    value: '预付款',
+                    lable: '预付款'
+                }, {
+                    value: '质保金',
+                    lable: '质保金'
                 }],
                 Payable: {
                     jbbm: '',
@@ -297,14 +299,14 @@
                 jss: [],
                 fileList: [],
                 xms: [],
-                projectNo:'',
-                projectName:'',
-                contractNo:'',
-                rq:'',
-                jbbm:'',
-                jbr:'',
-                yszmr:'',
-                skdw:''
+                projectNo: '',
+                projectName: '',
+                contractNo: '',
+                rq: '',
+                jbbm: '',
+                jbr: '',
+                yszmr: '',
+                skdw: ''
             }
         },
         computed: {
@@ -378,12 +380,12 @@
                         })
 
                     //拿到改合同已经支付的次数
-                    axios.get(this.ip+'/payable/count',{
-                        params:{
-                            contractId:newValue
+                    axios.get(this.ip + '/payable/count', {
+                        params: {
+                            contractId: newValue
                         }
-                    }).then(res=>{
-                        this.Payable.gszjl=res.data+1;
+                    }).then(res => {
+                        this.Payable.gszjl = res.data + 1;
                     })
                 }
             }
@@ -395,24 +397,23 @@
         },
         methods: {
             //下载
-            xz(row){
-                window.open("http://10.197.41.100:8080/print/zfspd?id="+row.id)
+            xz(row) {
+                window.open("http://10.197.41.100:8080/print/zfspd?id=" + row.id)
             },
 
-            currentChange(currentPage){
+            currentChange(currentPage) {
                 this.currentPage = currentPage;
             },
             //合同搜索
-            htss(){
+            htss() {
                 axios.get(this.ip + '/payable/htidToPaybles', {
                     params: {
                         contractId: this.contractId
                     }
                 }).then(res => {
-                    if (res.data.length != 0){
+                    if (res.data.length != 0) {
                         this.jss = res.data
-                    }
-                    else
+                    } else
                         this.$message.error("没找到相关数据！")
                 })
             },
@@ -429,17 +430,17 @@
                         this.$message.error("没找到相关数据！")
                 })
             },
-            ss(){
+            ss() {
                 axios.get(this.ip + '/payable/search', {
                     params: {
-                        projectNo:this.projectNo,
-                        projectName:this.projectName,
-                        contractNo:this.contractNo,
-                        rq:this.rq,
-                        jbbm:this.jbbm,
-                        jbr:this.jbr,
-                        yszmr:this.yszmr,
-                        skdw:this.skdw
+                        projectNo: this.projectNo,
+                        projectName: this.projectName,
+                        contractNo: this.contractNo,
+                        rq: this.rq,
+                        jbbm: this.jbbm,
+                        jbr: this.jbr,
+                        yszmr: this.yszmr,
+                        skdw: this.skdw
                     }
                 }).then(res => {
                     if (res.data.length != 0)
@@ -457,7 +458,7 @@
             },
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/contract/getFj?fid=' + file.id + '&fname=' + file.name)
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
             },
             //上传成功，重新请求
             handleSuccess() {
@@ -510,7 +511,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id
+                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')
                 this.show_scfj = true
             },
             //拿所有的结算记录
@@ -546,14 +547,18 @@
                 this.skdw = ''
                 this.zfxm = ''
                 this.htzje = ''
-                this.htrq=''
+                this.htrq = ''
                 this.yzfje = 0.00
                 this.wzfje = 0.00
                 this.show_xzjs = true
             },
-            //拿到项目下拉框数据
+            //拿到合同的下拉框数据
             getHts() {
-                axios.get(this.ip + '/contract/getAllHtidAndHtno')
+                axios.get(this.ip + '/contract/canHtidAndHtno', {
+                    params: {
+                        userId: localStorage.getItem('userId')
+                    }
+                })
                     .then(res => {
                         this.hts = res.data
                     })
@@ -570,7 +575,7 @@
             },
             //立即创建
             ljcj() {
-                if(this.Payable.bqyf==null||this.Payable.bqyf==0||this.Payable.contract_id==""||this.Payable.contract_id==null){
+                if (this.Payable.bqyf == null || this.Payable.bqyf == 0 || this.Payable.contract_id == "" || this.Payable.contract_id == null) {
                     this.$message.error("请填写应付金额和合同！")
                     return;
                 }
