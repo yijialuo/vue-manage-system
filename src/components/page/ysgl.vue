@@ -253,7 +253,6 @@
 
 <script>
     import axios from 'axios'
-
     export default {
         inject:['reload'],
         name: 'ysgl',
@@ -325,6 +324,25 @@
             this.getAllys(1)
             this.getXms()
             this.getCount()
+        },
+        //监听验收表项目id的改变,请求关联的数据
+        computed: {
+            projectid() {
+                return this.yanshou.projectid
+            }},
+        watch: {
+            projectid(newValue, oldValue) {
+                if(newValue!=null&&newValue!=''&&this.show_bjys==false){
+                    axios.get(this.ip+"/yanshou/fillYanshouByXmid",{
+                        params:{
+                            projectid:newValue
+                        }
+                    }).then(res=>{
+                        this.yanshou=res.data;
+
+                    })
+                }
+            }
         },
         methods: {
             currentChange(pageNum){
@@ -487,7 +505,6 @@
             },
             //编辑合同
             bjys(row){
-                //this.remoteMethod(row.projectName)
                 this.yanshou=row
                 this.show_bjys=true
             },
