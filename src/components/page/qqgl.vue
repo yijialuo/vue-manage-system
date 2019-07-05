@@ -108,7 +108,7 @@
                         </el-option>
                     </el-select>
                     <el-button style="margin-left: 10px" type="primary" icon="el-icon-search" @click="zhSearch">搜索
-                    </el-button>
+                </el-button>
                 </div>
 
                 <el-table stripe :data="projects" border class="table" ref="multipleTable">
@@ -233,17 +233,17 @@
                     </el-form-item>
                     <el-form-item label="立项背景理由" prop="establishReason">
                         <el-input v-model="project.establishReason" type="textarea"
-                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多600字"
+                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多1000字"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="立项内容规模" prop="scale">
                         <el-input v-model="project.scale" type="textarea"
-                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多600字"
+                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多1000字"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算说明" prop="illustration">
                         <el-input v-model="project.illustration" type="textarea"
-                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多600字"
+                                  :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多1000字"
                         ></el-input>
                     </el-form-item>
                 </el-form>
@@ -585,13 +585,13 @@
                 // 立项申请验证规则
                 applyRules: {
                     establishReason: [
-                        {max: 600, message: '最多600字', trigger: 'change'}
+                        {max: 1000, message: '最多1000字', trigger: 'change'}
                     ],
                     scale: [
-                        {max: 600, message: '最多600字', trigger: 'change'}
+                        {max: 1000, message: '最多1000字', trigger: 'change'}
                     ],
                     illustration: [
-                        {max: 600, message: '最多600字', trigger: 'change'}
+                        {max: 1000, message: '最多1000字', trigger: 'change'}
                     ]
                 },
                 //必传文件

@@ -77,9 +77,26 @@
                     <el-card shadow="hover" style="height:535px;">
                         <div slot="header" class="clearfix">
                             <span>待办</span>
+                            <el-input v-model="daibanSearch.projectNo" placeholder="项目编号" clearable class="daibanSearch"/>
+                            <el-input v-model="daibanSearch.projectNam" placeholder="项目名称" clearable class="daibanSearch"/>
+                            <el-select
+                                    clearable
+                                    filterable
+                                    class="daibanSearch"
+                                    v-model="daibanSearch.declarationDep"
+                                    placeholder="立项部门">
+                                <el-option
+                                        v-for="item in bms"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <el-button type="primary" icon="el-icon-search" @click="doDaibanSearch">搜索
+                            </el-button>
                         </div>
                         <el-tabs v-model="message">
-                            <!--待办项目-->
+                            <!--!待办项目-->
                             <el-tab-pane v-if="groupId!='doman'" :label="`前期审批(${Xms.length})`" name="first">
                                 <el-table :data="Xms" border height="400px" stripe :show-header="true"
                                           style="width: 100%;font-size: 14px;">
@@ -102,7 +119,7 @@
                                 </el-table>
                             </el-tab-pane>
 
-                            <!--待办公室苏燕春备案股份项目-->
+                            <!--!待办公室苏燕春备案股份项目-->
                             <el-tab-pane stripe v-if="userId=='syc'" :label="`股份备案(${baXms.length})`"
                                          name="second">
                                 <el-table height="400px" border :data="baXms" :show-header="true"
@@ -124,7 +141,7 @@
                                 </el-table>
                             </el-tab-pane>
 
-                            <!--待技术部经办人备案项目-->
+                            <!--!待技术部经办人备案项目-->
                             <el-tab-pane stripe v-if="groupId=='jsb_doman'" :label="`待备案项目(${baXms.length})`"
                                          name="second">
                                 <el-table height="400px" border :data="baXms" :show-header="true"
@@ -145,7 +162,7 @@
                                     </el-table-column>
                                 </el-table>
                             </el-tab-pane>
-                            <!--驳回的项目 -->
+                            <!--!驳回的项目 -->
                             <el-tab-pane v-if="groupId=='doman'" :label="`项目审批(${bhXms.length})`" name="third">
                                 <el-table stripe border height="400px" :data="bhXms" :show-header="true"
                                           style="width: 100%;font-size: 14px;">
@@ -1308,7 +1325,8 @@
                 isbs: false,
                 //备注数组
                 bzs: [],
-                options: [{
+                options: [
+                    {
                     value: '同意',
                     label: '同意'
                 }, {
@@ -1361,7 +1379,8 @@
                 fileList: [],
                 ip: 'http://10.197.41.100:8080',
                 //立项类别
-                xmdl: [{
+                xmdl: [
+                    {
                     id: '临时立项',
                     name: '临时立项'
                 }, {
@@ -1375,7 +1394,8 @@
                     name: '股份项目'
                 }],
                 //项目类别
-                xmlb: [{
+                xmlb: [
+                    {
                     id: '固定资产',
                     name: '固定资产'
                 }, {
@@ -1386,7 +1406,8 @@
                     name: '物资采购'
                 }],
                 //项目大类
-                xmfl: [{
+                xmfl: [
+                    {
                     id: '土建',
                     name: '土建'
                 }, {
@@ -1443,7 +1464,20 @@
                 jbrOrZgjlList: [],// 经理列表
                 jbrOrZgjlValue: [],// 下拉选择的经理值
                 //必传文件列表
-                bcwjs: []
+                bcwjs: [],
+                daibanSearch:{// 待办搜索字段
+                    projectNo:'',// 项目编号
+                    projectNam:'',// 项目名称
+                    declarationDep:''// 立项部门
+                },
+                bms:[],// 所有立项部门
+                daibanSearchRawData:{// 保存待办搜索过滤前的数据
+                    Xms:[],
+                    baXms:[],
+                    bhXms:[],
+                    zhaobiaos:[],
+                    contracts:[]
+                }
             }
         },
         watch: {
@@ -1525,6 +1559,8 @@
             this.getzb()
 
             this.handleListener();
+
+            this.getAllDptName()
         },
 
         activated() {
@@ -1755,6 +1791,7 @@
                 if (this.groupId === 'jsb_jl') {
                     axios.get(this.ip + '/contract/getJsbjlHts').then(res => {
                         this.contracts = res.data
+                        this.daibanSearchRawData.contracts=this.contracts
                     })
                 } else if (this.groupId === 'bgs') {
                     axios.get(this.ip + '/contract/getBgsHts', {
@@ -1763,6 +1800,7 @@
                         }
                     }).then(res => {
                         this.contracts = res.data
+                        this.daibanSearchRawData.contracts=this.contracts
                     })
                 } else {
                     axios.get(this.ip + '/contract/getJsbdomanHts', {
@@ -1771,6 +1809,7 @@
                         }
                     }).then(res => {
                         this.contracts = res.data
+                        this.daibanSearchRawData.contracts=this.contracts
                     })
                 }
             },
@@ -2147,6 +2186,7 @@
                                 this.$set(this.zhaobiaos, i, this.zhaobiaos[i]);
                             })
                         }
+                        this.daibanSearchRawData.zhaobiaos=this.zhaobiaos
                     }
                 })
             },
@@ -2735,10 +2775,14 @@
                     if (res.data) {
                         if (localStorage.getItem('groupId') == 'doman') {//如果是办事员，收到的项目为驳回项目
                             this.bhXms = res.data
-                        } else
+                            this.daibanSearchRawData.bhXms=this.bhXms
+                        } else {
                             this.Xms = res.data
+                            this.daibanSearchRawData.Xms=this.Xms
+                        }
                     } else {
                         this.Xms = []
+                        this.daibanSearchRawData.Xms=this.Xms
                     }
                 })
             },
@@ -2752,8 +2796,10 @@
                     .then(res => {
                         if (res.data) {//填充到备案项目数组
                             this.baXms = res.data
+                            this.daibanSearchRawData.baXms=this.baXms
                         } else {
                             this.baXms = []
+                            this.daibanSearchRawData.baXms=this.baXms
                         }
                     })
             },
@@ -3094,7 +3140,129 @@
                                 })
                         }
                     })
-            }
+            },
+
+            //拿到搜索部门的名称
+            getAllDptName() {
+                axios.get(this.ip + '/department/getAllDptName')
+                    .then(res => {
+                        if (res.data != null) {
+                            for (let i = 0; i < res.data.length; i++) {
+                                this.bms.push({
+                                    value: res.data[i],
+                                    label: res.data[i],
+                                })
+                            }
+                        }
+                    })
+            },
+
+            doDaibanSearch(){// 待办项目搜索
+                this.Xms=this.daibanSearchRawData.Xms
+                this.baXms=this.daibanSearchRawData.baXms
+                this.bhXms=this.daibanSearchRawData.bhXms
+                this.contracts=this.daibanSearchRawData.contracts
+                this.zhaobiaos=this.daibanSearchRawData.zhaobiaos
+
+                var _this=this
+                if(this.daibanSearch.projectNo){
+                    this.Xms=this.Xms.filter(function(item){
+                        if(item.projectNo)
+                            return item.projectNo.toLowerCase().indexOf(_this.daibanSearch.projectNo.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                    this.baXms=this.baXms.filter(function(item){
+                        if(item.projectNo)
+                            return item.projectNo.toLowerCase().indexOf(_this.daibanSearch.projectNo.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                    this.bhXms=this.bhXms.filter(function(item){
+                        if(item.projectNo)
+                            return item.projectNo.toLowerCase().indexOf(_this.daibanSearch.projectNo.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                    this.zhaobiaos=this.zhaobiaos.filter(function(item){
+                        console.log(item)
+                        if(item.xmNo)
+                            return item.xmNo.toString().toLowerCase().indexOf(_this.daibanSearch.projectNo.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                    this.contracts=this.contracts.filter(function(item){
+                        if(item.xmNo)
+                            return item.xmNo.toString().toLowerCase().indexOf(_this.daibanSearch.projectNo.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                }
+                if(this.daibanSearch.projectNam){
+                    this.Xms=this.Xms.filter(function(item){
+                        if(item.projectNam)
+                            return item.projectNam.toLowerCase().indexOf(_this.daibanSearch.projectNam.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                    this.baXms=this.baXms.filter(function(item){
+                        if(item.projectNam)
+                            return item.projectNam.toLowerCase().indexOf(_this.daibanSearch.projectNam.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                    this.bhXms=this.bhXms.filter(function(item){
+                        if(item.projectNam)
+                            return item.projectNam.toLowerCase().indexOf(_this.daibanSearch.projectNam.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                    this.zhaobiaos=this.zhaobiaos.filter(function(item){
+                        if(item.xmName)
+                            return item.xmName.toString().toLowerCase().indexOf(_this.daibanSearch.projectNam.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                    this.contracts=this.contracts.filter(function(item){
+                        if(item.projectNam)
+                            return item.projectNam.toLowerCase().indexOf(_this.daibanSearch.projectNam.toLowerCase())!=-1
+                        else
+                            return false;
+                    })
+                }
+                if(this.daibanSearch.declarationDep){
+                    this.Xms=this.Xms.filter(function(item){
+                        if(item.declarationDep)
+                            return item.declarationDep.toLowerCase().indexOf(_this.daibanSearch.declarationDep.toLowerCase())!=-1
+                        else
+                            return false
+                    })
+                    this.baXms=this.baXms.filter(function(item){
+                        if(item.declarationDep)
+                            return item.declarationDep.toLowerCase().indexOf(_this.daibanSearch.declarationDep.toLowerCase())!=-1
+                        else
+                            return false
+                    })
+                    this.bhXms=this.bhXms.filter(function(item){
+                        if(item.declarationDep)
+                            return item.declarationDep.toLowerCase().indexOf(_this.daibanSearch.declarationDep.toLowerCase())!=-1
+                        else
+                            return false
+                    })
+                    this.zhaobiaos=this.zhaobiaos.filter(function(item){
+                        if(item.declarationDep)
+                            return item.declarationDep.toLowerCase().indexOf(_this.daibanSearch.declarationDep.toLowerCase())!=-1
+                        else
+                            return false
+                    })
+                    this.contracts=this.contracts.filter(function(item){
+                        if(item.declarationDep)
+                            return item.declarationDep.toLowerCase().indexOf(_this.daibanSearch.declarationDep.toLowerCase())!=-1
+                        else
+                            return false
+                    })
+                }
+            },
         }
     }
 
@@ -3213,6 +3381,12 @@
 
     .handle-row {
         margin-top: 30px;
+    }
+
+    .daibanSearch{
+        width: 150px;
+        margin: 0px 20px 0px 20px;
+        display: inline-block;
     }
 
 </style>

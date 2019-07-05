@@ -145,7 +145,7 @@
                 </el-form-item>
 
                 <el-form-item label="备注" prop="jsyq">
-                    <el-input v-model="zhaobiao.jsyq" rows="4" type="textarea" placeholder="最多600字"></el-input>
+                    <el-input v-model="zhaobiao.jsyq" rows="4" type="textarea" placeholder="最多1000字"></el-input>
                 </el-form-item>
 
             </el-form>
@@ -175,7 +175,7 @@
                 </el-form-item>
 
                 <el-form-item label="备注" prop="jsyq">
-                    <el-input v-model="zhaobiao.jsyq" rows="4" type="textarea" placeholder="最多600字"></el-input>
+                    <el-input v-model="zhaobiao.jsyq" rows="4" type="textarea" placeholder="最多1000字"></el-input>
                 </el-form-item>
 
             </el-form>
@@ -432,7 +432,7 @@
                 // 招标新建验证规则
                 zbRules: {
                     jsyq: [
-                        {max: 600, message: '最多600字', trigger: 'change'}
+                        {max: 1000, message: '最多1000字', trigger: 'change'}
                     ]
                 },
                 project: {
