@@ -77,6 +77,19 @@
                             :value="item.value">
                     </el-option>
                 </el-select>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.jz"
+                        placeholder="机种">
+                    <el-option
+                            v-for="item in jzs"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
                 <el-input clearable v-model="selectObject.sgdw" class="search-item" placeholder="施工单位">
                 </el-input>
             </div>
@@ -297,7 +310,39 @@
                     offset: 1,
                     limit: 10
                 },
+                jzs: [
+                    {
+                        value: '门机',
+                        label: '门机'
+                    },
+                    {
+                        value: '装载机',
+                        label: '装载机'
+                    }, {
+                        value: '推耙机',
+                        label: '推耙机'
+                    }, {
+                        value: '推土机',
+                        label: '推土机'
+                    }, {
+                        value: '挖掘机',
+                        label: '挖掘机'
+                    }, {
+                        value: '叉拖板',
+                        label: '叉拖板'
+                    }, {
+                        value: '散粮装船系统',
+                        label: '散粮装船系统'
+                    },{
+                        value: '车间设备',
+                        label: '车间设备'
+                    }, {
+                        value: '卸油设备',
+                        label: '卸油设备'
+                    }
+                ],
                 selectObject: {
+                    jz:'',
                     projectNo: '',
                     projectNam: '',
                     investmentEstimate: '',

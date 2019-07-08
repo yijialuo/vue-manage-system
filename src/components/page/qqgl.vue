@@ -108,7 +108,7 @@
                         </el-option>
                     </el-select>
                     <el-button style="margin-left: 10px" type="primary" icon="el-icon-search" @click="zhSearch">搜索
-                </el-button>
+                    </el-button>
                 </div>
 
                 <el-table stripe :data="projects" border class="table" ref="multipleTable">
@@ -231,6 +231,17 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="机种类别" v-if="project.projectType=='维修'">
+                        <el-select style="width: 215px;padding-right: 20px" v-model="project.jz"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="item in jzs"
+                                    :key="item.label"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="立项背景理由" prop="establishReason">
                         <el-input v-model="project.establishReason" type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 10}" placeholder="最多1000字"
@@ -317,6 +328,17 @@
                             <el-option
                                     v-for="item in xmfl"
                                     :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="机种类别" v-if="project.projectType=='维修'">
+                        <el-select style="width: 215px;padding-right: 20px" v-model="project.jz"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="item in jzs"
+                                    :key="item.label"
                                     :label="item.label"
                                     :value="item.value">
                             </el-option>
@@ -462,6 +484,38 @@
                 select_xmfl: [],
                 //项目类别搜索
                 select_xmlb: [],
+                //机种类
+                jzs: [
+                    {
+                        value: '门机',
+                        label: '门机'
+                    },
+                    {
+                        value: '装载机',
+                        label: '装载机'
+                    }, {
+                        value: '推耙机',
+                        label: '推耙机'
+                    }, {
+                        value: '推土机',
+                        label: '推土机'
+                    }, {
+                        value: '挖掘机',
+                        label: '挖掘机'
+                    }, {
+                        value: '叉拖板',
+                        label: '叉拖板'
+                    }, {
+                        value: '散粮装船系统',
+                        label: '散粮装船系统'
+                    },{
+                        value: '车间设备',
+                        label: '车间设备'
+                    }, {
+                        value: '卸油设备',
+                        label: '卸油设备'
+                    }
+                ],
                 jds: [{
                     value: '未申请',
                     label: '未申请',
@@ -526,6 +580,7 @@
                     reviser: '',
                     reviseDte: '',
                     illustration: '',
+                    jz:'',
                     pid: ''
                 },
                 //立项类别
@@ -660,56 +715,56 @@
 
             //删除请求
             handleBeforeRemove(file, fileList) {
-                    if (this.project.pid != '' && this.project.pid != null) {
-                        fileList.push(file)
-                        this.$message.error("删除失败！附件只能在处理节点删除！")
-                        // this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                        //     confirmButtonText: '确定',
-                        //     cancelButtonText: '取消',
-                        //     type: 'warning'
-                        // }).then(() => {
-                        //     axios.get(this.ip + '/Attachment/deletAttachment', {
-                        //         params: {
-                        //             userId: localStorage.getItem('userId'),
-                        //             attachment_id: file.id
-                        //         }
-                        //     })
-                        //         .then(res => {
-                        //             if (res.data) {
-                        //                 this.$message.info("删除成功！")
-                        //             } else {
-                        //                 this.$message.info("删除失败！您可能没有权限！")
-                        //                 //重新请求
-                        //                 this.fj(this.project)
-                        //             }
-                        //         })
-                        // })
-                        //     .catch(() => {
-                        //         //重新请求
-                        //         //this.fj(this.project)
-                        //         fileList.push(file)
-                        //     })
-                    } else {
-                        this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(() => {
-                            axios.get(this.ip + '/contract/deletFj', {
-                                params: {
-                                    fid: file.id,
-                                    fname: file.name,
-                                    jlid: this.project.id
-                                }
-                            })
-                                .then(res => {
-                                    this.$message.info("删除成功！")
-                                })
-                        }).catch(() => {
-                            //this.fj(this.project)
-                            fileList.push(file)
+                if (this.project.pid != '' && this.project.pid != null) {
+                    fileList.push(file)
+                    this.$message.error("删除失败！附件只能在处理节点删除！")
+                    // this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                    //     confirmButtonText: '确定',
+                    //     cancelButtonText: '取消',
+                    //     type: 'warning'
+                    // }).then(() => {
+                    //     axios.get(this.ip + '/Attachment/deletAttachment', {
+                    //         params: {
+                    //             userId: localStorage.getItem('userId'),
+                    //             attachment_id: file.id
+                    //         }
+                    //     })
+                    //         .then(res => {
+                    //             if (res.data) {
+                    //                 this.$message.info("删除成功！")
+                    //             } else {
+                    //                 this.$message.info("删除失败！您可能没有权限！")
+                    //                 //重新请求
+                    //                 this.fj(this.project)
+                    //             }
+                    //         })
+                    // })
+                    //     .catch(() => {
+                    //         //重新请求
+                    //         //this.fj(this.project)
+                    //         fileList.push(file)
+                    //     })
+                } else {
+                    this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.get(this.ip + '/contract/deletFj', {
+                            params: {
+                                fid: file.id,
+                                fname: file.name,
+                                jlid: this.project.id
+                            }
                         })
-                    }
+                            .then(res => {
+                                this.$message.info("删除成功！")
+                            })
+                    }).catch(() => {
+                        //this.fj(this.project)
+                        fileList.push(file)
+                    })
+                }
             },
 
             //点击文件下载
@@ -1164,7 +1219,7 @@
 
             //确定新建
             qdxj() {
-                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep) || this.isnull(this.project.investmentEstimate)) {
+                if (this.isnull(this.project.projectNam) || this.isnull(this.project.reviser) || this.isnull(this.project.projectType) || this.isnull(this.project.declarationDep) || this.isnull(this.project.investmentEstimate)||(this.project.projectType==='维修'&&this.isnull(this.project.jz))) {
                     this.$message.error("请填写详细信息！")
                     return
                 }
@@ -1234,7 +1289,7 @@
                     }
                 })
                     .then(res => {
-                        if(res.data){
+                        if (res.data) {
                             axios.get(this.ip + '/projectApplication/deletXm', {
                                 params: {
                                     xmid: this.projects[this.idx].id
@@ -1250,7 +1305,7 @@
                                         this.$message.error('删除失败！');
                                     }
                                 })
-                        }else {
+                        } else {
                             loading.close()
                             this.$message.error('该项目还在进行其他操作！删除失败！');
                         }
