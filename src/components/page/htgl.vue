@@ -50,6 +50,12 @@
                             <el-form-item label="对方资质审查:">
                                 <span>{{ props.row.zzsc }}</span>
                             </el-form-item>
+                            <el-form-item label="中标单位:">
+                                <span>{{ props.row.dfdsr }}</span>
+                            </el-form-item>
+                            <el-form-item label="中标金额:">
+                                <span>{{ props.row.price }}</span>
+                            </el-form-item>
                             <!--<el-form-item label="单位意见:">-->
                             <!--<span>{{ props.row.dwyj }}</span>-->
                             <!--</el-form-item>-->
@@ -75,7 +81,7 @@
                 </el-table-column>
                 <el-table-column prop="dfdsr" align="center" label="对方当事人" width="120">
                 </el-table-column>
-                <el-table-column prop="tzwh" align="center" label="投资文号" width="120">
+                <el-table-column prop="tzwh" align="center" label="投资文号" sortable width="120">
                 </el-table-column>
                 <el-table-column prop="price" align="center" label="合同价款(元)" width="120">
                 </el-table-column>
@@ -172,6 +178,26 @@
                     <el-date-picker style="width: 205px" type="date" placeholder="选择日期" v-model="contract.rq"
                                     value-format="yyyy-MM-dd"></el-date-picker>
                 </el-form-item>
+                <el-form-item label="有效期合同">
+                    <el-switch
+                            v-model="isValidContract"
+                            active-text="是"
+                            inactive-text="否">
+                    </el-switch>
+                    <el-date-picker
+                            v-if="isValidContract"
+                            v-model="validDateScope"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            style="width: 70%;float: right;margin-right: 17px;">
+                    </el-date-picker>
+                    <div v-else style="display: inline;width: 70%;float: right;margin-right: 17px;">有效期：{{ validDateNumber }}</div>
+
+                </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
                     &nbsp&nbsp&nbsp&nbsp&nbsp投资文号&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -234,6 +260,26 @@
                     &nbsp&nbsp&nbsp&nbsp&nbsp合同日期&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                     <el-date-picker type="date" placeholder="选择日期" v-model="contract.rq" value-format="yyyy-MM-dd"
                                     style="width: 205px"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="有效期合同">
+                    <el-switch
+                            v-model="isValidContract"
+                            active-text="是"
+                            inactive-text="否">
+                    </el-switch>
+                    <el-date-picker
+                            v-if="isValidContract"
+                            v-model="validDateScope"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            style="width: 70%;float: right;margin-right: 17px;">
+                    </el-date-picker>
+                    <div v-else style="display: inline;width: 70%;float: right;margin-right: 17px;">有效期：{{ validDateNumber }}</div>
+
                 </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
@@ -408,8 +454,11 @@
                     zjlyj: '',
                     rq: '',
                     gd: '',
+                    ksyxq:'',
+                    jsyxq:''
                 },
-                jds: [{
+                jds: [
+                    {
                     value: '未申请',
                     label: '未申请',
                 }, {
@@ -470,6 +519,9 @@
                     pid: ''
                 },
                 lxxqShow: false,
+                isValidContract:true,// 是否有效期合同
+                validDateScope:'',// 有效期范围
+                validDateNumber:'',// 有效期数字
             }
         },
         //监听新建合同表项目id的改变,请求关联的数据
@@ -486,7 +538,6 @@
                             projectId: newValue
                         }
                     }).then(res => {
-                        console.log(res.data)
                         this.$set(this.contract, 'dfdsr', '')
                         this.$set(this.contract, 'tzwh', '')
                         this.$set(this.contract, 'jbr', '')
@@ -505,7 +556,29 @@
                                 this.$set(this.contract, 'jbr', sz[1])
                         }
                     })
+
+                    // 需要获取合同的有效期
+                    axios.get(this.ip + '/contract/getGq', {
+                        params: {
+                            projectId: newValue
+                        }
+                    }).then(res => {
+                        this.validDateNumber=res.data
+                    })
                 }
+            },
+            isValidContract(newValue,oldValue){
+                console.log(newValue)
+                /*if (newValue==false){// 如果不是有效期合同
+                    // 需要获取合同的有效期
+                    axios.get(this.ip + '/contract/getGq', {
+                        params: {
+                            projectId: this.contract.projectId
+                        }
+                    }).then(res => {
+                        this.validDate=res.data
+                    })
+                }*/
             }
         },
         created() {
@@ -848,6 +921,23 @@
                 this.contract = row
                 this.zzsc = row.zzsc.split('、')
                 this.show_bjht = true
+
+                if(this.contract.ksyxq||this.contract.jsyxq){// 有开始有效期或结束有效期，则为有效期合同
+                    this.isValidContract=true
+                    this.validDateScope=[
+                        this.contract.ksyxq,
+                        this.contract.jsyxq
+                    ]
+                }else{
+                    this.isValidContract=false
+                    axios.get(this.ip + '/contract/getGq', {
+                        params: {
+                            projectId: this.contract.projectId
+                        }
+                    }).then(res => {
+                        this.validDateNumber=res.data
+                    })
+                }
             },
 
             //确定编辑
@@ -859,6 +949,20 @@
                     else
                         this.contract.zzsc = this.contract.zzsc + this.zzsc[i]
                 }
+
+                if(this.isValidContract){// 如果是有效期合同
+                    if(!this.validDateScope){
+                        this.$message.error("有效期合同需要填写有效期范围")
+                        return
+                    }else{
+                        this.contract.ksyxq=this.validDateScope[0]
+                        this.contract.jsyxq=this.validDateScope[1]
+                    }
+                }else{
+                    this.contract.ksyxq=''
+                    this.contract.jsyxq=''
+                }
+
                 axios.post(this.ip + '/contract/updateContract', this.contract)
                     .then(res => {
                         if (res.data) {
@@ -1000,6 +1104,16 @@
                         this.contract.zzsc = this.contract.zzsc + this.zzsc[i]
                 }
                 this.contract.cwbmyj = localStorage.getItem('userId')
+
+                if(this.isValidContract){// 如果是有效期合同
+                    if(!this.validDateScope){
+                        this.$message.error("有效期合同需要填写有效期范围")
+                        return
+                    }else{
+                        this.contract.ksyxq=this.validDateScope[0]
+                        this.contract.jsyxq=this.validDateScope[1]
+                    }
+                }
                 axios.post(this.ip + '/contract/addContract', this.contract)
                     .then(res => {
                         if (res.data)
@@ -1017,6 +1131,10 @@
                 this.contract = {}
                 this.zzsc = []
                 this.show_xjht = true
+
+                this.isValidContract=true
+                this.validDateScope=''
+                this.validDateNumber=''
             },
 
             //拿到项目下拉框数据
