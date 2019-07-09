@@ -195,7 +195,11 @@
                             value-format="yyyy-MM-dd"
                             style="width: 70%;float: right;margin-right: 17px;">
                     </el-date-picker>
-                    <div v-else style="display: inline;width: 70%;float: right;margin-right: 17px;">有效期：{{ validDateNumber }}</div>
+                    <div v-else style="width: 70%;float: right;margin-right: 17px;">
+                        <el-input placeholder="请输入工期" v-model="contract.gq">
+                            <template slot="prepend">工期:</template>
+                        </el-input>
+                    </div>
 
                 </el-form-item>
                 <el-form-item label="对方当事人">
@@ -278,8 +282,11 @@
                             value-format="yyyy-MM-dd"
                             style="width: 70%;float: right;margin-right: 17px;">
                     </el-date-picker>
-                    <div v-else style="display: inline;width: 70%;float: right;margin-right: 17px;">有效期：{{ validDateNumber }}</div>
-
+                    <div v-else style="width: 70%;float: right;margin-right: 17px;">
+                        <el-input placeholder="请输入工期" v-model="contract.gq">
+                            <template slot="prepend">工期:</template>
+                        </el-input>
+                    </div>
                 </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
@@ -455,7 +462,8 @@
                     rq: '',
                     gd: '',
                     ksyxq:'',
-                    jsyxq:''
+                    jsyxq:'',
+                    gq:'',
                 },
                 jds: [
                     {
@@ -521,7 +529,6 @@
                 lxxqShow: false,
                 isValidContract:true,// 是否有效期合同
                 validDateScope:'',// 有效期范围
-                validDateNumber:'',// 有效期数字
             }
         },
         //监听新建合同表项目id的改变,请求关联的数据
@@ -557,29 +564,16 @@
                         }
                     })
 
-                    // 需要获取合同的有效期
+                    // 需要获取合同的工期
                     axios.get(this.ip + '/contract/getGq', {
                         params: {
                             projectId: newValue
                         }
                     }).then(res => {
-                        this.validDateNumber=res.data
+                        this.$set(this.contract, 'gq', res.data)
                     })
                 }
             },
-            isValidContract(newValue,oldValue){
-                console.log(newValue)
-                /*if (newValue==false){// 如果不是有效期合同
-                    // 需要获取合同的有效期
-                    axios.get(this.ip + '/contract/getGq', {
-                        params: {
-                            projectId: this.contract.projectId
-                        }
-                    }).then(res => {
-                        this.validDate=res.data
-                    })
-                }*/
-            }
         },
         created() {
             this.getAllht(1)
@@ -922,6 +916,7 @@
                 this.zzsc = row.zzsc.split('、')
                 this.show_bjht = true
 
+                this.validDateScope=''
                 if(this.contract.ksyxq||this.contract.jsyxq){// 有开始有效期或结束有效期，则为有效期合同
                     this.isValidContract=true
                     this.validDateScope=[
@@ -930,13 +925,6 @@
                     ]
                 }else{
                     this.isValidContract=false
-                    axios.get(this.ip + '/contract/getGq', {
-                        params: {
-                            projectId: this.contract.projectId
-                        }
-                    }).then(res => {
-                        this.validDateNumber=res.data
-                    })
                 }
             },
 
@@ -957,8 +945,11 @@
                     }else{
                         this.contract.ksyxq=this.validDateScope[0]
                         this.contract.jsyxq=this.validDateScope[1]
+                        // 设置有效期范围了工期时间就需要设为空串
+                        this.contract.gq=''
                     }
                 }else{
+                    // 不是有效期合同，此时有了工期时间，就不需要有效期范围了
                     this.contract.ksyxq=''
                     this.contract.jsyxq=''
                 }
@@ -1112,8 +1103,15 @@
                     }else{
                         this.contract.ksyxq=this.validDateScope[0]
                         this.contract.jsyxq=this.validDateScope[1]
+                        // 设置有效期范围了工期时间就需要设为空串
+                        this.contract.gq=''
                     }
+                }else{
+                    // 不是有效期合同，此时有了工期时间，就不需要有效期范围了
+                    this.contract.ksyxq=''
+                    this.contract.jsyxq=''
                 }
+
                 axios.post(this.ip + '/contract/addContract', this.contract)
                     .then(res => {
                         if (res.data)
@@ -1134,7 +1132,6 @@
 
                 this.isValidContract=true
                 this.validDateScope=''
-                this.validDateNumber=''
             },
 
             //拿到项目下拉框数据
