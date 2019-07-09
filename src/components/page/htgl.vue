@@ -188,6 +188,7 @@
                             v-if="isValidContract"
                             v-model="validDateScope"
                             type="daterange"
+                            @change="onValidDateScopeChange"
                             range-separator="至"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
@@ -201,6 +202,18 @@
                         </el-input>
                     </div>
 
+                </el-form-item>
+                <el-form-item label="履行情况">
+                    <el-select
+                            filterable
+                            v-model="contract.lxqk">
+                        <el-option
+                                v-for="item in lxqks"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
@@ -275,6 +288,7 @@
                             v-if="isValidContract"
                             v-model="validDateScope"
                             type="daterange"
+                            @change="onValidDateScopeChange"
                             range-separator="至"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
@@ -287,6 +301,18 @@
                             <template slot="prepend">工期:</template>
                         </el-input>
                     </div>
+                </el-form-item>
+                <el-form-item label="履行情况">
+                    <el-select
+                            filterable
+                            v-model="contract.lxqk">
+                        <el-option
+                                v-for="item in lxqks"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
@@ -464,6 +490,7 @@
                     ksyxq:'',
                     jsyxq:'',
                     gq:'',
+                    lxqk:'',
                 },
                 jds: [
                     {
@@ -529,6 +556,17 @@
                 lxxqShow: false,
                 isValidContract:true,// 是否有效期合同
                 validDateScope:'',// 有效期范围
+                lxqks: [
+                    {
+                        value: '未开始履行',
+                        label: '未开始履行',
+                    }, {
+                        value: '履行中',
+                        label: '履行中'
+                    }, {
+                        value: '履行完成',
+                        label: '履行完成'
+                    }],
             }
         },
         //监听新建合同表项目id的改变,请求关联的数据
@@ -1207,6 +1245,20 @@
                     this.project = res.data
                 })
             },
+
+            onValidDateScopeChange(value){// 有效期范围选择完成监听，设置履行情况
+                var currentDate = new Date();
+                var minDate = new Date(Date.parse(value[0]));
+                var maxDate = new Date(Date.parse(value[1]));
+
+                if(currentDate<minDate){// 当前时间小于最小时间
+                    this.$set(this.contract, 'lxqk', '未开始履行')
+                }else if(currentDate>maxDate){// 当前时间大于最大时间
+                    this.$set(this.contract, 'lxqk', '履行完成')
+                }else{// 当前时间在最小和最大时间之间
+                    this.$set(this.contract, 'lxqk', '履行中')
+                }
+            }
         }
     }
 </script>
