@@ -8,7 +8,7 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button v-if="groupId!='bgs'" type="primary" @click="xzjs" icon="el-icon-circle-plus"
+                    <el-button v-if="!equalsJs(groupId,'bgs')" type="primary" @click="xzjs" icon="el-icon-circle-plus"
                                class="handle-del mr10">
                         新增结算
                     </el-button>

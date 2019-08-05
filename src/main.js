@@ -26,6 +26,9 @@ router.beforeEach((to, from, next) => {
     }
 })
 
+Vue.prototype.equalsJs = function (groupIds, groupId) {
+    return (groupIds|| "").split(",").indexOf(groupId) != -1;
+}
 
 new Vue({
     router,

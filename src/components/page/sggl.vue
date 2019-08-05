@@ -15,7 +15,6 @@
                     <el-select
                             clearable
                             class="handle-input mr10"
-                            v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
                             v-model="xmlb"
                             placeholder="项目类别">
                         <el-option
@@ -30,7 +29,6 @@
                     <el-select
                             clearable
                             class="handle-input mr10"
-                            v-if="groupId!='doman'&&groupId!='zgjl'&&groupId!='jl'"
                             v-model="zt"
                             placeholder="状态">
                         <el-option
@@ -85,10 +83,10 @@
                     &nbsp&nbsp完工时间&nbsp&nbsp
                     <el-input v-model="wgsj" :disabled="true" style="width: 215px" ></el-input>
                 </el-form-item>
-                <el-button v-if="groupId!='bgs'" :disabled=iswg type="primary" @click="xzjd"  style="float:right" icon="el-icon-circle-plus" class="handle-del mr10" >
+                <el-button v-if="!equalsJs(groupId,'bgs')" :disabled=iswg type="primary" @click="xzjd"  style="float:right" icon="el-icon-circle-plus" class="handle-del mr10" >
                     新增节点
                 </el-button>
-                <el-button v-if="groupId!='bgs'" type="success" icon="el-icon-success" :disabled=iswg @click="wg">完 工</el-button>
+                <el-button v-if="!equalsJs(groupId,'bgs')" type="success" icon="el-icon-success" :disabled=iswg @click="wg">完 工</el-button>
                 <el-table
                         height="500"
                         :data="jindus"
@@ -110,8 +108,8 @@
                     </el-table-column>
                     <el-table-column label="操作" width="250" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" v-if="groupId!='bgs'" icon="el-icon-edit" :disabled=iswg   @click="bj(scope.row)">编辑</el-button>
-                            <el-button type="text" v-if="groupId!='bgs'" icon="el-icon-delete" :disabled=iswg  v-bind:class="{ red: !iswg,}"  @click="handleDelete(scope.row)">删除</el-button>
+                            <el-button type="text" v-if="!equalsJs(groupId,'bgs')" icon="el-icon-edit" :disabled=iswg   @click="bj(scope.row)">编辑</el-button>
+                            <el-button type="text" v-if="!equalsJs(groupId,'bgs')" icon="el-icon-delete" :disabled=iswg  v-bind:class="{ red: !iswg,}"  @click="handleDelete(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

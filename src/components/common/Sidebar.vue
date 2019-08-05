@@ -172,7 +172,7 @@
             getSidebar() {
                 let groupId = localStorage.getItem('groupId')
                 let departmentName = localStorage.getItem('departmentName')
-                if (groupId === 'admin') {
+                if ( this.equalsJs(groupId,'admin')) {
                     this.items = [
                         {
                             icon: 'el-icon-lx-home',
@@ -268,7 +268,7 @@
                             title: '操作手册'
                         },
                     ]
-                } else if (groupId === 'jsb_doman' || groupId === 'jsb_jl' || groupId === 'jsb_zgjl' || departmentName === '办公室.'||groupId==='ld') {
+                } else if (this.equalsJs(groupId, 'jsb_doman') || this.equalsJs(groupId, 'jsb_jl') || this.equalsJs(groupId, 'jsb_zgjl') || departmentName === '办公室.' ||  departmentName==='领导') {
                     this.items = [
                         {
                             icon: 'el-icon-lx-home',
@@ -360,7 +360,7 @@
                             title: '操作手册'
                         },
                     ]
-                } else if (groupId === 'bgs') {
+                } else if (this.equalsJs(groupId,'bgs')) {
                     this.items = [
                         {
                             icon: 'el-icon-lx-home',

@@ -253,6 +253,8 @@
                 </el-table-column>
                 <el-table-column label="项目大类" align="center" prop="xmdl" width="120">
                 </el-table-column>
+                <el-table-column label="机种" align="center" prop="jz" width="120">
+                </el-table-column>
                 <el-table-column label="技术部经理审批时间" align="center" prop="jsbjlsj" width="160">
                 </el-table-column>
                 <el-table-column label="定标时间" align="center" prop="dbsj" width="120">
@@ -342,7 +344,6 @@
                     }
                 ],
                 selectObject: {
-                    jz:'',
                     projectNo: '',
                     projectNam: '',
                     investmentEstimate: '',
@@ -350,6 +351,7 @@
                     lxlb: [],
                     xmlb: [],
                     xmdl: [],
+                    jz:[],
                     ksjsbjlsj: '', jsjsbjlsj: '',
                     kslhsj: '', jslhsj: '',
                     kszjhsj: '', jszjhsj: '',
@@ -410,9 +412,6 @@
                     }, {
                         value: '物资',
                         label: '物资'
-                    }, {
-                        value: '绿化',
-                        label: '绿化'
                     }
                 ],
                 jsbjbr: [],
@@ -437,7 +436,6 @@
                 axios.post('http://10.197.41.100:8080/sgjdb/select?pageNum=' + this.listQuery.offset, this.selectObject)
                     .then(res => {
                         this.list = res.data
-                        this.total = parseInt(res.headers.allcount)
                         loading.close()
                     })
             },

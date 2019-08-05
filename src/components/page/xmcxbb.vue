@@ -149,6 +149,19 @@
                             :value="item.value">
                     </el-option>
                 </el-select>
+                <el-select
+                        clearable
+                        multiple
+                        class="search-item"
+                        v-model="selectObject.jz"
+                        placeholder="机种">
+                    <el-option
+                            v-for="item in jzs"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
             </div>
             <div>
                 <el-date-picker
@@ -291,6 +304,8 @@
                 </el-table-column>
                 <el-table-column label="立项类别" align="center" prop="lxlb" width="120">
                 </el-table-column>
+                <el-table-column label="机种" align="center" prop="jz" width="120">
+                </el-table-column>
                 <el-table-column label="项目类别" align="center" prop="xmlb" width="120">
                 </el-table-column>
                 <el-table-column label="计划金额（万元）" align="center" prop="jhje" width="140">
@@ -348,7 +363,7 @@
             <el-table :data="hjs" border style="margin-top: 20px">
                 <el-table-column prop="hj" label="环节" width="100px">
                 </el-table-column>
-                <el-table-column  label="附件" >
+                <el-table-column label="附件">
                     <template slot-scope="scope">
                         <el-upload
                                 action=""
@@ -374,18 +389,18 @@
         name: "xmcxbb",
         data() {
             return {
-                hjs:[{
-                    hj:'前期附件'
-                },{
-                    hj:'招标附件'
-                },{
-                    hj:'小项目附件'
-                },{
-                    hj:'合同附件'
-                },{
-                    hj:'验收附件'
-                },{
-                    hj:'结算附件'
+                hjs: [{
+                    hj: '前期附件'
+                }, {
+                    hj: '招标附件'
+                }, {
+                    hj: '小项目附件'
+                }, {
+                    hj: '合同附件'
+                }, {
+                    hj: '验收附件'
+                }, {
+                    hj: '结算附件'
                 }],
                 departmentName: localStorage.getItem('departmentName'),
                 list: [],
@@ -396,6 +411,37 @@
                     limit: 10
                 },
                 ip: 'http://10.197.41.100:8080',
+                jzs: [
+                    {
+                        value: '门机',
+                        label: '门机'
+                    },
+                    {
+                        value: '装载机',
+                        label: '装载机'
+                    }, {
+                        value: '推耙机',
+                        label: '推耙机'
+                    }, {
+                        value: '推土机',
+                        label: '推土机'
+                    }, {
+                        value: '挖掘机',
+                        label: '挖掘机'
+                    }, {
+                        value: '叉拖板',
+                        label: '叉拖板'
+                    }, {
+                        value: '散粮装船系统',
+                        label: '散粮装船系统'
+                    }, {
+                        value: '车间设备',
+                        label: '车间设备'
+                    }, {
+                        value: '卸油设备',
+                        label: '卸油设备'
+                    }
+                ],
                 selectObject: {
                     xmbh: '',
                     xmmc: '',
@@ -405,6 +451,7 @@
                     xmdl: [],
                     lxlb: [],
                     xmlb: [],
+                    jz: [],
                     jhje: '',
                     htje: '',
                     spzt: [],
@@ -560,8 +607,8 @@
                 ],
                 xmfqr: [],
                 xmjbr: [],
-                showfj:false,
-                fileList:[]
+                showfj: false,
+                fileList: []
             }
         },
         created() {
@@ -578,21 +625,21 @@
 
             //点击附件事件
             fj(row) {
-                axios.get(this.ip+'/user/isClr',{
-                    params:{
-                        xmid:row.xmid,
-                        userId:localStorage.getItem('userId')
+                axios.get(this.ip + '/user/isClr', {
+                    params: {
+                        xmid: row.xmid,
+                        userId: localStorage.getItem('userId')
                     }
-                }).then(res=>{
-                    if(res.data){
+                }).then(res => {
+                    if (res.data) {
                         //拿前期附件
-                        axios.get(this.ip+'/Attachment/getHjFj',{
-                            params:{
-                                xmid:row.xmid,
-                                hj:'前期'
+                        axios.get(this.ip + '/Attachment/getHjFj', {
+                            params: {
+                                xmid: row.xmid,
+                                hj: '前期'
                             }
-                        }).then(res=>{
-                            this.fileList.splice(0,1,[])
+                        }).then(res => {
+                            this.fileList.splice(0, 1, [])
                             for (let j = 0; j < res.data.length; j++) {
                                 this.fileList[0].push({
                                     name: res.data[j].attachment_nam,
@@ -603,13 +650,13 @@
                             }
                         })
                         //拿招标附件
-                        axios.get(this.ip+'/Attachment/getHjFj',{
-                            params:{
-                                xmid:row.xmid,
-                                hj:'招标'
+                        axios.get(this.ip + '/Attachment/getHjFj', {
+                            params: {
+                                xmid: row.xmid,
+                                hj: '招标'
                             }
-                        }).then(res=>{
-                            this.fileList.splice(1,1,[])
+                        }).then(res => {
+                            this.fileList.splice(1, 1, [])
                             for (let j = 0; j < res.data.length; j++) {
                                 this.fileList[1].push({
                                     name: res.data[j].attachment_nam,
@@ -620,12 +667,12 @@
                             }
                         })
                         //拿小项目附件
-                        axios.get(this.ip+'/Attachment/getXxmfj',{
-                            params:{
-                                xmid:row.xmid,
+                        axios.get(this.ip + '/Attachment/getXxmfj', {
+                            params: {
+                                xmid: row.xmid,
                             }
-                        }).then(res=>{
-                            this.fileList.splice(2,1,[])
+                        }).then(res => {
+                            this.fileList.splice(2, 1, [])
                             for (let j = 0; j < res.data.length; j++) {
                                 this.fileList[2].push({
                                     name: res.data[j].attachment_nam,
@@ -636,13 +683,13 @@
                             }
                         })
                         //拿合同附件
-                        axios.get(this.ip+'/Attachment/getHjFj',{
-                            params:{
-                                xmid:row.xmid,
-                                hj:'合同'
+                        axios.get(this.ip + '/Attachment/getHjFj', {
+                            params: {
+                                xmid: row.xmid,
+                                hj: '合同'
                             }
-                        }).then(res=>{
-                            this.fileList.splice(3,1,[])
+                        }).then(res => {
+                            this.fileList.splice(3, 1, [])
                             for (let j = 0; j < res.data.length; j++) {
                                 this.fileList[3].push({
                                     name: res.data[j].attachment_nam,
@@ -653,12 +700,12 @@
                             }
                         })
                         //拿验收附件
-                        axios.get(this.ip+'/Attachment/getYsfj',{
-                            params:{
-                                xmid:row.xmid,
+                        axios.get(this.ip + '/Attachment/getYsfj', {
+                            params: {
+                                xmid: row.xmid,
                             }
-                        }).then(res=>{
-                            this.fileList.splice(4,1,[])
+                        }).then(res => {
+                            this.fileList.splice(4, 1, [])
                             for (let j = 0; j < res.data.length; j++) {
                                 this.fileList[4].push({
                                     name: res.data[j].attachment_nam,
@@ -669,12 +716,12 @@
                             }
                         })
                         //拿结算附件
-                        axios.get(this.ip+'/Attachment/getJsfj',{
-                            params:{
-                                xmid:row.xmid,
+                        axios.get(this.ip + '/Attachment/getJsfj', {
+                            params: {
+                                xmid: row.xmid,
                             }
-                        }).then(res=>{
-                            this.fileList.splice(5,1,[])
+                        }).then(res => {
+                            this.fileList.splice(5, 1, [])
                             for (let j = 0; j < res.data.length; j++) {
                                 this.fileList[5].push({
                                     name: res.data[j].attachment_nam,
@@ -684,8 +731,8 @@
                                 })
                             }
                         })
-                        this.showfj=true
-                    }else {
+                        this.showfj = true
+                    } else {
                         this.$message.error("您没有权限！")
                     }
                 })
@@ -703,7 +750,7 @@
                 axios.post('http://10.197.41.100:8080/xmcxb/select?pageNum=' + this.listQuery.offset, this.selectObject)
                     .then(res => {
                         this.list = res.data
-                        this.total = parseInt(res.headers.allcount)
+                        //this.total = res.data.length
                         loading.close()
                     })
             },

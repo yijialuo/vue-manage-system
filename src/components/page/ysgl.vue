@@ -7,7 +7,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button v-if="groupId!='bgs'" @click="xjys" type="primary" icon="el-icon-circle-plus" class="handle-del mr10">
+                <el-button v-if="!equalsJs(groupId,'bgs')" @click="xjys" type="primary" icon="el-icon-circle-plus" class="handle-del mr10">
                     新建验收
                 </el-button>
                 <el-input placeholder="验收单编号" clearable v-model="ysNo" class="handle-input mr10"></el-input>
@@ -161,7 +161,7 @@
                 <el-date-picker type="date" placeholder="选择日期" v-model="yanshou.kgrq" value-format="yyyy-MM-dd"
                                 style="width: 200px" ></el-date-picker>
             </el-form-item>
-            <el-form-item label="计划金额">
+            <el-form-item label="计划金额(元)">
                 <el-input type="number" v-model="yanshou.jhje"  style="width: 200px" ></el-input>
                 &nbsp&nbsp&nbsp&nbsp竣工日期&nbsp&nbsp&nbsp&nbsp
                 <el-date-picker type="date" placeholder="选择日期" v-model="yanshou.sjjgrq" value-format="yyyy-MM-dd"
@@ -218,7 +218,7 @@
                     <el-date-picker type="date" placeholder="选择日期" v-model="yanshou.kgrq" value-format="yyyy-MM-dd"
                                     style="width: 200px" ></el-date-picker>
                 </el-form-item>
-                <el-form-item label="计划金额">
+                <el-form-item label="计划金额(元)">
                     <el-input type="number" v-model="yanshou.jhje"  style="width: 200px" ></el-input>
                     &nbsp&nbsp&nbsp&nbsp竣工日期&nbsp&nbsp&nbsp&nbsp
                     <el-date-picker type="date" placeholder="选择日期" v-model="yanshou.sjjgrq" value-format="yyyy-MM-dd"

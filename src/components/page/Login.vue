@@ -1,10 +1,11 @@
 <template>
     <div style="height: 100%;width: 100%">
         <el-header style="background-color: #417e9f;height: 85px">
-            <img style="margin-left:80px;display:inline" src="../../assets/img/login_logo1.png"><li class="active">世界大港&nbsp;&nbsp;&nbsp;服务世界</li>
+            <img style="margin-left:80px;display:inline" src="../../assets/img/login_logo1.png">
+            <li class="active">世界大港&nbsp;&nbsp;&nbsp;服务世界</li>
         </el-header>
         <div class="login-wrap">
-            <div class="ms-login" >
+            <div class="ms-login">
                 <div class="ms-title">新沙工程项目管理系统</div>
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
                     <el-form-item prop="username">
@@ -19,7 +20,7 @@
                         </el-input>
                     </el-form-item>
                     <div class="login-btn">
-                        <el-button type="primary"  @click="submitForm()">登录</el-button>
+                        <el-button type="primary" @click="submitForm()">登录</el-button>
                     </div>
                     <p class="login-tips">Tips : 请向管理员申请相关账号。</p>
                 </el-form>
@@ -33,7 +34,7 @@
     import axios from 'axios'
 
     export default {
-        inject:['reload'],
+        inject: ['reload'],
         data: function () {
             return {
                 ip: 'http://10.197.41.100:8080',
@@ -69,19 +70,19 @@
                         loading.close();
                         if (res.data) {
                             localStorage.setItem('userId', this.ruleForm.username);
-                            localStorage.setItem('passWord',this.ruleForm.password);
-                            axios.get(this.ip+'/user/getuser',{
-                                params:{
+                            localStorage.setItem('passWord', this.ruleForm.password);
+                            axios.get(this.ip + '/user/getuser', {
+                                params: {
                                     userId: localStorage.getItem('userId'),
                                     passWord: localStorage.getItem('passWord')
                                 }
                             })
-                                .then(res=>{
-                                    localStorage.setItem('groupId',res.data.groupId)
-                                    localStorage.setItem('groupName',res.data.groupName)
-                                    localStorage.setItem('userName',res.data.userName)
-                                    localStorage.setItem('departmentName',res.data.departmentName)
-                                    localStorage.setItem('departmentId',res.data.departmentId)
+                                .then(res => {
+                                    localStorage.setItem('groupId', res.data.groupId)
+                                    localStorage.setItem('groupName', res.data.groupName)
+                                    localStorage.setItem('userName', res.data.userName)
+                                    localStorage.setItem('departmentName', res.data.departmentName)
+                                    localStorage.setItem('departmentId', res.data.departmentId)
                                     this.$router.push('/');
                                 })
                         } else {
@@ -142,10 +143,11 @@
         line-height: 30px;
         color: #fff;
     }
+
     .active {
         position: absolute;
         right: 15px;
-        display:inline;
+        display: inline;
         color: #FFF;
         font-size: 18px;
         border-bottom: 4px solid #f46425;

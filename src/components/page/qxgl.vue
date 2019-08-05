@@ -67,7 +67,7 @@
                 </div>
                 <div class="demo-input-suffix" style="margin-top: 10px">
                     职位：
-                    <el-select v-model="userOV.groupId" placeholder="请选择">
+                    <el-select v-model="userOV.groupId" multiple placeholder="请选择">
                         <el-option
                                 v-for="item in group_options"
                                 :key="item.value"
@@ -78,7 +78,7 @@
                 </div>
                 <!--是工程技术部的技术部办事员或技术部主管经理才显示-->
                 <div class="demo-input-suffix"
-                     v-if="userOV.departmentId=='20190123022801622'&&(userOV.groupId=='jsb_doman'||userOV.groupId=='jsb_zgjl')"
+                     v-if="userOV.departmentId=='20190123022801622'&&(userOV.groupId.indexOf('jsb_doman')!=-1||userOV.groupId.indexOf('jsb_zgjl')!=-1)"
                      style="margin-top: 10px;width: 100%;">
                     管理类型：
                     <el-select v-model="userOV.manageType" multiple placeholder="请选择">
@@ -119,7 +119,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="职位">
-                        <el-select v-model="form.groupId" placeholder="请选择">
+                        <el-select v-model="form.groupId" multiple placeholder="请选择">
                             <el-option
                                     v-for="item in group_options"
                                     :key="item.value"
@@ -130,7 +130,7 @@
                     </el-form-item>
                     <!--有管理类型才显示-->
                     <div class="demo-input-suffix"
-                         v-if="form.departmentId=='20190123022801622'&&(form.groupId=='jsb_doman'||form.groupId=='jsb_zgjl')"
+                         v-if="form.departmentId=='20190123022801622'&&(form.groupId.indexOf('jsb_doman') !=-1||form.groupId.indexOf('jsb_zgjl') !=-1)"
                          style="margin-top: 10px;width: 100%;">
                         管理类型：
                         <el-select v-model="form.manageType" multiple placeholder="请选择">
@@ -195,6 +195,8 @@
                 <el-table :data="groups" border style="margin-top: 20px">
                     <el-table-column prop="code" label="职位编号" width="150">
                     </el-table-column>
+                    <el-table-column prop="id" label="职位ID" width="150">
+                    </el-table-column>
                     <el-table-column prop="name" label="职位名字" width="150">
                     </el-table-column>
                 </el-table>
@@ -204,6 +206,9 @@
                     <el-form ref="form" :model="group" label-width="80px">
                         <el-form-item label="职位编号">
                             <el-input v-model="group.code"></el-input>
+                        </el-form-item>
+                        <el-form-item label="职位ID">
+                            <el-input v-model="group.id"></el-input>
                         </el-form-item>
                         <el-form-item label="职位名称">
                             <el-input v-model="group.name"></el-input>
@@ -387,8 +392,8 @@
                     userId: '',
                     userName: '',
                     passWord: '',
-                    groupId: '',
-                    groupName: '',
+                    groupId: [],
+                    groupName: [],
                     departmentId: '',
                     departmentName: '',
                     manageType: []
@@ -440,7 +445,7 @@
                     userId: '',
                     userName: '',
                     passWord: '',
-                    groupId: '',
+                    groupId: [],
                     departmentId: '',
                     manageType: []
                 },
@@ -490,64 +495,12 @@
         watch: {
             lc(newValue, oldValue) {
                 this.bcwj.jd = ''
-                console.log(newValue)
                 if (newValue === '前期') {
-                    this.jds = [{
-                        value: '填写申请表',
-                        label: '填写申请表'
-                    }, {
-                        value: '主管经理审批',
-                        label: '主管经理审批'
-                    }, {
-                        value: '经理审批',
-                        label: '经理审批',
-                    }, {
-                        value: '经办人',
-                        label: '经办人'
-                    }, {
-                        value: '技术部主管经理',
-                        label: '技术部主管经理'
-                    }, {
-                        value: '技术部经理',
-                        label: '技术部经理'
-                    }, {
-                        value: '两会',
-                        label: '两会'
-                    }, {
-                        value: '总经理办公会',
-                        label: '总经理办公会'
-                    }, {
-                        value: '备案',
-                        label: '备案',
-                    }]
+                   this.getJd('lxsp')
                 } else if (newValue === '招标') {
-                    this.jds = [{
-                        value: '立项部门提出技术要求',
-                        label: '立项部门提出技术要求'
-                    }, {
-                        value: '技术部经办人',
-                        label: '技术部经办人'
-                    }, {
-                        value: '主管经理',
-                        label: '主管经理'
-                    }, {
-                        value: '经理',
-                        label: '经理'
-                    }, {
-                        value: '定标',
-                        label: '定标'
-                    }]
-                } else {
-                    this.jds = [{
-                        value: '填写合同表单',
-                        label: '填写合同表单'
-                    }, {
-                        value: '技术部经理审批',
-                        label: '技术部经理审批'
-                    }, {
-                        value: '办公室确认',
-                        label: '办公室确认'
-                    }]
+                    this.getJd('zbsp')
+                } else {//合同
+                   this.getJd('htsp')
                 }
             },
 
@@ -565,6 +518,25 @@
             }
         },
         methods: {
+            //拿节点
+            getJd(lc) {
+                axios.get(this.ip + "/process/getJd", {
+                    params: {
+                        lc: lc
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        this.jds=[]
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.jds.push({
+                                value: res.data[i],
+                                label: res.data[i]
+                            })
+                        }
+                    }
+                })
+            },
+
             //插入必传文件数据
             addBcwj() {
                 axios.get(this.ip + '/bcwj/insert', {
@@ -778,9 +750,12 @@
                 this.show_editGroup = false
                 this.getAllgroup();
             },
+
+            //确认添加角色
             confirm_addGroup() {
                 axios.get(this.ip + "/group/addgroup", {
                     params: {
+                        groupId: this.group.id,
                         groupName: this.group.name,
                         groupCode: this.group.code,
                     }
