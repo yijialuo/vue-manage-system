@@ -68,9 +68,11 @@
                 })
                     .then(res => {
                         loading.close();
+                        //登录成功
                         if (res.data) {
-                            localStorage.setItem('userId', this.ruleForm.username);
-                            localStorage.setItem('passWord', this.ruleForm.password);
+                            localStorage.setItem('token', res.headers.authorization)
+                            localStorage.setItem('userId', this.ruleForm.username)
+                            localStorage.setItem('passWord', this.ruleForm.password)
                             axios.get(this.ip + '/user/getuser', {
                                 params: {
                                     userId: localStorage.getItem('userId'),
@@ -83,10 +85,13 @@
                                     localStorage.setItem('userName', res.data.userName)
                                     localStorage.setItem('departmentName', res.data.departmentName)
                                     localStorage.setItem('departmentId', res.data.departmentId)
+                                    //localStorage.setItem('qxs', res.data.qxs)
                                     this.$router.push('/');
                                 })
                         } else {
-                            alert("用户名或者密码错误！")
+                            //登录失败
+                            console.log(decodeURI(res.headers.info))
+                            alert(decodeURI(res.headers.info))
                             return false;
                         }
                     })

@@ -38,7 +38,7 @@
 
                 <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getAllys(1)">全部</el-button>
             </div>
-            <el-table height="600" border :data="yanshous" class="table" style="width: 100%">
+            <el-table  border :data="yanshous" class="table" style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;"  label-position="left" inline class="demo-table-expand">
@@ -49,23 +49,11 @@
                                 <span>{{ props.row.sybm }}</span>
                             </el-form-item>
                             <el-form-item label="施工单位:">
-                                <span>{{ props.row.jhwh }}</span>
-                            </el-form-item>
-                            <el-form-item label="计划文号:">
                                 <span>{{ props.row.sgdw }}</span>
                             </el-form-item>
-                            <!--<el-form-item label="施工单位自我评定:">-->
-                                <!--<span>{{ props.row.sgdwzwpd }}</span>-->
-                            <!--</el-form-item>-->
-                            <!--<el-form-item label="使用部门验收意见:">-->
-                                <!--<span>{{ props.row.sybmysyj }}</span>-->
-                            <!--</el-form-item>-->
-                            <!--<el-form-item label="项目主管部门质量评定:">-->
-                                <!--<span>{{ props.row.zgbmpd }}</span>-->
-                            <!--</el-form-item>-->
-                            <!--<el-form-item label="参加验收人员验收结论:">-->
-                                <!--<span>{{ props.row.ysjl }}</span>-->
-                            <!--</el-form-item>-->
+                            <el-form-item label="计划文号:">
+                                <span>{{ props.row.jhwh }}</span>
+                            </el-form-item>
                         </el-form>
                     </template>
                 </el-table-column>
@@ -73,9 +61,9 @@
                 </el-table-column>
                 <el-table-column prop="projectName" label="工程名称" min-width="160">
                 </el-table-column>
-                <el-table-column prop="xmNo" label="项目编号" min-width="160">
+                <el-table-column prop="xmNo" label="项目编号" min-width="80">
                 </el-table-column>
-                <el-table-column prop="kgrq" align="center" sortable  label="开工日期" width="160">
+                <el-table-column prop="kgrq" align="center" sortable  label="开工日期" width="170">
                 </el-table-column>
                 <el-table-column prop="sjjgrq" align="center" sortable  label="实际竣工日期" width="160">
                 </el-table-column>
@@ -544,13 +532,13 @@
             },
             //点击文件下载
             handlePreview(file){
-                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name)+ '&authorization=' + localStorage.getItem('token'))
             },
             //点击附件
             djfj(id){
                 this.cid=id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')+ '&authorization=' + localStorage.getItem('token')
                 this.show_scfj=true
             },
             //填充附件列表

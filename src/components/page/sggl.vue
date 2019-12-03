@@ -514,7 +514,7 @@
                 axios.get(this.ip + '/projectApplication/sgSearch', {
                     params: {
                         projectName: this.projectName,
-                        departmentName: localStorage.getItem('departmentName'),
+                        departmentName: localStorage.getItem('departmentName')!='无部门'?localStorage.getItem('departmentName'):"",
                         fzr: this.fzr,
                         xmlb: this.xmlb,
                         yjgq: this.yjgq,

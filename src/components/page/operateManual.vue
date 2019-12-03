@@ -241,7 +241,7 @@
                 })
             },
             download(row){
-                window.location.href='http://10.197.41.100:8080/operateManual/download?id='+row.id
+                window.location.href='http://10.197.41.100:8080/operateManual/download?id='+row.id+ '&authorization=' + localStorage.getItem('token')
             },
             handleCurrentChange(val) {
                 this.listQuery.offset=val;

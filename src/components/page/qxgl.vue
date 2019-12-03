@@ -8,7 +8,8 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button type="primary" icon="delete" class="handle-del mr10" @click="visible=true">新建用户
+                    <el-button type="primary" icon="delete" class="handle-del mr10"
+                               @click="visible=true;userOV.passWord='111'">新建用户
                     </el-button>
                 </div>
                 <el-table :data="users" height="500px" border class="table">
@@ -16,7 +17,7 @@
                     </el-table-column>
                     <el-table-column prop="userName" label="姓名">
                     </el-table-column>
-                    <el-table-column prop="passWord" label="密码">
+                    <el-table-column v-if="userId==='admin'" prop="passWord" label="密码">
                     </el-table-column>
                     <el-table-column prop="departmentName" sortable label="部门">
                     </el-table-column>
@@ -31,7 +32,7 @@
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-edit" @click="editUser(scope.$index, scope.row)">编辑
                             </el-button>
-                            <el-button type="text" icon="el-icon-delete" class="red"
+                            <el-button v-if="userId==='admin'" type="text" icon="el-icon-delete" class="red"
                                        @click="deleteUser(scope.$index, scope.row)">删除
                             </el-button>
                         </template>
@@ -50,7 +51,7 @@
                     姓名：
                     <el-input v-model="userOV.userName"></el-input>
                 </div>
-                <div class="demo-input-suffix" style="margin-top: 10px">
+                <div v-if="userId==='admin'" class="demo-input-suffix" style="margin-top: 10px">
                     密码：
                     <el-input v-model="userOV.passWord"></el-input>
                 </div>
@@ -76,9 +77,9 @@
                         </el-option>
                     </el-select>
                 </div>
-                <!--是工程技术部的技术部办事员或技术部主管经理才显示-->
+                <!--是工程技术部的技术部办事员或技术部主管经理或者分管副总显示-->
                 <div class="demo-input-suffix"
-                     v-if="userOV.departmentId=='20190123022801622'&&(userOV.groupId.indexOf('jsb_doman')!=-1||userOV.groupId.indexOf('jsb_zgjl')!=-1)"
+                     v-if="userOV.departmentId=='20190123022801622'&&(userOV.groupId.indexOf('jsb_doman')!=-1||userOV.groupId.indexOf('jsb_zgjl')!=-1)||userOV.groupId.indexOf('fgfz')!=-1"
                      style="margin-top: 10px;width: 100%;">
                     管理类型：
                     <el-select v-model="userOV.manageType" multiple placeholder="请选择">
@@ -105,7 +106,7 @@
                     <el-form-item label="姓名">
                         <el-input v-model="form.userName"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码">
+                    <el-form-item v-if="userId==='admin'" label="密码">
                         <el-input v-model="form.passWord"></el-input>
                     </el-form-item>
                     <el-form-item label="部门">
@@ -130,7 +131,7 @@
                     </el-form-item>
                     <!--有管理类型才显示-->
                     <div class="demo-input-suffix"
-                         v-if="form.departmentId=='20190123022801622'&&(form.groupId.indexOf('jsb_doman') !=-1||form.groupId.indexOf('jsb_zgjl') !=-1)"
+                         v-if="form.departmentId=='20190123022801622'&&(form.groupId.indexOf('jsb_doman') !=-1||form.groupId.indexOf('jsb_zgjl') !=-1)||form.groupId.indexOf('fgfz')!=-1"
                          style="margin-top: 10px;width: 100%;">
                         管理类型：
                         <el-select v-model="form.manageType" multiple placeholder="请选择">
@@ -169,7 +170,8 @@
                     <el-button type="primary" icon="delete" class="handle-del mr10" @click="show_addDepartment=true">
                         添加部门
                     </el-button>
-                    <el-button type="primary" icon="delete" class="handle-del mr10" @click="show_addGroup=true">添加职位
+                    <el-button type="primary" v-if="userId==='admin'" icon="delete" class="handle-del mr10"
+                               @click="show_addGroup=true">添加职位
                     </el-button>
                 </div>
                 <el-table :data="departments" border style="margin-top: 20px">
@@ -184,7 +186,7 @@
                                        @click="edit_department(scope.$index, scope.row)">
                                 编辑
                             </el-button>
-                            <el-button type="text" icon="el-icon-delete" class="red"
+                            <el-button type="text" icon="el-icon-delete" class="red" v-if="userId==='admin'"
                                        :disabled="scope.row.id=='20190125102616787'||scope.row.id=='20190123022801622'"
                                        @click="delete_department(scope.$index, scope.row)">删除
                             </el-button>
@@ -268,7 +270,7 @@
                 </el-dialog>
             </div>
         </div>
-        <div class="table">
+        <div class="table" v-if="userId==='admin'">
             <div class="crumbs">
                 <el-breadcrumb separator="/">
                     <el-breadcrumb-item><i class="el-icon-lx-warn"></i>阈值</el-breadcrumb-item>
@@ -288,6 +290,45 @@
                     </el-table-column>
                 </el-table>
             </div>
+        </div>
+
+        <div class="table">
+            <div class="crumbs">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item><i class="el-icon-lx-warn"></i>机种</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div class="container">
+                <div class="handle-box">
+                    <el-button type="primary" class="handle-del mr10" @click="show_addjz=true,jz=''">添加机种
+                    </el-button>
+                </div>
+                <el-table :data="jzs" border style="margin-top: 20px">
+                    <el-table-column prop="jzmc" label="机种" width="150">
+                    </el-table-column>
+                    <el-table-column label="操作" width="180" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-edit"
+                                       @click="del_jz(scope.row,scope.$index)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+
+            <!-- 添加机种弹出框 -->
+            <el-dialog title="添加机种" :close-on-click-modal="false" :visible.sync="show_addjz" width="380px">
+                <el-form label-width="80px" :model="bcwj">
+                    <el-form-item label="机种名称:">
+                        <el-input v-model="jz"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                        <el-button @click="show_addjz=false">取 消</el-button>
+                        <el-button type="primary" @click="addjz">确 定</el-button>
+                    </span>
+            </el-dialog>
         </div>
 
         <div class="table">
@@ -381,12 +422,15 @@
         name: 'account',
         data: function () {
             return {
+                userId: localStorage.getItem('userId'),
                 fz: '',
                 //总经会阀值
                 zjhfz: [],
                 ip: 'http://10.197.41.100:8080',
                 //添加必传文件
                 show_addbcwj: false,
+                //添加机种
+                show_addjz: false,
                 editVisible: false,
                 userOV: {
                     userId: '',
@@ -472,7 +516,11 @@
                     lc: '',
                     jd: '',
                     wjmc: ''
-                }
+                },
+                //机种列表
+                jzs: [],
+                //机种
+                jz: ''
             }
         },
         created() {
@@ -485,6 +533,8 @@
             this.getZjhfz()
             //拿毕传文件
             this.getBcwjs()
+            //拿机种
+            this.getjzs()
         },
         computed: {
             lc() {
@@ -496,11 +546,11 @@
             lc(newValue, oldValue) {
                 this.bcwj.jd = ''
                 if (newValue === '前期') {
-                   this.getJd('lxsp')
+                    this.getJd('lxsp')
                 } else if (newValue === '招标') {
                     this.getJd('zbsp')
                 } else {//合同
-                   this.getJd('htsp')
+                    this.getJd('htsp')
                 }
             },
 
@@ -518,6 +568,49 @@
             }
         },
         methods: {
+            //添加机种
+            addjz() {
+                axios.get(this.ip + '/jz/addJz', {
+                    params: {
+                        jz: this.jz
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        this.$message.success("添加成功！")
+                        this.jzs.push({
+                            jzmc: this.jz
+                        })
+                    } else {
+                        this.$message.error("添加失败！")
+                    }
+                    this.show_addjz = false
+                })
+            },
+
+            //拿机种
+            getjzs() {
+                axios.get(this.ip + '/jz/getAll')
+                    .then(res => {
+                        this.jzs = res.data;
+                    })
+            },
+
+            //删除机种
+            del_jz(row, index) {
+                axios.get(this.ip + '/jz/delJz', {
+                    params: {
+                        jz: row.jzmc
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        this.$message.success("删除成功！")
+                        this.jzs.splice(index, 1);
+                    } else {
+                        this.$message.error("删除失败！")
+                    }
+                })
+            },
+
             //拿节点
             getJd(lc) {
                 axios.get(this.ip + "/process/getJd", {
@@ -526,7 +619,7 @@
                     }
                 }).then(res => {
                     if (res.data) {
-                        this.jds=[]
+                        this.jds = []
                         for (let i = 0; i < res.data.length; i++) {
                             this.jds.push({
                                 value: res.data[i],

@@ -411,37 +411,7 @@
                     limit: 10
                 },
                 ip: 'http://10.197.41.100:8080',
-                jzs: [
-                    {
-                        value: '门机',
-                        label: '门机'
-                    },
-                    {
-                        value: '装载机',
-                        label: '装载机'
-                    }, {
-                        value: '推耙机',
-                        label: '推耙机'
-                    }, {
-                        value: '推土机',
-                        label: '推土机'
-                    }, {
-                        value: '挖掘机',
-                        label: '挖掘机'
-                    }, {
-                        value: '叉拖板',
-                        label: '叉拖板'
-                    }, {
-                        value: '散粮装船系统',
-                        label: '散粮装船系统'
-                    }, {
-                        value: '车间设备',
-                        label: '车间设备'
-                    }, {
-                        value: '卸油设备',
-                        label: '卸油设备'
-                    }
-                ],
+                jzs: [],
                 selectObject: {
                     xmbh: '',
                     xmmc: '',
@@ -616,11 +586,25 @@
             this.getAllDptName()
             this.getAllJBRS()
             this.getAllFQRS()
+            this.getjzs()
         },
         methods: {
+            //拿机种
+            getjzs() {
+                axios.get(this.ip + '/jz/getAll')
+                    .then(res => {
+                        for(let i=0;i<res.data.length;i++){
+                            this.jzs.push({
+                                value:res.data[i].jzmc,
+                                lable:res.data[i].jzmc
+                            })
+                        }
+                    })
+            },
+
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name)+ '&authorization=' + localStorage.getItem('token'))
             },
 
             //点击附件事件
@@ -755,7 +739,7 @@
                     })
             },
             download() {
-                window.location.href = 'http://10.197.41.100:8080/Bb/downloadXMCXBB?param=' + JSON.stringify(this.selectObject)
+                window.location.href = 'http://10.197.41.100:8080/Bb/downloadXMCXBB?param=' + JSON.stringify(this.selectObject)+ '&authorization=' + localStorage.getItem('token')
             },
             getAllDptName() {
                 axios.get('http://10.197.41.100:8080/department/getAllDptName')

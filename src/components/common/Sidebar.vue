@@ -59,7 +59,7 @@
                             },
                             {
                                 index: '/xxmgl',
-                                title: '小项目管理'
+                                title: '股份项目管理'
                             },
                             {
                                 index: '/htgl',
@@ -92,20 +92,20 @@
                                 index: '/qxgl',
                                 title: '权限管理'
                             },
-                            {
-                                index: '2',
-                                title: '工作流管理',
-                                subs: [
-                                    {
-                                        index: '/lxsp',
-                                        title: '立项审批'
-                                    },
-                                    {
-                                        index: '/zbsp',
-                                        title: '招标审批'
-                                    }
-                                ]
-                            },
+                            // {
+                            //     index: '2',
+                            //     title: '工作流管理',
+                            //     subs: [
+                            //         {
+                            //             index: '/lxsp',
+                            //             title: '立项审批'
+                            //         },
+                            //         {
+                            //             index: '/zbsp',
+                            //             title: '招标审批'
+                            //         }
+                            //     ]
+                            // },
                             {
                                 index: '/operateManual',
                                 title: '操作手册'
@@ -130,6 +130,10 @@
                                 index: '/xmcxbb',
                                 title: '项目查询报表'
                             },
+                            // {
+                            //     index:'/txhtj',
+                            //     title:'图形化统计'
+                            // }
                             // {
                             //     index: '3-2',
                             //     title: '三级菜单',
@@ -172,7 +176,21 @@
             getSidebar() {
                 let groupId = localStorage.getItem('groupId')
                 let departmentName = localStorage.getItem('departmentName')
-                if ( this.equalsJs(groupId,'admin')) {
+                let userId=localStorage.getItem('userId')
+                if(userId==='xsadmin'){
+                    this.items=[
+                        {
+                            icon: 'el-icon-lx-cascades',
+                            index: 'table',
+                            title: '系统管理',
+                            subs: [
+                                {
+                                    index: '/qxgl',
+                                    title: '权限管理'
+                                }]
+                        }
+                    ]
+                }else if ( this.equalsJs(groupId,'admin')) {
                     this.items = [
                         {
                             icon: 'el-icon-lx-home',
@@ -194,7 +212,7 @@
                                 },
                                 {
                                     index: '/xxmgl',
-                                    title: '小项目管理'
+                                    title: '股份项目管理'
                                 },
                                 {
                                     index: '/htgl',
@@ -226,21 +244,21 @@
                                 {
                                     index: '/qxgl',
                                     title: '权限管理'
-                                },
-                                {
-                                    index: '2',
-                                    title: '工作流管理',
-                                    subs: [
-                                        {
-                                            index: '/lxsp',
-                                            title: '立项审批'
-                                        },
-                                        {
-                                            index: '/zbsp',
-                                            title: '招标审批'
-                                        }
-                                    ]
                                 }
+                                // {
+                                //     index: '2',
+                                //     title: '工作流管理',
+                                //     subs: [
+                                //         {
+                                //             index: '/lxsp',
+                                //             title: '立项审批'
+                                //         },
+                                //         {
+                                //             index: '/zbsp',
+                                //             title: '招标审批'
+                                //         }
+                                //     ]
+                                // }
                             ]
                         },
                         {
@@ -259,7 +277,11 @@
                                 {
                                     index: '/xmcxbb',
                                     title: '项目查询报表'
-                                }
+                                },
+                                // {
+                                //     index:'/txhtj',
+                                //     title:'图形化统计'
+                                // }
                             ]
                         },
                         {
@@ -290,7 +312,7 @@
                                 },
                                 {
                                     index: '/xxmgl',
-                                    title: '小项目管理'
+                                    title: '股份项目管理'
                                 },
                                 {
                                     index: '/htgl',
@@ -351,7 +373,11 @@
                                 {
                                     index: '/xmcxbb',
                                     title: '项目查询报表'
-                                }
+                                },
+                                // {
+                                //     index:'/txhtj',
+                                //     title:'图形化统计'
+                                // }
                             ]
                         },
                         {
@@ -382,7 +408,7 @@
                                 },
                                 {
                                     index: '/xxmgl',
-                                    title: '小项目管理'
+                                    title: '股份项目管理'
                                 },
                                 {
                                     index: '/htgl',
@@ -419,6 +445,11 @@
                                     index: '/xmcxbb',
                                     title: '项目查询报表'
                                 }
+                                // ,
+                                // {
+                                //     index:'/txhtj',
+                                //     title:'图形化统计'
+                                // }
                             ]
                         },
                         {
@@ -469,6 +500,11 @@
                                     index: '/xmcxbb',
                                     title: '项目查询报表'
                                 }
+                                // ,
+                                // {
+                                //     index:'/txhtj',
+                                //     title:'图形化统计'
+                                // }
                             ]
                         },
                         {

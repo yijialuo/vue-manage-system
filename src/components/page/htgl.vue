@@ -38,7 +38,7 @@
                 <el-button type="primary" icon="el-icon-search" style="margin-left: 10px" @click="handleSearch">搜索
                 </el-button>
             </div>
-            <el-table height="600" :data="contracts" border class="table">
+            <el-table  :data="contracts" border class="table">
                 <el-table-column type="expand" width="40">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;" label-position="left" inline class="demo-table-expand">
@@ -76,17 +76,17 @@
                 </el-table-column>
                 <el-table-column prop="projectName" label="合同项目" min-width="160">
                 </el-table-column>
-                <el-table-column prop="xmNo" align="center" label="项目编号" min-width="160">
+                <el-table-column prop="xmNo" align="center" label="项目编号" min-width="80">
                 </el-table-column>
                 <el-table-column prop="rq" sortable align="center" label="合同日期" width="120">
                 </el-table-column>
-                <el-table-column prop="dfdsr" align="center" label="对方当事人" width="120">
+                <el-table-column prop="dfdsr" align="center" label="对方当事人" width="220">
                 </el-table-column>
-                <el-table-column prop="tzwh" align="center" label="投资文号" sortable width="120">
-                </el-table-column>
+                <!--<el-table-column prop="tzwh" align="center" label="投资文号" sortable width="120">-->
+                <!--</el-table-column>-->
                 <el-table-column prop="price" align="center" label="合同价款(元)" width="120">
                 </el-table-column>
-                <el-table-column prop="psjl" align="center" label="评审结论" min-width="160">
+                <el-table-column prop="psjl" align="center" label="评审结论" min-width="100">
                 </el-table-column>
                 <el-table-column prop="dqjd" align="center" label="当前节点" width="140">
                 </el-table-column>
@@ -143,21 +143,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <!--<el-upload-->
-            <!--:disabled="isgd=='1'"-->
-            <!--class="upload-demo"-->
-            <!--drag-->
-            <!--:action="url"-->
-            <!--:on-preview="handlePreview"-->
-            <!--:before-remove="handleBeforeRemove"-->
-            <!--:on-success="handleSuccess"-->
-            <!--multiple-->
-            <!--:file-list="fileList"-->
-            <!--style="width: 100%;"-->
-            <!--&gt;-->
-            <!--<i class="el-icon-upload" ></i>-->
-            <!--<div class="el-upload__text" >将文件拖到此处，或<em>点击上传</em></div>-->
-            <!--</el-upload>-->
         </el-dialog>
 
         <!--添加合同弹窗 -->
@@ -275,7 +260,7 @@
         <el-dialog title="编辑合同" :close-on-click-modal="false" :visible.sync="show_bjht" width="685px">
             <el-form ref="form" label-width="100px">
                 <el-form-item label="合同项目">
-                    <el-input  v-model="contract.projectName" readonly style="width: 210px"></el-input>
+                    <el-input v-model="contract.projectName" readonly style="width: 210px"></el-input>
                 </el-form-item>
                 <el-form-item label="有效期合同">
                     <el-switch
@@ -349,7 +334,13 @@
                 <el-form-item>
                     <el-table
                             :data="bzs"
+                            :row-class-name="tableRowClassName"
                     >
+                        <el-table-column
+                                prop="time"
+                                label="时间"
+                                width="180">
+                        </el-table-column>
                         <el-table-column
                                 prop="usernam"
                                 label="姓名"
@@ -359,11 +350,6 @@
                                 prop="groupName"
                                 label="职位"
                                 width="120">
-                        </el-table-column>
-                        <el-table-column
-                                prop="time"
-                                label="时间"
-                                width="180">
                         </el-table-column>
                         <el-table-column
                                 prop="comment"
@@ -376,7 +362,9 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="lxxq(contract)">立项详情</el-button>
                 <el-button @click="qxbj">取 消</el-button>
-                <el-button type="primary" v-if="contract.gd!='1'&&(contract.dqjd==='未申请'||contract.dqjd==='经办人')&&contract.cwbmyj===userId" @click="qdbj">确定编辑</el-button>
+                <el-button type="primary"
+                           v-if="contract.gd!='1'&&(contract.dqjd==='未申请'||contract.dqjd==='经办人')&&contract.cwbmyj===userId"
+                           @click="qdbj">确定编辑</el-button>
             </span>
         </el-dialog>
 
@@ -472,7 +460,9 @@
                 <el-form-item label="审批列表">
                     <el-table
                             :data="commentList"
-                            style="width: 100%">
+                            style="width: 100%"
+                            :row-class-name="tableRowClassName"
+                    >
                         <el-table-column
                                 prop="time"
                                 label="日期"
@@ -635,42 +625,44 @@
         watch: {
             //填充其他字段
             projectId(newValue, oldValue) {
-                if (newValue != null && newValue != '' && this.show_bjht == false) {
-                    axios.get(this.ip + '/contract/fillContractByXmid', {
-                        params: {
-                            projectId: newValue
-                        }
-                    }).then(res => {
-                        this.$set(this.contract, 'dfdsr', '')
-                        this.$set(this.contract, 'tzwh', '')
-                        this.$set(this.contract, 'jbr', '')
-                        this.$set(this.contract, 'price', '')
-                        let sz = res.data.split('/')
-                        if (sz.length == 4) {
-                            if (sz[0] != null && sz[0] != 'null')
-                                this.$set(this.contract, 'dfdsr', sz[0])
-                            if (sz[1] != null && sz[1] != 'null')
-                                this.$set(this.contract, 'price', sz[1])
-                            if (sz[2] != null && sz[2] != 'null')
-                                this.$set(this.contract, 'tzwh', sz[2])
-                            if (sz[3] != null && sz[3] != 'null')
-                                this.$set(this.contract, 'jbr', sz[3])
-                        } else {
-                            if (sz[0] != null && sz[0] != 'null')
-                                this.$set(this.contract, 'tzwh', sz[0])
-                            if (sz[1] != null && sz[1] != 'null')
-                                this.$set(this.contract, 'jbr', sz[1])
-                        }
-                    })
+                if(this.show_xjht==true){
+                    if (newValue != null && newValue != '' && this.show_bjht == false) {
+                        axios.get(this.ip + '/contract/fillContractByXmid', {
+                            params: {
+                                projectId: newValue
+                            }
+                        }).then(res => {
+                            this.$set(this.contract, 'dfdsr', '')
+                            this.$set(this.contract, 'tzwh', '')
+                            this.$set(this.contract, 'jbr', '')
+                            this.$set(this.contract, 'price', '')
+                            let sz = res.data.split('/')
+                            if (sz.length == 4) {
+                                if (sz[0] != null && sz[0] != 'null')
+                                    this.$set(this.contract, 'dfdsr', sz[0])
+                                if (sz[1] != null && sz[1] != 'null')
+                                    this.$set(this.contract, 'price', sz[1])
+                                if (sz[2] != null && sz[2] != 'null')
+                                    this.$set(this.contract, 'tzwh', sz[2])
+                                if (sz[3] != null && sz[3] != 'null')
+                                    this.$set(this.contract, 'jbr', sz[3])
+                            } else {
+                                if (sz[0] != null && sz[0] != 'null')
+                                    this.$set(this.contract, 'tzwh', sz[0])
+                                if (sz[1] != null && sz[1] != 'null')
+                                    this.$set(this.contract, 'jbr', sz[1])
+                            }
+                        })
 
-                    // 需要获取合同的工期
-                    axios.get(this.ip + '/contract/getGq', {
-                        params: {
-                            projectId: newValue
-                        }
-                    }).then(res => {
-                        this.$set(this.contract, 'gq', res.data)
-                    })
+                        // 需要获取合同的工期
+                        axios.get(this.ip + '/contract/getGq', {
+                            params: {
+                                projectId: newValue
+                            }
+                        }).then(res => {
+                            this.$set(this.contract, 'gq', res.data)
+                        })
+                    }
                 }
             },
         },
@@ -698,9 +690,9 @@
                 this.currentRow = row;
                 var index = this.url.indexOf("&bcwjid=")
                 if (index != -1) {
-                    this.url = this.url.substring(0, index + 8) + this.currentRow.id;
+                    this.url = this.url.substring(0, index + 8) + this.currentRow.id + '&authorization=' + localStorage.getItem('token') + '&authorization=' + localStorage.getItem('token');
                 } else {
-                    this.url = this.url + "&bcwjid=" + this.currentRow.id
+                    this.url = this.url + "&bcwjid=" + this.currentRow.id + '&authorization=' + localStorage.getItem('token') + '&authorization=' + localStorage.getItem('token')
                 }
             },
             //拿前期必传文件列表
@@ -717,7 +709,7 @@
 
             //合同下载
             xz(row) {
-                window.open('http://10.197.41.100:8080/print/ht?id=' + row.id)
+                window.open('http://10.197.41.100:8080/print/ht?id=' + row.id + '&authorization=' + localStorage.getItem('token'))
             },
             //状态
             zt(row) {
@@ -729,7 +721,7 @@
                     this.src = require('@/assets/img/ht/h_jsbjl.svg')
                 } else if (row.dqjd === '评审人') {
                     this.src = require('@/assets/img/ht/h_psr.svg')
-                } else if (row.dqjd === '法律事务所') {
+                } else if (row.dqjd === '法律事务室') {
                     this.src = require('@/assets/img/ht/h_flsws.svg')
                 } else if (row.dqjd === '财务总监') {
                     this.src = require('@/assets/img/ht/h_cwzj.svg')
@@ -983,7 +975,7 @@
                         } else {
                             this.$message.error("修改失败！")
                         }
-                        this.getAllht(1)
+                        this.reload()
                     })
                 this.show_bjht = false
             },
@@ -1046,12 +1038,11 @@
 
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
-
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name) + '&authorization=' + localStorage.getItem('token'))
             },
 
-            //点击附件
-            djfj(row) {
+            //拿附件
+            getfj(row) {
                 this.contract = row
                 this.cid = row.id
                 if (row.dwyj == '' || row.dwyj == null) {//未申请
@@ -1068,9 +1059,7 @@
                         }
                     })
                         .then(res => {
-                            // items.splice(indexOfItem, 1, newValue)
-                            // this.fileList[i] = []
-                            this.fileList.splice(i, 1, [])
+                            this.$set(this.fileList, i, [])
                             if (res.data) {
                                 for (let j = 0; j < res.data.length; j++) {
                                     this.fileList[i].push({
@@ -1082,6 +1071,29 @@
                         })
                 }
                 this.show_scfj = true
+            },
+
+            //点击附件
+            djfj(row) {
+                //领导类、直接查看附件
+                if (localStorage.getItem('departmentName') === '领导' || this.equalsJs(this.groupId, 'jsb_zgjl') || this.equalsJs(this.groupId, 'jsb_jl') || this.equalsJs(this.groupId, 'psr')||row.jbr===localStorage.getItem('userName')||this.equalsJs(this.groupId, 'admin')) {
+                    this.getfj(row)
+                    return
+                }
+                //判定当前账号是否为改项目的处理人之一
+                axios.get(this.ip + '/user/isClr', {
+                    params: {
+                        xmid: row.projectId,
+                        userId: localStorage.getItem('userId')
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        this.getfj(row)
+                    } else {
+                        this.$message.error("您没权限！")
+                    }
+                })
+
             },
 
             //填充附件列表
@@ -1223,7 +1235,6 @@
                 var currentDate = new Date();
                 var minDate = new Date(Date.parse(value[0]));
                 var maxDate = new Date(Date.parse(value[1]));
-
                 if (currentDate < minDate) {// 当前时间小于最小时间
                     this.$set(this.contract, 'lxqk', '未开始履行')
                 } else if (currentDate > maxDate) {// 当前时间大于最大时间

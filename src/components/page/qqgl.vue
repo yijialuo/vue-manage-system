@@ -8,9 +8,12 @@
             </div>
             <div class="container">
                 <div class="handle-box">
-                    <el-button v-if=" equalsJs(groupId,'doman') || equalsJs(groupId,'jsb_doman') " type="primary"
-                               icon="el-icon-circle-plus"
-                               class="handle-del mr10" @click="xjxmlxd">新建项目立项单
+                    <!--v-if="hasqx('xjxmlxd')"-->
+                    <el-button
+                            type="primary"
+                             v-if=" equalsJs(groupId,'doman') || equalsJs(groupId,'jsb_doman') "
+                            icon="el-icon-circle-plus"
+                            class="handle-del mr10" @click="xjxmlxd">新建项目立项单
                     </el-button>
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="qb">全部</el-button>
                     <br/>
@@ -231,8 +234,8 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item  label="机种类别" v-if="project.projectType=='维修'">
-                        <el-select style="width: 215px;padding-right: 20px" v-model="project.jz"
+                    <el-form-item label="机种类别" v-if="project.projectType=='维修'">
+                        <el-select filterable style="width: 215px;padding-right: 20px" v-model="project.jz"
                                    placeholder="请选择">
                             <el-option
                                     v-for="item in jzs"
@@ -334,7 +337,8 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="机种类别" v-if="project.projectType=='维修'">
-                        <el-select :disabled="!issqr" style="width: 215px;padding-right: 20px" v-model="project.jz"
+                        <el-select filterable :disabled="!issqr" style="width: 215px;padding-right: 20px"
+                                   v-model="project.jz"
                                    placeholder="请选择">
                             <el-option
                                     v-for="item in jzs"
@@ -374,7 +378,9 @@
                     <el-form-item label="审批列表">
                         <el-table
                                 :data="commentList"
-                                style="width: 100%">
+                                style="width: 100%"
+                                :row-class-name="tableRowClassName"
+                        >
                             <el-table-column
                                     prop="time"
                                     label="日期"
@@ -429,6 +435,7 @@
                                     :file-list="fileList[scope.$index]">
                                 <el-button size="small" type="primary" @click="recordCurrentRow(scope.row)">点击上传
                                 </el-button>
+
                             </el-upload>
                         </template>
                     </el-table-column>
@@ -467,37 +474,7 @@
                 //项目类别搜索
                 select_xmlb: [],
                 //机种类
-                jzs: [
-                    {
-                        value: '门机',
-                        label: '门机'
-                    },
-                    {
-                        value: '装载机',
-                        label: '装载机'
-                    }, {
-                        value: '推耙机',
-                        label: '推耙机'
-                    }, {
-                        value: '推土机',
-                        label: '推土机'
-                    }, {
-                        value: '挖掘机',
-                        label: '挖掘机'
-                    }, {
-                        value: '叉拖板',
-                        label: '叉拖板'
-                    }, {
-                        value: '散粮装船系统',
-                        label: '散粮装船系统'
-                    }, {
-                        value: '车间设备',
-                        label: '车间设备'
-                    }, {
-                        value: '卸油设备',
-                        label: '卸油设备'
-                    }
-                ],
+                jzs: [],
                 jds: [{
                     value: '未申请',
                     label: '未申请',
@@ -660,8 +637,22 @@
             this.getAllJBR()
             //拿必传文件列表
             this.getBcwjs()
+            this.getjzs()
         },
         methods: {
+            //拿机种
+            getjzs() {
+                axios.get(this.ip + '/jz/getAll')
+                    .then(res => {
+                        for (let i = 0; i < res.data.length; i++) {
+                            this.jzs.push({
+                                value: res.data[i].jzmc,
+                                lable: res.data[i].jzmc
+                            })
+                        }
+                    })
+            },
+
             //填充是否可以申请字段
             isSq() {
                 for (let i = 0; i < this.projects.length; i++) {
@@ -688,7 +679,7 @@
 
             //下载
             xz(row) {
-                window.open('http://10.197.41.100:8080/print/sqb?id=' + row.id)
+                window.open('http://10.197.41.100:8080/print/sqb?id=' + row.id + '&authorization=' + localStorage.getItem('token'))
             },
 
             //上传成功，重新请求
@@ -700,9 +691,9 @@
                 this.currentRow = row;
                 var index = this.url.indexOf("&bcwjid=")
                 if (index != -1) {
-                    this.url = this.url.substring(0, index + 8) + this.currentRow.id;
+                    this.url = this.url.substring(0, index + 8) + this.currentRow.id + '&authorization=' + localStorage.getItem('token');
                 } else {
-                    this.url = this.url + "&bcwjid=" + this.currentRow.id
+                    this.url = this.url + "&bcwjid=" + this.currentRow.id + '&authorization=' + localStorage.getItem('token')
                 }
             },
 
@@ -736,40 +727,14 @@
 
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name) + '&authorization=' + localStorage.getItem('token'))
             },
 
             //点击附件事件
             fj(row) {
                 //领导类、直接查看附件
-                if(localStorage.getItem('departmentName')==='领导'||this.groupId==='jsb_zgjl'||this.groupId==='jsb_jl'){
-                    this.showfj = true
-                    this.project = row
-                    if (row.pid == '' || row.pid == null) {//未申请
-                        this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
-                    } else {//已经申请
-                        this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
-                    }
-                    //拿附件信息
-                    for (let i = 0; i < this.bcwjs.length; i++) {
-                        axios.get(this.ip + '/Attachment/getattachment2', {
-                            params: {
-                                id: row.id,
-                                bcwjid: this.bcwjs[i].id
-                            }
-                        })
-                            .then(res => {
-                                this.fileList.splice(i, 1, [])
-                                if (res.data) {
-                                    for (let j = 0; j < res.data.length; j++) {
-                                        this.fileList[i].push({
-                                            name: res.data[j].attachment_nam,
-                                            id: res.data[j].attachment_id
-                                        })
-                                    }
-                                }
-                            })
-                    }
+                if (localStorage.getItem('departmentName') === '领导' || this.equalsJs(this.groupId, 'jsb_zgjl') || this.equalsJs(this.groupId, 'jsb_jl') || this.equalsJs(this.groupId, 'admin')) {
+                    this.getfj(row)
                     return
                 }
                 //判定当前账号是否为改项目的处理人之一
@@ -779,38 +744,44 @@
                         userId: localStorage.getItem('userId')
                     }
                 }).then(res => {
+                    //是相关人
                     if (res.data) {
-                        this.project = row
-                        if (row.pid == '' || row.pid == null) {//未申请
-                            this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
-                        } else {//已经申请
-                            this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
-                        }
-                        //拿附件信息
-                        for (let i = 0; i < this.bcwjs.length; i++) {
-                            axios.get(this.ip + '/Attachment/getattachment2', {
-                                params: {
-                                    id: row.id,
-                                    bcwjid: this.bcwjs[i].id
-                                }
-                            })
-                                .then(res => {
-                                    this.fileList.splice(i, 1, [])
-                                    if (res.data) {
-                                        for (let j = 0; j < res.data.length; j++) {
-                                            this.fileList[i].push({
-                                                name: res.data[j].attachment_nam,
-                                                id: res.data[j].attachment_id
-                                            })
-                                        }
-                                    }
-                                })
-                        }
-                        this.showfj = true
+                        this.getfj(row)
                     } else {
                         this.$message.error("您没有权限！")
                     }
                 })
+            },
+
+            //拿附件信息
+            getfj(row) {
+                this.showfj = true
+                this.project = row
+                if (row.pid == '' || row.pid == null) {//未申请
+                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
+                } else {//已经申请
+                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                }
+                //拿附件信息
+                for (let i = 0; i < this.bcwjs.length; i++) {
+                    axios.get(this.ip + '/Attachment/getattachment2', {
+                        params: {
+                            id: row.id,
+                            bcwjid: this.bcwjs[i].id
+                        }
+                    })
+                        .then(res => {
+                            this.$set(this.fileList, i, [])
+                            if (res.data) {
+                                for (let j = 0; j < res.data.length; j++) {
+                                    this.fileList[i].push({
+                                        name: res.data[j].attachment_nam,
+                                        id: res.data[j].attachment_id
+                                    })
+                                }
+                            }
+                        })
+                }
             },
 
             //领取评论
@@ -839,8 +810,8 @@
                     select_xmfl: this.select_xmfl,
                     select_xmlb: this.select_xmlb,
                 }
-                // 如果当前账号不是工程技术部且不是办公室且不是办公室.，select_dptnmt填充当前账号部门
-                if (localStorage.getItem('departmentId') != '20190123022801622' && localStorage.getItem('departmentId') != '20190125102616787' && localStorage.getItem('departmentId') != '103a990b-a59a-40bc-8ac9-a505076ca0ae') {
+                // 如果当前账号不是工程技术部且不是办公室且不是办公室.且不是领导，select_dptnmt填充当前账号部门
+                if (localStorage.getItem('departmentId') != '20190123022801622' && localStorage.getItem('departmentId') != '20190125102616787' && localStorage.getItem('departmentId') != '103a990b-a59a-40bc-8ac9-a505076ca0ae' && localStorage.getItem('departmentId') != 'ba7c0e37-3df1-463d-9eda-c90bc564d6c5'&&localStorage.getItem('departmentId')!='0') {
                     params.select_dptnm = localStorage.getItem('departmentName')
                 }
                 this.ss = true
@@ -849,6 +820,7 @@
                     }
                 ).then(res => {
                     this.projects = res.data
+                    this.isSq()
                 })
             },
 
@@ -1168,10 +1140,10 @@
                     this.lqpl(this.project.pid)
                 }
                 //修改按钮的显示
-                if((this.project.pid==null||this.project.pid==''||this.project.dqjd==='填写申请表')&&this.project.proposer==this.userName)
-                    this.issqr=true
+                if ((this.project.pid == null || this.project.pid == '' || this.project.dqjd === '填写申请表') && this.project.proposer == this.userName)
+                    this.issqr = true
                 else
-                    this.issqr=false
+                    this.issqr = false
                 this.show_xq = true
                 // //判断是否能修改（修改按钮的显示）
                 // axios.get(this.ip + '/projectApplication/qdsqr', {

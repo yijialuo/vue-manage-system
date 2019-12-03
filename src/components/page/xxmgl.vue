@@ -2,7 +2,7 @@
     <div class="table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-cascades"></i>小项目管理</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-cascades"></i>股份项目管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
@@ -29,12 +29,16 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" width="240">
                     <template slot-scope="scope">
-                        <el-button type="text" size="mini" v-if="scope.row.y2==userId" @click="updateProject(scope.row)">修改</el-button>
-                        <el-button type="text" size="mini" @click="openSmallProject(scope.row)">小项目管理</el-button>
+                        <el-button type="text" size="mini" v-if="scope.row.y2==userId"
+                                   @click="updateProject(scope.row)">修改
+                        </el-button>
+                        <el-button type="text" size="mini" @click="openSmallProject(scope.row)">股份项目管理</el-button>
+                        <el-button type="text" @click="lxxq(scope.row)">立项详情
+                        </el-button>
+                        <el-button type="text" @click="zbxx(scope.row)">招标信息
+                        </el-button>
                         <el-button type="text" style="color: #ff0000;" v-if="scope.row.y2==userId" size="mini"
                                    @click="deleteProjectData(scope.row.id)">删除
-                        </el-button>
-                        <el-button type="text" @click="lxxq(scope.row)">立项详情
                         </el-button>
                     </template>
                 </el-table-column>
@@ -104,7 +108,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog title="小项目管理" :close-on-click-modal="false" :visible.sync="smallProjectDialogVisible"
+            <el-dialog title="股份项目管理" :close-on-click-modal="false" :visible.sync="smallProjectDialogVisible"
                        width="80%">
                 <el-button type="primary" icon="el-icon-circle-plus" v-if="y2==userId"
                            @click="addSmallProject">增加
@@ -130,7 +134,9 @@
                     </el-table-column>
                     <el-table-column fixed="right" label="操作" align="center" width="160">
                         <template slot-scope="scope">
-                            <el-button type="text" size="mini" v-if="y2==userId" @click="updateSmallProject(scope.row)">修改</el-button>
+                            <el-button type="text" size="mini" v-if="y2==userId" @click="updateSmallProject(scope.row)">
+                                修改
+                            </el-button>
                             <el-button type="text" size="mini" @click="attachment(scope.row)">附件</el-button>
                             <el-button type="text" style="color: #ff0000;" v-if="y2==userId" size="mini"
                                        @click="deleteSmallProjectData(scope.row.id)">删除
@@ -143,20 +149,50 @@
                 </div>
             </el-dialog>
 
-            <el-dialog :title="addUpdateSmallProjectDialogTitle"  :close-on-click-modal="false"
+            <!--招标信息弹窗-->
+            <el-dialog title="招标信息" :close-on-click-modal="false"
+                       :visible.sync="showZbxx" width="50%">
+                <el-form ref="form" style="margin-top: 10px" :model="project" label-width="100px">
+                    <el-form-item label="发标时间">
+                        <el-date-picker v-model="zhaobiao.fbsj" type="date" placeholder="选择日期"
+                                        value-format="yyyy-MM-dd"
+                                        style="width: 205px"></el-date-picker>
+                        &nbsp&nbsp&nbsp&nbsp定标时间&nbsp&nbsp&nbsp&nbsp
+                        <el-date-picker v-model="zhaobiao.dbsj" type="date" placeholder="选择日期"
+                                        value-format="yyyy-MM-dd"
+                                        style="width: 205px"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="工期">
+                        <el-input v-model="zhaobiao.tbjzsj"></el-input>
+                    </el-form-item>
+                    <el-form-item label="中标人">
+                        <el-input v-model="zhongbiao.zhongbiaodw"></el-input>
+                    </el-form-item>
+                    <el-form-item label="中标价格">
+                        <el-input type="number" v-model="zhongbiao.zhongbiaojg"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="()=>{showZbxx=false;zhaobiao={};zhongbiao={}}">取消</el-button>
+                <el-button type="primary" @click="qdzbxx">确定修改</el-button>
+            </span>
+            </el-dialog>
+
+            <el-dialog :title="addUpdateSmallProjectDialogTitle" :close-on-click-modal="false"
                        :visible.sync="addUpdateSmallProjectDialogVisible" width="50%">
-                <el-form ref="smallProjectDataForm" :model="smallProjectTemp" :rules="addUpdateRule2" label-position="left" label-width="120px">
-                    <el-form-item label="小项目编号" prop="xxmbh">
-                        <el-input v-model="smallProjectTemp.xxmbh" />
+                <el-form ref="smallProjectDataForm" :model="smallProjectTemp" :rules="addUpdateRule2"
+                         label-position="left" label-width="120px">
+                    <el-form-item label="  小项目编号" prop="xxmbh">
+                        <el-input v-model="smallProjectTemp.xxmbh"/>
                     </el-form-item>
                     <el-form-item label="工作步骤名称" prop="gzbzmc">
-                        <el-input v-model="smallProjectTemp.gzbzmc" />
+                        <el-input v-model="smallProjectTemp.gzbzmc"/>
                     </el-form-item>
                     <el-form-item label="施工单位" prop="sgdw">
-                        <el-input v-model="smallProjectTemp.sgdw" />
+                        <el-input v-model="smallProjectTemp.sgdw"/>
                     </el-form-item>
                     <el-form-item label="合同金额" prop="htje">
-                        <el-input type="number" v-model="smallProjectTemp.htje" />
+                        <el-input type="number" v-model="smallProjectTemp.htje"/>
                     </el-form-item>
                     <el-form-item label="合同签订时间">
                         <el-date-picker
@@ -201,7 +237,7 @@
             </el-dialog>
 
             <!--立项详情-->
-            <el-dialog title="立项详情" :visible.sync="lxxqShow" width="50%" >
+            <el-dialog title="立项详情" :visible.sync="lxxqShow" width="50%">
                 <el-form :model="project" label-position="left" label-width="120px">
                     <el-form-item label="项目编号">
                         <el-input v-model="project.projectNo" readonly/>
@@ -270,14 +306,44 @@
                         </el-col>
                     </el-form-item>
                     <el-form-item label="立项背景理由">
-                        <el-input v-model="project.establishReason" readonly type="textarea" :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                        <el-input v-model="project.establishReason" readonly type="textarea"
+                                  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
                     </el-form-item>
 
                     <el-form-item label="立项内容规模">
-                        <el-input v-model="project.scale" readonly type="textarea" :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                        <el-input v-model="project.scale" readonly type="textarea"
+                                  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
                     </el-form-item>
                     <el-form-item label="投资概算说明">
-                        <el-input v-model="project.illustration" readonly type="textarea" :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                        <el-input v-model="project.illustration" readonly type="textarea"
+                                  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                    </el-form-item>
+                    <el-form-item label="审批列表">
+                        <el-table
+                                :data="commentList"
+                                style="width: 100%"
+                                :row-class-name="tableRowClassName"
+                        >
+                            <el-table-column
+                                    prop="time"
+                                    label="日期"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="usernam"
+                                    label="姓名"
+                                    width="80">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="groupName"
+                                    label="职位"
+                                    width="120">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="comment"
+                                    label="审批">
+                            </el-table-column>
+                        </el-table>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -296,7 +362,10 @@
         inject: ['reload'],
         data() {
             return {
-                userId:localStorage.getItem('userId'),
+                zhongbiao: {},
+                zhaobiao: {},
+                showZbxx: false,
+                userId: localStorage.getItem('userId'),
                 userName: localStorage.getItem('userName'),
                 groupId: localStorage.getItem('groupId'),
                 projectList: null,
@@ -370,14 +439,35 @@
                     zjhsj: '',
                     pid: ''
                 },
-                lxxqShow:false,
-                y2:'',
+                lxxqShow: false,
+                y2: '',
+                commentList: [],
+                ip: 'http://10.197.41.100:8080',
+                xxmgl: {}
             }
         },
         created() {
             this.getProjectList()
         },
         methods: {
+            //确定招标信息
+            qdzbxx() {
+                this.zhaobiao.xmid = this.xxmgl.y1
+                this.zhaobiao.sqr= this.userId
+                var zbxx = {
+                    zhaobiao: this.zhaobiao,
+                    zhongbiao:this.zhongbiao
+                }
+                axios.post(this.ip + '/xxmgl/insertZbxx',zbxx)
+                    .then(res=>{
+                        if(res.data){
+                            this.$message.success("提交成功！")
+                        }else {
+                            this.$message.error("提交失败！")
+                        }
+                    })
+            },
+
             getProjectList() {
                 var _this = this
                 axios.get('http://10.197.41.100:8080/xxmgl/selectAll', {
@@ -390,6 +480,7 @@
                     this.projectTotal = parseInt(res.headers.allcount)
                 })
             },
+
             addProject() {
                 this.projectTemp = {
                     id: '',
@@ -398,7 +489,7 @@
                     lxbm: '',
                     sqr: '',
                     y1: '',
-                    y2:''
+                    y2: ''
                 }
                 this.addUpdateDialogVisible = true;// 对话框可见
                 this.addUpdateDialogTitle = "增加"// 修改标题
@@ -416,7 +507,7 @@
                                 lxbm: this.projectTemp.lxbm,
                                 sqr: this.projectTemp.sqr,
                                 y1: this.projectTemp.y1,
-                                y2:localStorage.getItem('userId')
+                                y2: localStorage.getItem('userId')
                             }
                         }).then(res => {
                             this.addUpdateDialogVisible = false
@@ -425,6 +516,28 @@
                     }
                 })
             },
+
+            //招标信息
+            zbxx(row) {
+                axios.get(this.ip + '/zhaobiao/getZbxxByXmid', {
+                    params: {
+                        xmid: row.y1
+                    }
+                }).then(res => {
+                    console.log(res.data)
+                    if (res.data) {
+                        if (res.data.zhongbiao != null)
+                            this.zhongbiao = res.data.zhongbiao
+                        if (res.data.zhaobiao != null)
+                            this.zhaobiao = res.data.zhaobiao
+                    }
+                    this.xxmgl = row
+                    this.showZbxx = true
+                }).catch(() => {
+                    this.$message.error("网络错误！")
+                })
+            },
+
             deleteProjectData(row) {
                 this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {// 弹出确认框
                     confirmButtonText: '确定',
@@ -490,7 +603,7 @@
             },
 
             openSmallProject(row) {
-                this.y2=row.y2
+                this.y2 = row.y2
                 this.sqr = row.sqr
                 this.smallProjectTemp.xxmid = row.id
                 this.smallProjectDialogVisible = true
@@ -597,7 +710,7 @@
             attachment(row) {
                 this.smallProjectTemp = row
                 this.attachmentVisiable = true
-                this.attachmentUrl = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + this.smallProjectTemp.id+'&userId='+localStorage.getItem('userId')
+                this.attachmentUrl = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + this.smallProjectTemp.id + '&userId=' + localStorage.getItem('userId') + '&authorization=' + localStorage.getItem('token')
 
                 axios.get('http://10.197.41.100:8080/contract/getFjs', {
                     params: {
@@ -614,7 +727,7 @@
                 })
             },
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name) + '&authorization=' + localStorage.getItem('token'))
             },
             handleBeforeRemove(file, fileList) {
                 this.$confirm('此操作将永久删除该附件,是否继续?', '提示', {
@@ -638,15 +751,28 @@
             handleSuccess(response, file, fileList) {
                 this.attachment(this.smallProjectTemp)
             },
-            lxxq(row){// 立项详情
-                this.lxxqShow=true
+            lxxq(row) {// 立项详情
+                this.lxxqShow = true
                 axios.get('http://10.197.41.100:8080/projectApplication/getXmById', {
                     params: {
                         xmid: row.y1
                     }
                 }).then(res => {
-                    this.project=res.data
+                    this.project = res.data
                 })
+
+
+                //领取前期评论
+                axios.get('http://10.197.41.100:8080/projectApplication/projectIdTocomment', {
+                    params: {
+                        projectId: row.y1
+                    }
+                })
+                    .then(res => {
+                        if (res.data) {
+                            this.commentList = res.data
+                        }
+                    })
             },
         },
         watch: {

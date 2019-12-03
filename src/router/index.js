@@ -27,7 +27,7 @@ export default new Router({
                 {
                     path:'/xxmgl',
                     component:resolve => require(['../components/page/xxmgl.vue'], resolve),
-                    meta:{title:'小项目管理'}
+                    meta:{title:'股份项目管理'}
                 },
                 {
                     path: '/htgl',
@@ -93,6 +93,11 @@ export default new Router({
                     path:'/xmcxbb',
                     component:resolve => require(['../components/page/xmcxbb.vue'], resolve),
                     meta:{title:'项目查询报表'}
+                },
+                {
+                    path:'/txhtj',
+                    component:resolve => require(['../components/page/txhtj.vue'], resolve),
+                    meta:{title:'图形化统计'}
                 },
                 {
                     path: '/dashboard',

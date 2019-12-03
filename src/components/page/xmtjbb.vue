@@ -39,25 +39,28 @@
                                 <ul style="display: flex;">
                                     <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[1] }}</li>
                                     <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[2] }}</li>
-                                    <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[3] }}</li>
+                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[3] }}</li>
+                                    <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[4] }}</li>
                                 </ul>
                             </template>
                         </el-table-column>
                         <el-table-column label="基建" align="center"  width="420">
                             <template slot-scope="scope">
                                 <ul style="display: flex;">
-                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[4] }}</li>
                                     <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[5] }}</li>
-                                    <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[6] }}</li>
+                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[6] }}</li>
+                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[7] }}</li>
+                                    <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[8] }}</li>
                                 </ul>
                             </template>
                         </el-table-column>
                         <el-table-column label="信息" align="center"  width="420">
                             <template slot-scope="scope">
                                 <ul style="display: flex;">
-                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[7] }}</li>
-                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[8] }}</li>
-                                    <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[9] }}</li>
+                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[9] }}</li>
+                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[10] }}</li>
+                                    <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[11] }}</li>
+                                    <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[12] }}</li>
                                 </ul>
                             </template>
                         </el-table-column>
@@ -65,25 +68,34 @@
                     <el-table-column label="物资" align="center"  width="420">
                         <template slot-scope="scope">
                             <ul style="display: flex;">
-                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[10] }}</li>
-                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[11] }}</li>
-                                <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[12] }}</li>
+                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[13] }}</li>
+                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[14] }}</li>
+                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[15] }}</li>
+                                <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[16] }}</li>
                             </ul>
                         </template>
                     </el-table-column>
                     <el-table-column label="固定资产（设备）" align="center"  width="420">
                         <template slot-scope="scope">
                             <ul style="display: flex;">
-                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[13] }}</li>
-                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[14] }}</li>
-                                <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[15] }}</li>
+                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[17] }}</li>
+                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[18] }}</li>
+                                <li style="flex: 1;text-align: center;border-right: 1px solid #ebeef5;list-style: none;">{{ scope.row[19] }}</li>
+                                <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[20] }}</li>
                             </ul>
                         </template>
                     </el-table-column>
-                    <el-table-column label="总金额（万元）" align="center" width="150">
+                    <el-table-column label="结算总金额（万元）" align="center" width="150">
                         <template slot-scope="scope">
                             <ul style="display: flex;">
-                                <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[16] }}</li>
+                                <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[21] }}</li>
+                            </ul>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="合同总金额（万元）" align="center" width="150">
+                        <template slot-scope="scope">
+                            <ul style="display: flex;">
+                                <li style="flex: 1;text-align: center;list-style: none;">{{ scope.row[22] }}</li>
                             </ul>
                         </template>
                     </el-table-column>
@@ -119,7 +131,7 @@
                 if(this.departmentName!='工程技术部'&&this.departmentName!='办公室'&&this.departmentName!='办公室.'){
                     bm=this.departmentName
                 }
-                window.location.href='http://10.197.41.100:8080/Bb/downloadXMTJBB?year='+year+'&month='+month+'&bm='+bm
+                window.location.href='http://10.197.41.100:8080/Bb/downloadXMTJBB?year='+year+'&month='+month+'&bm='+bm+ '&authorization=' + localStorage.getItem('token')
             },
             dateSelectChange(){
                 if(this.dateSelect==null){

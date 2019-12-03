@@ -32,7 +32,7 @@
                     <el-button type="success" icon="el-icon-tickets" style="float:right" @click="getALLJsjl">全部
                     </el-button>
                 </div>
-                <el-table height="600" class="table" border style="width: 100%"
+                <el-table class="table" border style="width: 100%"
                           :data="jss.slice((currentPage-1)*10,currentPage*10)">
                     <el-table-column type="expand" min-width="160">
                         <template slot-scope="props">
@@ -398,7 +398,7 @@
         methods: {
             //下载
             xz(row) {
-                window.open("http://10.197.41.100:8080/print/zfspd?id=" + row.id)
+                window.open("http://10.197.41.100:8080/print/zfspd?id=" + row.id+ '&authorization=' + localStorage.getItem('token'))
             },
 
             currentChange(currentPage) {
@@ -458,7 +458,7 @@
             },
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name))
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name)+ '&authorization=' + localStorage.getItem('token'))
             },
             //上传成功，重新请求
             handleSuccess() {
@@ -511,7 +511,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')+ '&authorization=' + localStorage.getItem('token')
                 this.show_scfj = true
             },
             //拿所有的结算记录

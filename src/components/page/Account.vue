@@ -9,7 +9,7 @@
             <div class="handle-box">
                 <el-button type="primary" icon="delete" class="handle-del mr10" @click="visible=true">新建用户</el-button>
             </div>
-            <el-table :data="users" border class="table">
+            <el-table :data="users" border class="table" >
                 <el-table-column prop="userId" label="账号" >
                 </el-table-column>
                 <el-table-column prop="userName" label="姓名" >
