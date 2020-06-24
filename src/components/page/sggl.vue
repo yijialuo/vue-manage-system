@@ -141,6 +141,21 @@
                 <el-button type="primary" @click="qdxg">确定修改</el-button>
             </span>
         </el-dialog>
+
+        <!--完工时间选择框-->
+        <el-dialog title="选择完工时间" :visible.sync="show_wgsj" width="300px">
+            <el-date-picker
+                    v-model="xzwgsj"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    type="datetime"
+                    placeholder="选择日期时间">
+            </el-date-picker>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="show_wgsj = false">取 消</el-button>
+                <el-button type="primary" @click="qdwgsj">确 定</el-button>
+            </span>
+        </el-dialog>
+
         <!--新建施工进度弹窗 -->
         <el-dialog title="添加施工进度" :close-on-click-modal="false" :visible.sync="show_xzjd" width="550px">
             <h2 style="text-align: center"> {{projectName}}</h2>
@@ -229,12 +244,15 @@
                 jindu:{},
                 jindus:[],
                 tableData: [],
+                wgsj:"",
                 //新增节点弹窗
                 show_xzjd:false,
                 //施工进度
                 show_sgjd: false,
                 //编辑弹窗
                 show_bj:false,
+                //完工时间弹窗
+                show_wgsj:false,
                 loading: false,
                 projectId: '',
                 projectName: '',
@@ -243,14 +261,14 @@
                 xmlb:'',
                 yjgq:'',
                 zt:'',
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 projects: [],
                 xms: [],
                 list: [],
                 //开工时间
                 kgsj:'',
                 //完工时间
-                wgsj:'',
+                xzwgsj:'',
                 iswg:false,
                 count:0
             }
@@ -260,6 +278,14 @@
             this.getAllProject(1,this.userId)
             this.getcounts()
             this.getAllDptName()
+        },
+        watch:{
+          xzwgsj(newValue,oldValue){
+              //新选的日期大于当前时间
+              if(new Date(newValue)>new Date()){
+                  this.xzwgsj=oldValue
+              }
+          }
         },
         methods: {
             //分页请求
@@ -350,18 +376,8 @@
                     type: 'warning'
                 }).then(() => {
                     if(this.jindus.length!=0){
-                        axios.get(this.ip+'/jindu/projectFinish',{
-                            params:{
-                                pid:this.projectId
-                            }
-                        }).then(res=>{
-                            if(res.data){
-                                this.$message.success("已经完工！")
-                                this.iswg=true
-                                this.wgsj=res.data
-                                this.show_xzjd=false
-                            }
-                        })
+                        //弹出完工时间选择框
+                        this.show_wgsj=true
                     }else {
                         this.$message.error("该项目还没有节点，请先添加节点！")
                     }
@@ -392,6 +408,28 @@
                     }
                 })
             },
+            //确定完工时间
+            qdwgsj(){
+                if(this.xzwgsj!=null&&this.xzwgsj!=""){
+                    axios.get(this.ip+'/jindu/projectFinish',{
+                        params:{
+                            pid:this.projectId,
+                            wgsj:this.xzwgsj
+                        }
+                    }).then(res=>{
+                        if(res.data){
+                            this.$message.success("已经完工！")
+                            this.iswg=true
+                            this.wgsj=res.data
+                            this.show_xzjd=false
+                            this.show_wgsj=false
+                        }
+                    })
+                }else {
+                    this.$message.error("请选择时间！")
+                }
+            },
+
             //确定插入节点
             qdcr(){
                 axios.post(this.ip+'/jindu/addJindu',this.jindu)

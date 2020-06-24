@@ -48,7 +48,7 @@
                 zcmm: '',
                 //修改密码
                 show_xgmm: false,
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 collapse: false,
                 fullscreen: false,
                 name: 'linxin',
@@ -96,6 +96,8 @@
                     localStorage.removeItem('userName')
                     localStorage.removeItem('departmentName')
                     localStorage.removeItem('departmentId')
+                    localStorage.removeItem('dtrids')
+                    localStorage.removeItem('dtrnames')
                     //localStorage.removeItem('qxs')
                     this.$router.push('/login');
                 } else {

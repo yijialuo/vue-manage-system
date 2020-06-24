@@ -131,7 +131,7 @@
                 if(this.departmentName!='工程技术部'&&this.departmentName!='办公室'&&this.departmentName!='办公室.'){
                     bm=this.departmentName
                 }
-                window.location.href='http://10.197.41.100:8080/Bb/downloadXMTJBB?year='+year+'&month='+month+'&bm='+bm+ '&authorization=' + localStorage.getItem('token')
+                window.location.href='http://10.197.33.115:8080/Bb/downloadXMTJBB?year='+year+'&month='+month+'&bm='+bm+ '&authorization=' + localStorage.getItem('token')
             },
             dateSelectChange(){
                 if(this.dateSelect==null){
@@ -146,7 +146,7 @@
                     bm=this.departmentName
                 }
                 var _this=this
-                axios.get('http://10.197.41.100:8080/Bb/get', {
+                axios.get('http://10.197.33.115:8080/Bb/get', {
                     params: {
                         year: year,
                         month:month,

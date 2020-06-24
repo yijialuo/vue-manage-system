@@ -49,6 +49,9 @@ axios.interceptors.response.use(response => {
                 localStorage.removeItem('userName')
                 localStorage.removeItem('departmentName')
                 localStorage.removeItem('departmentId')
+                localStorage.removeItem('dtrids')
+                localStorage.removeItem('dtrnames')
+
                 Message.error('身份验证信息失效，重新登录!');
                 router.push('/login');
                 break;
@@ -86,11 +89,13 @@ Vue.prototype.tableRowClassName = function ({row, rowIndex}) {
     // }
 
 
-
     Vue.prototype.equalsJs = function (groupIds, groupId) {
         return (groupIds || "").split(",").indexOf(groupId) != -1;
     }
 
+Vue.prototype.equalsDtr = function (dtr, userId) {
+    return (dtr || "").split(",").indexOf(userId) != -1;
+}
 
 new Vue({
     router,

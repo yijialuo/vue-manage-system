@@ -34,7 +34,7 @@
                 </div>
                 <el-table class="table" border style="width: 100%"
                           :data="jss.slice((currentPage-1)*10,currentPage*10)">
-                    <el-table-column type="expand" min-width="160">
+                    <el-table-column fixed type="expand" min-width="160">
                         <template slot-scope="props">
                             <el-form style="color: #99a9bf;" label-position="left" inline class="demo-table-expand">
                                 <el-form-item label="发票号码:">
@@ -79,9 +79,9 @@
                             </el-form>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="gszjl" sortable label="付款顺序" width="110">
+                    <el-table-column prop="gszjl" fixed sortable label="付款顺序" width="110">
                     </el-table-column>
-                    <el-table-column prop="xmNo" label="项目编号" width="160">
+                    <el-table-column prop="xmNo" fixed label="项目编号" width="160">
                     </el-table-column>
                     <el-table-column prop="project_name" label="项目名" min-width="220">
                     </el-table-column>
@@ -102,7 +102,7 @@
                     <el-table-column prop="bqyf" align="center" label="本期已付(元)" width="120">
                     </el-table-column>
 
-                    <el-table-column label="操作" width="140" align="center">
+                    <el-table-column label="操作" width="140" fixed="right" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-upload" @click="fj(scope.row.id)">附件
                             </el-button>
@@ -249,10 +249,14 @@
                 jslx: [{
                     value: '预付款',
                     lable: '预付款'
-                }, {
-                    value: '质保金',
-                    lable: '质保金'
-                }],
+                },
+                    {
+                        value: '结算款',
+                        lable: '结算款'
+                    }, {
+                        value: '质保金',
+                        lable: '质保金'
+                    }],
                 Payable: {
                     jbbm: '',
                     jbr: '',
@@ -292,7 +296,7 @@
                 show_xzjs: false,
                 list: [],
                 list2: [],
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 loading2: false,
                 //结算数组
@@ -398,7 +402,7 @@
         methods: {
             //下载
             xz(row) {
-                window.open("http://10.197.41.100:8080/print/zfspd?id=" + row.id+ '&authorization=' + localStorage.getItem('token'))
+                window.open("http://10.197.33.115:8080/print/zfspd?id=" + row.id + '&authorization=' + localStorage.getItem('token'))
             },
 
             currentChange(currentPage) {
@@ -458,7 +462,7 @@
             },
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name)+ '&authorization=' + localStorage.getItem('token'))
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name) + '&authorization=' + localStorage.getItem('token'))
             },
             //上传成功，重新请求
             handleSuccess() {
@@ -511,7 +515,7 @@
             fj(id) {
                 this.cid = id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')+ '&authorization=' + localStorage.getItem('token')
+                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId') + '&authorization=' + localStorage.getItem('token')
                 this.show_scfj = true
             },
             //拿所有的结算记录
@@ -575,6 +579,7 @@
             },
             //立即创建
             ljcj() {
+                this.skdw = ''
                 if (this.Payable.bqyf == null || this.Payable.bqyf == 0 || this.Payable.contract_id == "" || this.Payable.contract_id == null) {
                     this.$message.error("请填写应付金额和合同！")
                     return;

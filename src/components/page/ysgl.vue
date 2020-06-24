@@ -290,7 +290,7 @@
                 yanshous: [],
 
                 xms:[],
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 list: [],
                 url: '',
@@ -538,7 +538,7 @@
             djfj(id){
                 this.cid=id
                 this.getFileList()
-                this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')+ '&authorization=' + localStorage.getItem('token')
+                this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + id + '&userId=' + localStorage.getItem('userId')+ '&authorization=' + localStorage.getItem('token')
                 this.show_scfj=true
             },
             //填充附件列表

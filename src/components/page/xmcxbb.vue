@@ -410,7 +410,7 @@
                     offset: 1,
                     limit: 10
                 },
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 jzs: [],
                 selectObject: {
                     xmbh: '',
@@ -578,7 +578,7 @@
                 xmfqr: [],
                 xmjbr: [],
                 showfj: false,
-                fileList: []
+                fileList: [[], [], [], [], [], []]
             }
         },
         created() {
@@ -593,10 +593,10 @@
             getjzs() {
                 axios.get(this.ip + '/jz/getAll')
                     .then(res => {
-                        for(let i=0;i<res.data.length;i++){
+                        for (let i = 0; i < res.data.length; i++) {
                             this.jzs.push({
-                                value:res.data[i].jzmc,
-                                lable:res.data[i].jzmc
+                                value: res.data[i].jzmc,
+                                lable: res.data[i].jzmc
                             })
                         }
                     })
@@ -604,7 +604,7 @@
 
             //点击文件下载
             handlePreview(file) {
-                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name)+ '&authorization=' + localStorage.getItem('token'))
+                window.open(this.ip + '/Attachment/Download?fid=' + file.id + '&fname=' + encodeURIComponent(file.name) + '&authorization=' + localStorage.getItem('token'))
             },
 
             //点击附件事件
@@ -731,7 +731,7 @@
 
                 this.formatSelecrObject()
 
-                axios.post('http://10.197.41.100:8080/xmcxb/select?pageNum=' + this.listQuery.offset, this.selectObject)
+                axios.post('http://10.197.33.115:8080/xmcxb/select?pageNum=' + this.listQuery.offset, this.selectObject)
                     .then(res => {
                         this.list = res.data
                         //this.total = res.data.length
@@ -739,10 +739,10 @@
                     })
             },
             download() {
-                window.location.href = 'http://10.197.41.100:8080/Bb/downloadXMCXBB?param=' + JSON.stringify(this.selectObject)+ '&authorization=' + localStorage.getItem('token')
+                window.location.href = 'http://10.197.33.115:8080/Bb/downloadXMCXBB?param=' + JSON.stringify(this.selectObject) + '&authorization=' + localStorage.getItem('token')
             },
             getAllDptName() {
-                axios.get('http://10.197.41.100:8080/department/getAllDptName')
+                axios.get('http://10.197.33.115:8080/department/getAllDptName')
                     .then(res => {
                         if (res.data != null) {
                             for (let i = 0; i < res.data.length; i++) {
@@ -755,7 +755,7 @@
                     })
             },
             getAllJBRS() {
-                axios.get('http://10.197.41.100:8080/user/jsbjbr', {}).then(res => {
+                axios.get('http://10.197.33.115:8080/user/jsbjbr', {}).then(res => {
                     if (res.data != null) {
                         for (let i = 0; i < res.data.length; i++) {
                             this.xmjbr.push({
@@ -767,7 +767,7 @@
                 })
             },
             getAllFQRS() {
-                axios.get('http://10.197.41.100:8080/user/fqr', {}).then(res => {
+                axios.get('http://10.197.33.115:8080/user/fqr', {}).then(res => {
                     if (res.data != null) {
                         for (let i = 0; i < res.data.length; i++) {
                             this.xmfqr.push({

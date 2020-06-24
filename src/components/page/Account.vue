@@ -7,7 +7,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="delete" class="handle-del mr10" @click="visible=true">新建用户</el-button>
+                <el-button type="primary" icon="delete" class="handle-del mr10" @click="visible=true;userOV={}">新建用户s</el-button>
             </div>
             <el-table :data="users" border class="table" >
                 <el-table-column prop="userId" label="账号" >
@@ -22,10 +22,10 @@
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="editUser(scope.$index, scope.row)">编辑
+                        <el-button type="text" icon="el-icon-edit" @click="editUser(scope.row)">编辑
                         </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red"
-                                   @click="deleteUser(scope.$index, scope.row)">删除
+                                   @click="deleteUser(scope.row)">删除
                         </el-button>
                     </template>
                 </el-table-column>
@@ -135,7 +135,7 @@
         name:'account',
         data: function () {
             return {
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 editVisible: false,
                 userOV: {
                     userId: '',
@@ -146,6 +146,7 @@
                     departmentId:'',
                     departmentName:''
                 },
+                user:{},
                 users: [],
                 //添加用户
                 visible: false,
@@ -198,7 +199,7 @@
             deleteRow(){
                 axios.get(this.ip+'/user/deleteuser',{
                     params:{
-                        userId:this.users[this.idx].userId
+                        userId:this.user.userId
                     }
                 } )
                     .then(res=>{
@@ -211,19 +212,20 @@
                     })
             },
             editUser(index, row) {
-                this.idx = index;
-                const item = this.users[index];
+                // this.idx = index;
+                // const item = this.users[index];
+                this.user=row
                 this.form = {
-                    userId: item.userId,
-                    userName: item.userName,
-                    passWord: item.passWord,
-                    groupId: item.groupId,
-                    departmentId:item.departmentId
+                    userId: row.userId,
+                    userName: row.userName,
+                    passWord: row.passWord,
+                    groupId: row.groupId,
+                    departmentId:row.departmentId
                 }
                 this.editVisible = true;
             },
-            deleteUser(index, row) {
-                this.idx = index;
+            deleteUser( row) {
+                this.user = row;
                 this.delVisible = true;
             },
             getAllusers() {

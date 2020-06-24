@@ -64,7 +64,7 @@
                     <el-table-column label="操作" align="center" width="200">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-star-on"
-                                       v-if="scope.row.sqr===userId&&(scope.row.dqjd==='立项部门提出技术要求'||scope.row.dqjd==='未申请')&&!((!isnull(scope.row.fbsj)||!isnull(scope.row.dbsj)||!isnull(scope.row.zbr) ||!isnull(scope.row.zbje))&&(scope.row.zbpid==null||scope.row.zbpid==''))"
+                                       v-if="(scope.row.sqr===userId||equalsDtr(dtrids,scope.row.sqr))&&(scope.row.dqjd==='立项部门提出技术要求'||scope.row.dqjd==='未申请')&&!((!isnull(scope.row.fbsj)||!isnull(scope.row.dbsj)||!isnull(scope.row.zbr) ||!isnull(scope.row.zbje))&&(scope.row.zbpid==null||scope.row.zbpid==''))"
                                        @click="sq(scope.$index,scope.row)">申请
                             </el-button>
                             <el-button type="text" icon="el-icon-upload" @click="fj(scope.row)">附件
@@ -73,10 +73,10 @@
                             </el-button>
                             <el-button type="text" icon="el-icon-tickets" @click="xq(scope.row)">详情
                             </el-button>
-                            <el-button type="text" icon="el-icon-edit" v-if="scope.row.sqr===userId"
+                            <el-button type="text" icon="el-icon-edit" v-if="scope.row.sqr===userId||equalsDtr(dtrids,scope.row.sqr)"
                                        @click="bj(scope.$index,scope.row)">编辑
                             </el-button>
-                            <el-button type="text" class="red" icon="el-icon-delete" v-if="scope.row.sqr===userId&&!((!isnull(scope.row.fbsj)||!isnull(scope.row.dbsj)||!isnull(scope.row.zbr) ||!isnull(scope.row.zbje))&&(scope.row.zbpid==null||scope.row.zbpid==''))"
+                            <el-button type="text" class="red" icon="el-icon-delete" v-if="(scope.row.sqr===userId||equalsDtr(dtrids,scope.row.sqr))&&!((!isnull(scope.row.fbsj)||!isnull(scope.row.dbsj)||!isnull(scope.row.zbr) ||!isnull(scope.row.zbje))&&(scope.row.zbpid==null||scope.row.zbpid==''))"
                                        @click="sc(scope.row)">删除
                             </el-button>
 
@@ -368,6 +368,7 @@
         name: 'zbgl',
         data() {
             return {
+                dtrids:localStorage.getItem("dtrids"),
                 jds: [{
                     value: '未申请',
                     label: '未申请'
@@ -425,7 +426,7 @@
                 show_xq: false,
                 xms: [],
                 loading: false,
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 fileList: [],
                 list: [],
                 zhaobiao: {
@@ -797,9 +798,9 @@
             getfj(row) {
                 this.zhaobiao = row
                 if (row.zbpid == '' || row.zbpid == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
                 } else {//已经申请
-                    this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
                 }
                 //拿附件信息
                 for (let i = 0; i < this.bcwjs.length; i++) {
@@ -869,7 +870,7 @@
 
             lxxq(xmid) {// 立项详情
                 this.lxxqShow = true
-                axios.get('http://10.197.41.100:8080/projectApplication/getXmById', {
+                axios.get('http://10.197.33.115:8080/projectApplication/getXmById', {
                     params: {
                         xmid: xmid
                     }

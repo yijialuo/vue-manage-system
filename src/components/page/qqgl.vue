@@ -11,7 +11,7 @@
                     <!--v-if="hasqx('xjxmlxd')"-->
                     <el-button
                             type="primary"
-                             v-if=" equalsJs(groupId,'doman') || equalsJs(groupId,'jsb_doman') "
+                            v-if=" equalsJs(groupId,'doman') || equalsJs(groupId,'jsb_doman') "
                             icon="el-icon-circle-plus"
                             class="handle-del mr10" @click="xjxmlxd">新建项目立项单
                     </el-button>
@@ -143,7 +143,8 @@
                                        @click="kssq(scope.$index, scope.row)">申请
                             </el-button>
                             <el-button type="text" icon="el-icon-download" @click="xz(scope.row)">下载</el-button>
-                            <el-button v-if="scope.row.proposer===userName" type="text" icon="el-icon-delete"
+                            <el-button v-if="scope.row.proposer===userName||equalsDtr(dtrnames,scope.row.proposer)"
+                                       type="text" icon="el-icon-delete"
                                        class="red" @click="handleDelete(scope.$index, scope.row)">删除
                             </el-button>
                         </template>
@@ -455,6 +456,7 @@
         data() {
             return {
                 userName: localStorage.getItem('userName'),
+                dtrnames: localStorage.getItem("dtrnames"),
                 showfj: false,
                 url: '',
                 fileList: [],
@@ -518,7 +520,7 @@
                 show_xjxmlxd: false,
                 projects: [],
                 show_xq: false,
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 project: {
                     id: '',
                     projectNo: '',
@@ -656,7 +658,8 @@
             //填充是否可以申请字段
             isSq() {
                 for (let i = 0; i < this.projects.length; i++) {
-                    if (this.userName == this.projects[i].proposer && (this.projects[i].pid == null || this.projects[i].pid == "" || this.projects[i].dqjd == "填写申请表")) {
+                    //如果申请人是自己，或者是自己的代替人
+                    if ((this.userName === this.projects[i].proposer || this.equalsDtr(this.dtrnames, this.projects[i].proposer)) && (this.projects[i].pid == null || this.projects[i].pid == "" || this.projects[i].dqjd == "填写申请表")) {
                         this.projects[i].canSq = true
                         this.$set(this.projects, i, this.projects[i]);
                     } else {
@@ -679,7 +682,7 @@
 
             //下载
             xz(row) {
-                window.open('http://10.197.41.100:8080/print/sqb?id=' + row.id + '&authorization=' + localStorage.getItem('token'))
+                window.open('http://10.197.33.115:8080/print/sqb?id=' + row.id + '&authorization=' + localStorage.getItem('token'))
             },
 
             //上传成功，重新请求
@@ -699,7 +702,8 @@
 
             //删除请求
             handleBeforeRemove(file, fileList) {
-                if (this.project.pid != '' && this.project.pid != null) {
+                //有流程，且流程不在“填写申请表”||流程在’填写申请表‘但是申请人不是自己
+                if (this.project.pid != '' && this.project.pid != null && this.project.dqjd != "填写申请表" || this.project.dqjd === "填写申请表" && this.project.proposer != this.userName) {
                     fileList.push(file)
                     this.$message.error("删除失败！附件只能在处理节点删除！")
                 } else {
@@ -758,9 +762,9 @@
                 this.showfj = true
                 this.project = row
                 if (row.pid == '' || row.pid == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
                 } else {//已经申请
-                    this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
                 }
                 //拿附件信息
                 for (let i = 0; i < this.bcwjs.length; i++) {
@@ -811,7 +815,7 @@
                     select_xmlb: this.select_xmlb,
                 }
                 // 如果当前账号不是工程技术部且不是办公室且不是办公室.且不是领导，select_dptnmt填充当前账号部门
-                if (localStorage.getItem('departmentId') != '20190123022801622' && localStorage.getItem('departmentId') != '20190125102616787' && localStorage.getItem('departmentId') != '103a990b-a59a-40bc-8ac9-a505076ca0ae' && localStorage.getItem('departmentId') != 'ba7c0e37-3df1-463d-9eda-c90bc564d6c5'&&localStorage.getItem('departmentId')!='0') {
+                if (localStorage.getItem('departmentId') != '20190123022801622' && localStorage.getItem('departmentId') != '20190125102616787' && localStorage.getItem('departmentId') != '103a990b-a59a-40bc-8ac9-a505076ca0ae' && localStorage.getItem('departmentId') != 'ba7c0e37-3df1-463d-9eda-c90bc564d6c5' && localStorage.getItem('departmentId') != '0') {
                     params.select_dptnm = localStorage.getItem('departmentName')
                 }
                 this.ss = true

@@ -11,6 +11,12 @@
                     <el-button type="primary" icon="delete" class="handle-del mr10"
                                @click="visible=true;userOV.passWord='111'">新建用户
                     </el-button>
+                    <br/>
+                    <el-input placeholder="姓名" v-model="searchName" clearable style="width: 200px;margin-top: 5px"
+                              class="handle-input mr10">
+                    </el-input>
+                    <el-button style="margin-left: 10px" type="primary" icon="el-icon-search" @click="userSearchBt">搜索
+                    </el-button>
                 </div>
                 <el-table :data="users" height="500px" border class="table">
                     <el-table-column prop="userId" label="账号">
@@ -23,6 +29,8 @@
                     </el-table-column>
                     <el-table-column prop="groupName" label="职位">
                     </el-table-column>
+                    <el-table-column prop="sfzf" label="是否作废">
+                    </el-table-column>
                     <el-table-column label="管理类型">
                         <template slot-scope="scope">
                             <span>{{ scope.row.manageType | filterManageType }}</span>
@@ -30,10 +38,10 @@
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-edit" @click="editUser(scope.$index, scope.row)">编辑
+                            <el-button type="text" icon="el-icon-edit" @click="editUser( scope.row)">编辑
                             </el-button>
                             <el-button v-if="userId==='admin'" type="text" icon="el-icon-delete" class="red"
-                                       @click="deleteUser(scope.$index, scope.row)">删除
+                                       @click="deleteUser( scope.row)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -365,6 +373,77 @@
             </div>
         </div>
 
+        <div class="table">
+            <div class="crumbs">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item><i class="el-icon-lx-warn"></i>交接</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div class="container">
+                <div class="handle-box">
+                    <el-button type="primary" class="handle-del mr10" @click="showDt=true;dt={}">新增交接
+                    </el-button>
+                </div>
+                <el-table :data="dts" border style="margin-top: 20px">
+                    <el-table-column prop="username" label="当前人" width="150">
+                    </el-table-column>
+                    <el-table-column prop="dtusername" label="被交接人" width="150">
+                    </el-table-column>
+                    <el-table-column label="操作" width="180" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-edit"
+                                       @click="detDt(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+
+            <!-- 添加机种弹出框 -->
+            <el-dialog title="添加交接" :close-on-click-modal="false" :visible.sync="showDt" width="500px">
+                <el-form label-width="160px">
+                    <el-form-item label="用户">
+                        <el-select filterable v-model="dt.userid" placeholder="请选择用户">
+                            <el-option
+                                    v-for="item in selectLabelUser"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="被代替用户（原用户）">
+                        <el-select filterable v-model="dt.dtuserid" placeholder="请选择用户">
+                            <el-option
+                                    v-for="item in selectLabelUser"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                        <el-button @click="showDt=false">取 消</el-button>
+                        <el-button type="primary" @click="adddt">确 定</el-button>
+                    </span>
+            </el-dialog>
+
+            <!-- 添加机种弹出框 -->
+            <el-dialog title="添加机种" :close-on-click-modal="false" :visible.sync="show_addjz" width="380px">
+                <el-form label-width="80px" :model="bcwj">
+                    <el-form-item label="机种名称:">
+                        <el-input v-model="jz"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                        <el-button @click="show_addjz=false">取 消</el-button>
+                        <el-button type="primary" @click="addjz">确 定</el-button>
+                    </span>
+            </el-dialog>
+        </div>
+
         <!-- 添加必传文件弹出框 -->
         <el-dialog title="添加必传文件记录" :close-on-click-modal="false" :visible.sync="show_addbcwj" width="380px">
             <el-form label-width="80px" :model="bcwj">
@@ -426,12 +505,15 @@
                 fz: '',
                 //总经会阀值
                 zjhfz: [],
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 //添加必传文件
                 show_addbcwj: false,
+                selectLabelUser: [],
                 //添加机种
                 show_addjz: false,
+                showDt: false,
                 editVisible: false,
+                user: {},
                 userOV: {
                     userId: '',
                     userName: '',
@@ -443,6 +525,7 @@
                     manageType: []
                 },
                 users: [],
+                alluser: [],
                 //添加用户
                 visible: false,
                 //删除用户
@@ -511,6 +594,7 @@
                 },
                 bcwjs: [],
                 groups: [],
+                searchName: '',
                 bcwj: {
                     id: '',
                     lc: '',
@@ -519,6 +603,9 @@
                 },
                 //机种列表
                 jzs: [],
+                //代替表
+                dts: [],
+                dt: {},
                 //机种
                 jz: ''
             }
@@ -535,6 +622,10 @@
             this.getBcwjs()
             //拿机种
             this.getjzs()
+            //拿交接
+            this.getdts()
+            //所有用户下拉
+            this.selectLabelUsers()
         },
         computed: {
             lc() {
@@ -568,6 +659,50 @@
             }
         },
         methods: {
+            //账号搜索
+            userSearchBt() {
+                if (this.searchName == null || this.searchName === '') {
+                    this.users = this.alluser
+                    return
+                }
+                this.users = this.alluser.filter(item => {
+                    return item.userName.indexOf(this.searchName) != -1
+                })
+            },
+
+            detDt(row) {
+                this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post(this.ip + '/dt/delete', row)
+                        .then(res => {
+                            if (res.data) {
+                                this.$message.success("删除成功！")
+                                this.getdts()
+                            } else {
+                                this.$message.error("删除失败！")
+                            }
+                        })
+                }).catch(() => {
+                })
+            },
+
+            //添加代替
+            adddt() {
+                axios.post(this.ip + '/dt/insert', this.dt)
+                    .then(res => {
+                        if (res.data) {
+                            this.$message.success("添加成功！")
+                            this.getdts()
+                            this.showDt = false
+                        } else {
+                            this.$message.error("添加失败！")
+                        }
+                    })
+            },
+
             //添加机种
             addjz() {
                 axios.get(this.ip + '/jz/addJz', {
@@ -585,6 +720,29 @@
                     }
                     this.show_addjz = false
                 })
+            },
+
+            selectLabelUsers() {
+                axios.get(this.ip + '/user/selectLabelUsers', {
+                    params: {
+                        userId: localStorage.getItem('userId'),
+                        passWord: localStorage.getItem('passWord')
+                    }
+                })
+                    .then(res => {
+                        if (res.data) {
+                            this.selectLabelUser = res.data
+                        }
+                    })
+            },
+
+            //拿代替
+            getdts() {
+                axios.get(this.ip + '/dt/select', {params: {}})
+                    .then(res => {
+                        console.log(res.data)
+                        this.dts = res.data
+                    })
             },
 
             //拿机种
@@ -756,7 +914,7 @@
             deleteRow() {
                 axios.get(this.ip + '/user/deleteuser', {
                     params: {
-                        userId: this.users[this.idx].userId
+                        userId: this.user.userId
                     }
                 })
                     .then(res => {
@@ -768,21 +926,20 @@
                         }
                     })
             },
-            editUser(index, row) {
-                this.idx = index;
-                const item = this.users[index];
+            editUser(row) {
+
                 this.form = {
-                    userId: item.userId,
-                    userName: item.userName,
-                    passWord: item.passWord,
-                    groupId: item.groupId,
-                    departmentId: item.departmentId,
-                    manageType: item.manageType ? item.manageType : []
+                    userId: row.userId,
+                    userName: row.userName,
+                    passWord: row.passWord,
+                    groupId: row.groupId,
+                    departmentId: row.departmentId,
+                    manageType: row.manageType ? row.manageType : []
                 }
                 this.editVisible = true;
             },
-            deleteUser(index, row) {
-                this.idx = index;
+            deleteUser(row) {
+                this.user = row;
                 this.delVisible = true;
             },
             getAllusers() {
@@ -794,6 +951,16 @@
                 })
                     .then(res => {
                         this.users = res.data
+                        this.alluser = res.data
+                        //填充是否作废，如果密码是1111,就是作废的
+                        for (let i = 0; i < this.users.length; i++) {
+                            if (this.users[i].passWord === 'gcglzfzh123*') {
+                                this.users[i].sfzf = '已作废'
+                                this.$set(this.users, i, this.users[i])
+                                this.alluser[i].sfzf = '已作废'
+                                this.$set(this.alluser, i, this.alluser[i])
+                            }
+                        }
                     })
             },
             confirm_user() {
@@ -809,6 +976,11 @@
                     })
             },
             saveEdit() {
+                //防止新沙乱改
+                if(this.form.userId==null||this.form.userName==null||this.form.groupId==null||this.form.userId===''||this.form.userName===''||this.form.groupId.length==0){
+                    this.$message.error("请填写完整信息！")
+                    return
+                }
                 axios.post(this.ip + '/user/edituser', this.form)
                     .then(res => {
                         if (res.data)

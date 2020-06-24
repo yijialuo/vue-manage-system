@@ -38,7 +38,7 @@
                 <el-button type="primary" icon="el-icon-search" style="margin-left: 10px" @click="handleSearch">搜索
                 </el-button>
             </div>
-            <el-table  :data="contracts" border class="table">
+            <el-table :data="contracts" border class="table">
                 <el-table-column type="expand" width="40">
                     <template slot-scope="props">
                         <el-form style="color: #99a9bf;" label-position="left" inline class="demo-table-expand">
@@ -94,13 +94,17 @@
                     <template slot-scope="scope">
                         <el-button type="text" @click="djfj(scope.row),isgd=scope.row.gd">附件</el-button>
                         <el-button type="text"
-                                   v-if="(scope.row.dqjd==='未申请'||scope.row.dqjd==='经办人')&&scope.row.cwbmyj===userId"
+                                   v-if="(scope.row.dqjd==='未申请'||scope.row.dqjd==='经办人')&&(scope.row.cwbmyj===userId||equalsDtr(dtrids,scope.row.cwbmyj))"
                                    @click="htsq(scope.row.id)">审批
                         </el-button>
                         <el-button type="text" @click="zt(scope.row)">状态</el-button>
                         <el-button type="text" @click="bjht(scope.row)">详情</el-button>
                         <el-button type="text" @click="xz(scope.row)">下载</el-button>
-                        <el-button type="text" v-if="userId===scope.row.cwbmyj" :disabled="scope.row.gd=='1'"
+                        <el-button type="text" v-if="userId===scope.row.cwbmyj&&scope.row.gd!='1'"
+                                   @click="xghtbh(scope.row)">修改编号
+                        </el-button>
+                        <el-button type="text" v-if="userId===scope.row.cwbmyj||equalsDtr(dtrids,scope.row.cwbmyj)"
+                                   :disabled="scope.row.gd=='1'"
                                    @click="gd(scope.row)">归档
                         </el-button>
                         <el-button type="text" :disabled="scope.row.gd=='1'" @click="scht(scope.row)"
@@ -146,7 +150,7 @@
         </el-dialog>
 
         <!--添加合同弹窗 -->
-        <el-dialog title="新建合同" :close-on-click-modal="false" :visible.sync="show_xjht" width="688px">
+        <el-dialog title="新建合同" :close-on-click-modal="false" :visible.sync="show_xjht" width="690px">
             <el-form ref="form" label-width="100px">
                 <!--<el-form-item label="合同编号">-->
                 <!--<el-input v-model="contract.contractNo"></el-input>-->
@@ -163,6 +167,8 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp合同编号&nbsp&nbsp&nbsp
+                    <el-input v-model="contract.contractNo" style="width: 210px"></el-input>
                 </el-form-item>
                 <el-form-item label="有效期合同">
                     <el-switch
@@ -201,6 +207,13 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp合同时间&nbsp&nbsp&nbsp
+                    <el-date-picker
+                            v-model="contract.rq"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
                 </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
@@ -261,6 +274,8 @@
             <el-form ref="form" label-width="100px">
                 <el-form-item label="合同项目">
                     <el-input v-model="contract.projectName" readonly style="width: 210px"></el-input>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp合同编号&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <el-input v-model="contract.contractNo" style="width: 210px"></el-input>
                 </el-form-item>
                 <el-form-item label="有效期合同">
                     <el-switch
@@ -298,6 +313,13 @@
                                 :value="item.value">
                         </el-option>
                     </el-select>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp合同时间&nbsp&nbsp&nbsp
+                    <el-date-picker
+                            v-model="contract.rq"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
                 </el-form-item>
                 <el-form-item label="对方当事人">
                     <el-input v-model="contract.dfdsr" style="width: 210px"></el-input>
@@ -374,6 +396,16 @@
                 <el-button type="primary" @click="show_zt=false">确 定</el-button>
             </span>
         </el-dialog>
+
+
+        <el-dialog title="修改合同编号" :close-on-click-modal="false" :visible.sync="show_xghtbh" width="300px">
+            <el-input v-model="xgbh"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="qdxghtbh">确 定</el-button>
+                <el-button @click="show_xghtbh=false">取 消</el-button>
+            </span>
+        </el-dialog>
+
 
         <!--立项详情-->
         <el-dialog title="立项详情" :visible.sync="lxxqShow" width="50%">
@@ -512,6 +544,7 @@
                 show_scfj: false,
                 groupId: localStorage.getItem('groupId'),
                 userId: localStorage.getItem('userId'),
+                dtrids: localStorage.getItem("dtrids"),
                 contracts: [],
                 contract: {
                     id: '',
@@ -537,26 +570,55 @@
                     lxqk: '',
                 },
                 jds: [
+
                     {
                         value: '未申请',
                         label: '未申请',
-                    }, {
-                        value: '填写合同表单',
-                        label: '填写合同表单'
-                    }, {
-                        value: '技术部经理审批',
-                        label: '技术部经理审批'
-                    }, {
-                        value: '办公室确认',
-                        label: '办公室确认',
-                    }, {
-                        value: '合同审批结束',
-                        label: '合同审批结束'
+                    },
+                    {
+                        value: '经办人',
+                        label: '经办人'
+                    },
+                    {
+                        value: '技术部经理',
+                        label: '技术部经理'
+                    },
+                    {
+                        value: '评审人',
+                        label: '评审人'
+                    },
+                    {
+                        value: '法律事务室',
+                        label: '法律事务室'
+                    },
+                    {
+                        value: '财务总监',
+                        label: '财务总监'
+                    },
+                    {
+                        value: '分管副总经理',
+                        label: '分管副总经理'
+                    },
+                    {
+                        value: '总经理',
+                        label: '总经理'
+                    },
+                    {
+                        value: '签订',
+                        label: '签订'
+                    },
+                    {
+                        value: '归档',
+                        label: '归档'
+                    },
+                    {
+                        value: '合同结束',
+                        label: '合同结束'
                     }],
                 //对方资质审查,数组
                 zzsc: [],
                 xms: [],
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 loading: false,
                 list: [],
                 url: '',
@@ -569,7 +631,10 @@
                 dqjd: '',
                 //是否归档
                 isgd: '',
-                //合同数
+                //合同数,
+                xghtid: '',
+                xgbh: '',
+                show_xghtbh: false,
                 hts: 0,
                 xmId: '',
                 ssss: false,
@@ -625,7 +690,7 @@
         watch: {
             //填充其他字段
             projectId(newValue, oldValue) {
-                if(this.show_xjht==true){
+                if (this.show_xjht == true) {
                     if (newValue != null && newValue != '' && this.show_bjht == false) {
                         axios.get(this.ip + '/contract/fillContractByXmid', {
                             params: {
@@ -709,7 +774,7 @@
 
             //合同下载
             xz(row) {
-                window.open('http://10.197.41.100:8080/print/ht?id=' + row.id + '&authorization=' + localStorage.getItem('token'))
+                window.open('http://10.197.33.115:8080/print/ht?id=' + row.id + '&authorization=' + localStorage.getItem('token'))
             },
             //状态
             zt(row) {
@@ -817,6 +882,27 @@
                     .then(res => {
                         this.hts = res.data
                     })
+            },
+
+            //确定修改合同编号
+            qdxghtbh() {
+
+                axios.post(this.ip + '/contract/updateContractSelective', {id: this.xghtid, contractNo: this.xgbh})
+                    .then(res => {
+                        if (res.data) {
+                            this.$message.success("修改成功！")
+                        } else {
+                            this.$message.error("修改失败！")
+                        }
+                        this.show_xghtbh=false
+                        this.reload()
+                    })
+            },
+
+            xghtbh(row) {
+                this.xghtid = row.id
+                this.xgbh = row.contractNo
+                this.show_xghtbh = true
             },
 
             //归档，不能操作此记录
@@ -1046,9 +1132,9 @@
                 this.contract = row
                 this.cid = row.id
                 if (row.dwyj == '' || row.dwyj == null) {//未申请
-                    this.url = 'http://10.197.41.100:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/contract/uploadHtfj?id=' + row.id + '&userId=' + localStorage.getItem('userId')
                 } else {//已经申请的上传地址
-                    this.url = 'http://10.197.41.100:8080/contract/uploadFile?dwyj=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                    this.url = 'http://10.197.33.115:8080/contract/uploadFile?dwyj=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                 }
                 //拿附件信息
                 for (let i = 0; i < this.bcwjs.length; i++) {
@@ -1076,7 +1162,7 @@
             //点击附件
             djfj(row) {
                 //领导类、直接查看附件
-                if (localStorage.getItem('departmentName') === '领导' || this.equalsJs(this.groupId, 'jsb_zgjl') || this.equalsJs(this.groupId, 'jsb_jl') || this.equalsJs(this.groupId, 'psr')||row.jbr===localStorage.getItem('userName')||this.equalsJs(this.groupId, 'admin')) {
+                if (localStorage.getItem('departmentName') === '领导' || this.equalsJs(this.groupId, 'jsb_zgjl') || this.equalsJs(this.groupId, 'jsb_jl') || this.equalsJs(this.groupId, 'psr') || row.jbr === localStorage.getItem('userName') || this.equalsJs(this.groupId, 'admin')) {
                     this.getfj(row)
                     return
                 }
@@ -1172,7 +1258,7 @@
             getXms() {
                 axios.get(this.ip + '/projectApplication/getCanHtXmIdAndXmname', {
                     params: {
-                        userName: localStorage.getItem('userName')
+                        userId: localStorage.getItem('userId')
                     }
                 })
                     .then(res => {
@@ -1210,7 +1296,7 @@
 
             lxxq(row) {// 立项详情
                 this.lxxqShow = true
-                axios.get('http://10.197.41.100:8080/projectApplication/getXmById', {
+                axios.get('http://10.197.33.115:8080/projectApplication/getXmById', {
                     params: {
                         xmid: row.projectId
                     }

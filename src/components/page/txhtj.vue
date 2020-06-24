@@ -143,7 +143,7 @@
                 lxxqShow: false,
                 xmbh: '',
                 xmmc: '',
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 tjdata: [],
                 searchData: [],
                 chartData: {
@@ -219,7 +219,7 @@
 
             xmxq(xmid) {// 立项详情
                 this.lxxqShow = true
-                axios.get('http://10.197.41.100:8080/projectApplication/getXmById', {
+                axios.get('http://10.197.33.115:8080/projectApplication/getXmById', {
                     params: {
                         xmid: xmid
                     }

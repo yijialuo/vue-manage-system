@@ -1263,7 +1263,7 @@
                 comment: '同意',
                 userId: localStorage.getItem('userId'),
                 xm: {},
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 message: 'first',
                 //项目
                 Xms: [],
@@ -1821,7 +1821,7 @@
             //合同处理点击事件
             htqd(row) {
                 this.contract = row
-                this.url = 'http://10.197.41.100:8080/contract/uploadFile?dwyj=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/contract/uploadFile?dwyj=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                 //拿合同评论
                 this.gethtbz()
                 //领取附件
@@ -1832,7 +1832,7 @@
             //合同处理点击事件
             htcl(row) {
                 this.contract = row
-                this.url = 'http://10.197.41.100:8080/contract/uploadFile?dwyj=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/contract/uploadFile?dwyj=' + row.dwyj + '&userId=' + localStorage.getItem('userId')
                 //拿合同评论
                 this.gethtbz()
                 //领取附件
@@ -2142,7 +2142,7 @@
                 }
                 //拿招标审批版本
                 this.getZzspBb(row.zbpid)
-                this.url = 'http://10.197.41.100:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/zhaobiao/uploadFile?zbpid=' + row.zbpid + '&userId=' + localStorage.getItem('userId')
             },
 
             //拿到所有投标单位
@@ -2242,7 +2242,6 @@
                     }
                 }).then(res => {
                     if (res.data.length != 0) {
-                        console.log(res.data)
                         this.zhaobiaos = res.data
                         // //填充项目名称和项目编号和申请人
                         // for (let i = 0; i < this.zhaobiaos.length; i++) {
@@ -2779,7 +2778,7 @@
                 this.lqfj('前期', row.id)
                 //拿立项审批的版本号
                 this.getLxspBb(row.pid)
-                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
 
             //拿立项审批的版本号
@@ -2987,7 +2986,7 @@
                     })
                 //领取附件
                 this.lqfj('前期', row.id)
-                this.url = 'http://10.197.41.100:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
+                this.url = 'http://10.197.33.115:8080/projectApplication/uploadFile?pId=' + row.pid + '&userId=' + localStorage.getItem('userId')
             },
 
             //状态

@@ -37,7 +37,7 @@
         inject: ['reload'],
         data: function () {
             return {
-                ip: 'http://10.197.41.100:8080',
+                ip: 'http://10.197.33.115:8080',
                 ruleForm: {
                     username: '',
                     password: ''
@@ -86,6 +86,15 @@
                                     localStorage.setItem('departmentName', res.data.departmentName)
                                     localStorage.setItem('departmentId', res.data.departmentId)
                                     //localStorage.setItem('qxs', res.data.qxs)
+                                    //拿自己的代替人id
+                                    axios.get(this.ip + '/user/getDtrUserIdsAndUserNames', {
+                                        params: {
+                                            userid: localStorage.getItem('userId')
+                                        }
+                                    }).then(res=>{
+                                        localStorage.setItem('dtrids', res.data[0])
+                                        localStorage.setItem('dtrnames', res.data[1])
+                                    })
                                     this.$router.push('/');
                                 })
                         } else {

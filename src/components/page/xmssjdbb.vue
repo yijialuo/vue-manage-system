@@ -417,17 +417,17 @@
 
                 this.formatSelecrObject()
 
-                axios.post('http://10.197.41.100:8080/sgjdb/select?pageNum=' + this.listQuery.offset, this.selectObject)
+                axios.post('http://10.197.33.115:8080/sgjdb/select?pageNum=' + this.listQuery.offset, this.selectObject)
                     .then(res => {
                         this.list = res.data
                         loading.close()
                     })
             },
             download() {
-                window.location.href = 'http://10.197.41.100:8080/Bb/downloadXMSSJDB?param=' + JSON.stringify(this.selectObject)+ '&authorization=' + localStorage.getItem('token')
+                window.location.href = 'http://10.197.33.115:8080/Bb/downloadXMSSJDB?param=' + JSON.stringify(this.selectObject)+ '&authorization=' + localStorage.getItem('token')
             },
             getAllDptName() {
-                axios.get('http://10.197.41.100:8080/department/getAllDptName')
+                axios.get('http://10.197.33.115:8080/department/getAllDptName')
                     .then(res => {
                         if (res.data != null) {
                             for (let i = 0; i < res.data.length; i++) {
@@ -440,7 +440,7 @@
                     })
             },
             getAllJSBJBRS() {
-                axios.get('http://10.197.41.100:8080/user/jsbjbr', {}).then(res => {
+                axios.get('http://10.197.33.115:8080/user/jsbjbr', {}).then(res => {
                     if (res.data != null) {
                         for (let i = 0; i < res.data.length; i++) {
                             this.jsbjbr.push({
